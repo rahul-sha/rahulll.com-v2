@@ -816,6 +816,17 @@ p {
   overflow: hidden;
 }
 
+.card-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.card-layer.is-active {
+  opacity: 1;
+}
+
 .card-media img,
 .card-media video {
   width: 100%;
@@ -829,16 +840,74 @@ p {
   transform: scale(1.04);
 }
 
+/* Projects with several items: a stacked edge behind the card */
+.card.is-multi {
+  box-shadow:
+    5px -5px 0 -1px var(--surface-2),
+    5px -5px 0 0 var(--line-strong),
+    10px -10px 0 -2px var(--surface-2),
+    10px -10px 0 -1px var(--line);
+}
+
+.card.is-multi:hover {
+  box-shadow:
+    7px -7px 0 -1px var(--surface-2),
+    7px -7px 0 0 color-mix(in srgb, var(--cat) 45%, transparent),
+    14px -14px 0 -2px var(--surface-2),
+    14px -14px 0 -1px color-mix(in srgb, var(--cat) 25%, transparent),
+    var(--shadow);
+}
+
 .card-badge {
   position: absolute;
+  z-index: 2;
   right: 10px;
-  bottom: 10px;
-  padding: 4px 9px;
+  top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.65);
   color: #fff;
   backdrop-filter: blur(6px);
   font-size: 0.7rem;
+}
+
+.card-badge svg {
+  width: 13px;
+  height: 13px;
+}
+
+.card-dots {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+.card-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  transition: width 0.3s, background 0.3s;
+}
+
+.card-dots i.is-active {
+  width: 16px;
+  background: #fff;
+}
+
+.card.is-previewing .card-dots i.is-active {
+  background: var(--cat);
 }
 
 .card-body {

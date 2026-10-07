@@ -1,1063 +1,237 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 
 <head>
   <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rahul Sharma | Manufacturing Engineer and Product Designer</title>
+  <meta name="description"
+    content="Portfolio of Rahul Sharma, a Manufacturing Engineer in Singapore with a background in aerospace, product design, CFD/FEA simulation, and testing.">
+  <meta name="author" content="Rahul Sharma">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="Rahul Sharma | Manufacturing Engineer and Product Designer">
+  <meta property="og:description" content="Manufacturing, product design, R&amp;D, and testing work by Rahul Sharma.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rahulll.com/">
+  <meta property="og:image" content="https://rahulll.com/assets/img/hero-bg.jpg">
 
-  <title>This is me | Home</title>
-  <meta content="Personal Website" name="description">
-  <meta content="HTML, CSS, JavaScript, Portfolio, Work, Photography, My work, Learning, Rahul" name="keywords">
-  <meta content="Rahul Sharma" name="author">
+  <!-- Apply the saved or system theme before the page paints -->
+  <script>
+    (function () {
+      var t;
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
 
   <!-- Cloudflare Web Analytics -->
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token": "698974c22c894425bd2ba58de06ae4e2"}'></script>
-  <!-- End Cloudflare Web Analytics -->
 
-  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GDB1FDJ98K"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-GDB1FDJ98K');
+    function gtag() { dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-GDB1FDJ98K");
   </script>
 
-  <!-- Favicons -->
-  <link href="assets/img/favicon.jpg" rel="icon">
-  <link href="assets/img/apple-touch-icon.jpg" rel="apple-touch-icon">
+  <link rel="icon" href="assets/img/favicon.jpg">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.jpg">
 
-  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
     rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/icofont/icofont.min.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
-  <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: MyResume - v2.2.1
-  * Template URL: https://bootstrapmade.com/free-html-bootstrap-template-my-resume/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+  <link rel="stylesheet" href="assets/css/site.css">
 </head>
 
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ======= Mobile nav toggle button ======= -->
-  <button type="button" class="mobile-nav-toggle d-xl-none"><i class="icofont-navigation-menu"></i></button>
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="d-flex flex-column justify-content-center">
-
-    <nav class="nav-menu">
-      <ul>
-        <li class="active"><a href="#hero"><i class="bx bx-home"></i> <span>Home</span></a></li>
-        <li><a href="#about"><i class="bx bx-user"></i> <span>About</span></a></li>
-        <li><a href="#portfolio"><i class="bx bx-book-content"></i> <span>Portfolio</span></a></li>
-        <li><a href="/resume.html"><i class="bx bx-file-blank"></i> <span>Resume</span></a></li>
-        <li><a href="https://www.rahulsharma.xyz" target="_blank" class="photos"><i class="bx bx-aperture"></i>
-            <span>Art-Work</span></a></li>
-        <li><a href="https://rahulsharma94.wixsite.com/rahul-sharma" target="_blank" class="nostalgia"><i
-              class="bx bx-fingerprint"></i>
-            <span>Nostalgia</span></a></li>
-
-        <!--<li><a href="#services"><i class="bx bx-server"></i> <span>My Blog!</span></a></li>-->
+  <!-- ============ Header ============ -->
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main">
+      <a class="brand" href="#top">rahulll<span>.</span>com</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="resume.html">Resume</a></li>
       </ul>
-    </nav><!-- .nav-menu -->
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch light or dark theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </nav>
+  </header>
 
-  </header><!-- End Header -->
-
-  <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex flex-column justify-content-center">
-    <div class="container" data-aos="zoom-in" data-aos-delay="100">
-      <h1>Rahul Sharma</h1>
-      <p>I'm a <span class="typed" data-typed-items="Manufacturing Engineer, Product Designer, Photographer"></span>
-      </p>
-      <div class="social-links">
-        <a href="https://www.linkedin.com/in/rahul-sha/" target="_blank" class="linkedin"><i
-            class="bx bxl-linkedin"></i></a>
-        <a href="https://bsky.app/profile/rahulll.com" target="_blank" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="https://github.com/rahul-sha" target="_blank" class="github"><i class="bx bxl-github"></i></a>
-        <!--<a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>-->
-        <a href="https://www.instagram.com/xo_rahulll/" target="_blank" class="instagram"><i
-            class="bx bxl-instagram"></i></a>
-        <!--<a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>-->
-
+  <!-- ============ Hero ============ -->
+  <section class="hero" id="top">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <p class="hero-eyebrow mono"><span class="dot" aria-hidden="true"></span>Based in Singapore</p>
+      <h1>Rahul<br>Sharma</h1>
+      <p class="hero-role">I'm a <span class="typed" data-words="Manufacturing Engineer, Product Designer, Photographer">Manufacturing Engineer</span></p>
+      <p class="hero-lede">Aerospace engineer by training, now taking parts from CAD to the shop floor: designing, simulating, machining, and testing hardware.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#work">See my work</a>
+        <a class="btn" href="resume.html">Resume</a>
+        <div class="socials">
+          <a href="https://www.linkedin.com/in/rahul-sha/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg aria-hidden="true"><use href="assets/icons/social.svg#linkedin"/></svg></a>
+          <a href="https://bsky.app/profile/rahulll.com" target="_blank" rel="noopener" aria-label="Bluesky"><svg aria-hidden="true"><use href="assets/icons/social.svg#bluesky"/></svg></a>
+          <a href="https://github.com/rahul-sha" target="_blank" rel="noopener" aria-label="GitHub"><svg aria-hidden="true"><use href="assets/icons/social.svg#github"/></svg></a>
+          <a href="https://www.instagram.com/xo_rahulll/" target="_blank" rel="noopener" aria-label="Instagram"><svg aria-hidden="true"><use href="assets/icons/social.svg#instagram"/></svg></a>
+        </div>
       </div>
     </div>
-  </section><!-- End Hero -->
+    <a class="scroll-cue mono" href="#about">Scroll</a>
+  </section>
 
   <main id="main">
 
-    <!-- ======= About Section ======= -->
-    <section id="about" class="about">
-      <div class="container" data-aos="fade-up">
-        <div class="section-title">
+    <!-- ============ About ============ -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-label mono">01 / About</span>
           <h2>Who am I?</h2>
-
         </div>
 
-        <div class="row">
-          <div class="col-lg-4">
-            <img src="assets/img/profile-img.jpg" class="img-fluid" alt="My photo">
-          </div>
-          <div class="col-lg-8 pt-4 pt-lg-0 content">
-            <!--<h3>....................</h3>-->
-            <p><a href="https://youtu.be/rEq1Z0bjdwc?t=8" target="_blank">Hello there.</a> Welcome to my portfolio. Here
-              you
-              will find everything in relation to who I am, my work so far as an engineer.
-
-              <style>
-                .about a {
-                  color: #2395ff;
-                  font-weight: bold;
-                }
-
-                .about a:hover {
-                  color: red;
-                }
-              </style>
-            </p>
-            <p>
-              To begin with, Hi, I am Rahul and I am a Manufacturing Engineer with <a href="https://criswell.com.sg"
-                target="_blank">Criswell Singapore</a>.<br> Before that, I was a mechanical design engineer with more
-              than 3 years of experience with a Singapore
-              based startup, where I have designed, built and fabricated 3 working HVAC prototypes. Alongside, I have
-              acquired key insights of daily-running of a startup in a
-              feedback driven
-              development processes. </p>
-            <p>I
-              possess multidisciplinary skills in Industrial Design, Product Development, and
-              Design for Manufacturing and Assembly. I begrudgingly admit, <span class="font-italic">I am now a
-                specialist-generalist, with honed skills in mechanical design and prototyping.</span>
-              </br>
-              <p>I will allow my portfolio to showcase and present in-depth visualizations of the work I have done over
-                the past few
-                years.</p>
-          </div>
-          <figure>
-            <hr style="background-color: rgba(255, 255, 255, 0.295);">
-            <img src="assets/img/n_responsibilities.png" width="100%" style="padding-top: 20px; padding-bottom: 20px;"
-              alt="My responsibilities">
-            <figcaption style="font-size: smaller;font-style: italic; text-align: center;">Brief summary of areas I am
-              experienced in, highlighted with coloured hexagons.</figcaption>
+        <div class="about-grid">
+          <figure class="portrait reveal">
+            <img src="assets/img/profile-img.jpg" alt="Portrait of Rahul Sharma" width="404" height="494">
+            <figcaption class="mono"><span>Rahul Sharma</span><span>SG</span></figcaption>
           </figure>
-        </div>
 
-      </div>
-    </section><!-- End About Section -->
+          <div class="about-copy reveal">
+            <p class="lead"><a href="https://youtu.be/rEq1Z0bjdwc?t=8" target="_blank" rel="noopener">Hello there.</a>
+              Welcome to my portfolio. Here you will find everything about who I am and my work so far as an engineer.</p>
+            <p>To begin with, hi, I am Rahul, a <strong>Manufacturing Engineer</strong> with
+              <a href="https://criswell.com.sg" target="_blank" rel="noopener">Criswell Singapore</a>. Before that, I was a
+              mechanical design engineer for more than 3 years with a Singapore-based startup, where I designed, built, and
+              fabricated 3 working HVAC prototypes. Alongside that, I gained key insights into the daily running of a startup
+              with feedback-driven development processes.</p>
+            <p>I have multidisciplinary skills in industrial design, product development, and design for manufacturing and
+              assembly. I begrudgingly admit <em>I am now a specialist-generalist, with honed skills in mechanical design and
+              prototyping.</em></p>
+            <p>I will let my portfolio showcase in-depth visualisations of the work I have done over the past few years.</p>
 
-    <!-- ======= Work-Portfolio Section ======= -->
-    <section id="portfolio" class="portfolio section-bg">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2>Portfolio</h2>
-          <p>Over the years through my career, I have found myself continuously learning new things,
-            adapting and getting better at them.</p>
-          <p>This "portfolio" depicts all the things which I have mastered or rather gotten better at. I started as an
-            Aerospace Engineer with skills in Aircraft Designs, Computational Fluid Dynamics and flow visualizations.
-            But given how things rarely ever pan out the way you would think, I now find myself fully versed in
-            different domain of engineering. Whereby:
-          </p>
-
-          <ul>
-            <li>I am now fully appreciative of the actual manufacturing process, instead of just the design stage.
-              Understanding to work with various GD&Ts, manufacturing nuances and more, have emboldened the
-              designer in me.</li>
-            <li>I have learned that phase of gathering design requirements is just as important as the design itself.
-            </li>
-            <li>I understand the full picture of hardware based product development with key focus on Design for
-              Manufacturing and Design for Assembly. Otherwise, the cost borne in terms of hours and money is too high.
-            </li>
-            <li>I am highly aware of crucial processess in production stage such as Sourcing parts, managing various
-              timelines, tracking how parts are made, forming partnerships with OEMs,
-              small scale vendors, which ultimatelty make or break a product.</li>
-          </ul>
-
-          <p>There are more things which I have learned and contributed to, but the following inexhaustive presentation
-            should give the right idea. I have the content separated based on categories which should give a cleared
-            picture.</p>
-
-        </div>
-
-        <div class="row">
-          <div class="col-lg-12 d-flex justify-content-center" data-aos="fade-up" data-aos-delay="100">
-            <ul id="portfolio-flters">
-              <li data-filter="*" class="filter-active">All</li>
-              <li data-filter=".filter-mnfg">Manufacturing</li>
-              <li data-filter=".filter-prd-dsn">Product Design</li>
-              <li data-filter=".filter-rnd">Research & Development</li>
-              <li data-filter=".filter-tnv">Testing & Validation</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
-          <!-- ---------------------------- Manufacturing ---------------------------- -->
-          <!-- --------------------------------- P1 ---------------------------------- -->
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap mnfg-dsc">
-              <style>
-                .mnfg-dsc h4 {
-                  padding-top: 10px;
-                  font-weight: 600;
-                }
-              </style>
-              <h4>Manufacturing and Production</h4>
-              <hr>
-              <p>Some highlights showcasing how a part is produced in manufacturing setting.
-                Taking CAD models, programming them and validating using backplots before
-                turning to manufacturing.
-              </p>
+            <div class="stats">
+              <div class="stat"><b>3+</b><span>years in mechanical design</span></div>
+              <div class="stat"><b>3</b><span>working HVAC prototypes built</span></div>
+              <div class="stat"><b>4</b><span>disciplines in this portfolio</span></div>
             </div>
-          </div>
 
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Manufacturing/P1 CAD.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Timelapse of CAD being drawn according to the specifications.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Manufacturing/P1 CAM Simulation.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Simulation of the programmed toolpaths based on machining specifications from the shop floor and tools
-                available.
-                *Simulation provides a quick way to ensure the tools are complaint of things like safe retracts, tool
-                hits or finishing issues.
-              </p>
-              <P>And, also making sure operations are in right order and not skipped over, including:
-              </P>
-              <ul>
-                <li>Facing</li>
-                <li>Contouring</li>
-                <li>Roughing</li>
-                <li>Finishing</li>
-                <li>Drill and Hole making</li>
+            <div class="areas">
+              <h3>Areas of experience</h3>
+              <p>Highlighted areas are the ones I have worked in.</p>
+              <ul class="chips">
+                <li class="chip on" style="--chip:#e0702a">Design Research</li>
+                <li class="chip on" style="--chip:#b8601f">Modelling &amp; Simulation</li>
+                <li class="chip on" style="--chip:#6fae47">Product Engineering</li>
+                <li class="chip on" style="--chip:#e6d200">Prototyping &amp; Testing</li>
+                <li class="chip on" style="--chip:#4a7fd6">Design for Manufacturing</li>
+                <li class="chip on" style="--chip:#4a7fd6">Design for Assembly</li>
+                <li class="chip on" style="--chip:#26a58a">Fabrication</li>
+                <li class="chip">Experience Design</li>
+                <li class="chip">Electronics Engineering</li>
+                <li class="chip">Software Engineering</li>
+                <li class="chip">Compliance, Regulatory &amp; Testing</li>
+                <li class="chip">Execution Support</li>
               </ul>
             </div>
           </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Manufacturing/P1 Toolpath backplot.webm" loading="lazy"
-                  type="video/webm" alt="Video">
-              </video>
-              <p>Backploting to view and validate the nc-code genereated by the software. This is to ensure
-                conversion through CAM software is legible by the machine controller.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- P2 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Manufacturing/P2.webp" class="img-fluid" alt="">
-
-              <h4>5-axis machining</h4>
-              <hr>
-              <p>Many parts, either due to the manufacturing process or the lack of complexity can make do with
-                3-axis machining process. However, for parts like the one here, saves time and effort using a 5-axis
-                machining process.
-                Although 4-axis machining process can be used, but that entails removing the setup when 3-axis
-                operations are done and
-                setting up again and 4-th axis to finish it off, introducing more variables which can adversely effect
-                tight tolerancing.
-              </p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Manufacturing/P2 CAM Multi Axis Simulation.webm" loading="lazy"
-                  type="video/webm" alt="Video">
-              </video>
-              <p>Here, the simulation highlights all the generated toolpaths and how the tool approach changes for
-                different sides of the part.
-                Do note that the simulation is keeping part stationary and moving the tool. Machine simulation can be
-                done as well, but I find this easier to diagnose issues.
-              </p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- P3 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Manufacturing/P3 CAD model.webp" class="img-fluid" alt="">
-              <h4>CAD with cusps and curved surfaces.</h4>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Manufacturing/P3 CAM Simulation.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Simulation highlighting different and unique toolpaths and selection of tools for certain parts
-                to account for smooteher surfaces and different tolerance requirements. Here, alongside flat-end mills,
-                ball nose end mills were used.
-              </p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Manufacturing/P3 CAM toolpaths.webp" class="img-fluid" alt="">
-              <p>Just the toolpaths highlighted to show different operations and how the rapid movements, retracts and
-                cutting takes place in the process.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- P5 ---------------------------------- -->
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Manufacturing/P5 manifold cam.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Simulation and the actual part for comparison. The part is made of Ultem thermoplastic to be used as a
-                manifold for high temperatures
-                and pressures. Sealing the manifold meant the part needed to be precise. This part was reject due to
-                tolerances being off.
-              </p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- P4 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Manufacturing/P4.webp" class="img-fluid" alt="">
-
-              <h4>CAD for lathe operations</h4>
-              <p>Parts with cylindrical features are best made on lathes. Although certain 4-axis and 5-axis methods can
-                achieve the similar shape, however,
-                for maintaining higher tolerances it's often preferrable to use lathe. Not just that it is faster, but
-                has low probablity of human incurred issues.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-mnfg">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Manufacturing/P4 CAM Lathe.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Simulation of lathe operation showcasing the difference in approach to cutting using different tools to
-                rough, thread, bore and separate the part from the stock.</p>
-            </div>
-          </div>
-
-
-          <!-- --------------------------- Product Design ---------------------------- -->
-          <!-- --------------------------------- PR1 ---------------------------------- -->
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap mnfg-dsc">
-              <style>
-                .mnfg-dsc h4 {
-                  padding-top: 10px;
-                  font-weight: 600;
-                }
-              </style>
-              <h4>Product Design</h4>
-              <hr>
-              <p>I am fascinated by industrial designs, and do believe I have a knack for the drafting up quick designs.
-                Althouh most often, I have driven to design something based on work, but every now and then I have drawn
-                some designs.
-                Here are some of the drawings, CAD, animations, app designs, concept work etc., showcasing my work.
-              </p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR1-0.webp" class="img-fluid" alt="">
-              <h4>Swiveling desk mounting</h4>
-              <p>This concept was made to showcase the design issues a client had. Essentially, the hinge caused the
-                board to hit seat arm while folding.
-                I made the changes such the issues are alleviated.
-              </p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Product design/PR1 anim.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Animation through Fusion 360, to demonstrate the fact that the collision should no longer occur based
-                on the modifactions discussed with the client.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- PR4 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR4-1.webp" class="img-fluid" alt="">
-              <h4>Product concept demonstration</h4>
-              <p>Mounting a product in housing environment to showcase how it sits with the environment.
-                This was the first product I worked on with Aquifer/Disruptive Thermodynamics.
-              </p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR4-2.webp" class="img-fluid" alt="">
-              <p>Full width view of the a house, where the product is installed on the wall alongside the balconey.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR4-3.webp" class="img-fluid" alt="">
-              <p>This was designed to showcase how the same product can work in an construction environment, where by
-                the product is mounted on the shipping container office.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- PR5 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR5-1.webp" class="img-fluid" alt="">
-              <h4>App Mockup for monitoring body temperature.</h4>
-              <p>Drafting a mockup to see how a dedicated temperature monitoring app would look like.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR5-2.webp" class="img-fluid" alt="">
-              <p>Evaluating varous UX/UI elements and dark themes along side. Making it easier for a user to interact.
-              </p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- PR6 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Product design/PR6.webm" loading="lazy" type="video/webm" alt="Video">
-              </video>
-              <h4>Conceptual Model for a dual fan HVAC</h4>
-              <p>A concept that would be mounted on a ledge, is light weight and is aestheticly pleasing.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- PR7 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR7-1.webp" class="img-fluid" alt="">
-              <h4>Evolution of handheld thermometer, called Mini-IR</h4>
-              <p>Working with my colleagues to develop a economic smart thermometer which logs temeprature for each use.
-              </p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR7.webp" class="img-fluid" alt="">
-              <p>Different concepts developed which were feasible to manufacture on a budget.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR7-22.webp" class="img-fluid" alt="">
-              <p>Internal assembly of components of Mini-IR</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- PR2 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR2.webp" class="img-fluid" alt="">
-              <h4>HVAC Demonstration in a mining camp</h4>
-              <p>Visualizing the number of units required to cool the rooms in a mining camp.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- PR3 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR3-1.webp" class="img-fluid" alt="">
-              <h4>Volute Designs</h4>
-              <p>Designing volute based on the product requirements, to ensure perfromance is not lost with housing this
-                compact.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR3-2.webp" class="img-fluid" alt="">
-              <p>Going through different configurations to settle with the optimal perfromance with minimum back
-                pressure through CFD.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- PR8 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-prd-dsn">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Product design/PR8.webp" class="img-fluid" alt="">
-              <h4>Cantilever mounting mechanism for a 160kg componet.</h4>
-              <p>The design's purpose was to distribute load across 4 separate mounting locations on the wall to ensure
-                consisten load distribution.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------- Research and Development ---------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap rnd-dsc">
-              <style>
-                .rnd-dsc h4 {
-                  padding-top: 10px;
-                  font-weight: 600;
-                }
-              </style>
-              <h4>Research and development</h4>
-              <hr>
-              <p>Through out my masters and my job, I have used CFD, FEA simulations to conceptualize, ideate and
-                produce
-                parts which help realize the CAD into reality.
-                Here are some of those simulations and other elelments showcasing my work.
-              </p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD1 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD1-1.webp" class="img-fluid" alt="">
-              <h4>Generative designs of a mounting bracket</h4>
-              <p>Going through several iterations to identify and visualize the mounting points based on set
-                constraints.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD1-2 Mounting Plates.webp" class="img-fluid" alt="">
-              <h4>Comparitve generative design</h4>
-              <p>After convergence of certain design aspects, next is comparison of designs, to distinguish weight
-                saving characteristics and ease of manufactuing. </p>
-            </div>
-          </div>
-
-
-          <!-- --------------------------------- RD2 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD2-1.webp" class="img-fluid" alt="">
-              <h4>Load Path analysis for weight saving.</h4>
-              <p>As the original part is too heavy, for integration with the rest of the machine, it is critical to
-                reduce weight, whilst simultaneously
-                ensuring machinablity. Appropriate loads are applied and regions are marked for removal, making sure the
-                changes don't have high impact on a set Safety factor.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD3 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD3-1.webp" class="img-fluid" alt="">
-              <h4>Weight reductions for another part.</h4>
-              <p>For certain, not so load bearing parts, load analysis allowed for higher material reductions,
-                maintaining the set safetyfactor.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD4 ---------------------------------- -
-    
-              <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-                <div class="portfolio-wrap">
-                  <img src="assets/img/portfolio/Research and Dev/RD4-1.webp" class="img-fluid" alt="">
-                  <h4>4</h4>
-                  <p>Taking from CAD to CAM</p>
-                </div>
-              </div> -->
-
-          <!-- --------------------------------- RD6 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD6-1.webp" class="img-fluid" alt="">
-              <h4>Full assembly load analysis</h4>
-              <p>Becomes cruicial to analyse and test for full assembly context, as load acting on it can change. Here,
-                it is a good example of how, on their own the parts were complaint of Safety factor set, however,
-                in conjuction with assembly shows newer failure points.
-              </p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD5 ---------------------------------- 
-    
-              <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-                <div class="portfolio-wrap">
-                  <img src="assets/img/portfolio/Research and Dev/RD5-1.webp" class="img-fluid" alt="">
-                  <h4>5</h4>
-                  <p>Taking from CAD to CAM</p>
-                </div>
-              </div>-->
-
-          <!-- --------------------------------- RD7 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD7-1.webp" class="img-fluid" alt="">
-              <h4>Stress, deflection analysis of a manifold</h4>
-              <p>For a part under load, material selection and overall design becomes a crucial point in design. Based
-                on applied constraints and materials selected, it becomes evident that this part would fail.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD8 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD8-1.webp" class="img-fluid" alt="">
-              <h4>Designing and setting up a test room for HVAC performance</h4>
-              <p>Designed a test room with different material properties to understand influence of draft from the HVAC,
-                windows heat transfer and presence of an open boundary.</p>
-            </div>
-          </div>
-
-          <!--
-    
-              <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-                <div class="portfolio-wrap">
-                  <img src="assets/img/portfolio/Research and Dev/RD8-2.webp" class="img-fluid" alt="">
-                  <h4>7</h4>
-                  <p>Taking from CAD to CAM</p>
-                </div>
-              </div>
-              -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Research and Dev/RD8-3.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Side view of the test room depicting the influence of heat transfer through the window. The velocity
-                spheres showcasing not just the reflection of the particles, but change in velocity due to different
-                surfaces.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD9 ---------------------------------- -->
-
-          <!--<div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-                <div class="portfolio-wrap">
-                  <img src="assets/img/portfolio/Research and Dev/RD9-1.webp" class="img-fluid" alt="">
-                  <h4>1</h4>
-                  <p>Taking from CAD to CAM</p>
-                </div>
-              </div>-->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD9-2.webp" class="img-fluid" alt="">
-              <h4>Another test room visualization</h4>
-              <p>Coverage of air draft across the room and its impact on a person.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD9-3.webp" class="img-fluid" alt="">
-              <p>Thermal visualization of air as it exits the duct and spread across the room.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Research and Dev/RD9-3.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Initial turbulence created when the HVAC is turned on, and showcases the impact of HVAC position in a
-                room.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD10 ---------------------------------- -->
-
-          <!--<div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-                <div class="portfolio-wrap">
-                  <img src="assets/img/portfolio/Research and Dev/RD10-1.webp" class="img-fluid" alt="">
-                  <h4>7</h4>
-                  <p>Taking from CAD to CAM</p>
-                </div>
-              </div>-->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Research and Dev/RD10-2-.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Flow simulation of a 3-way refrigerant splitter. For the application, knowing the upstream value
-                dictates the velocity distributed through
-                the splitter. As the part is custom made, the part is modified till the appropriate downstream values
-                are achieved.
-              </p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD11 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Research and Dev/RD11.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <h4>Back pressure analysis</h4>
-              <p>To understand the full impact of a custom volute, flow is simulated to find out the backpressure
-                increase due to restricted sections in the design.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD12 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Research and Dev/RD12-1.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <h4>Back pressure analysis of an axial fan</h4>
-              <p>As the machine was being incluenced by the outwash of an OEM nozzle, a custom shorud was made and the
-                outwash was analysed.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Research and Dev/RD12-2.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <p>Similarly, the tip vortices are simulated to see the impact on static pressure on overall system.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD14 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Research and Dev/RD14-2.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <h4>Full assembly analysis flow distribution.</h4>
-              <p>Studying the influence of a custom diffuser over flow distribution through the system.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Research and Dev/RD14-1.webp" class="img-fluid" alt="">
-              <p>Plotting the distribution along the height of the machine to adapt the diffuser for optimized
-                parameters.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- RD13 ---------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-rnd">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Research and Dev/RD13.webm" loading="lazy" type="video/webm"
-                  alt="Video">
-              </video>
-              <h4>2-D analysis of heat exchanging tubes in a controlled environment.</h4>
-              <p>Analysis of temperature change due to the presene of a cold low pressure refrigerant flowing through a
-                series of tubes.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------- Testing and Validation ---------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap tnv-dsc">
-              <style>
-                .rnd-dsc h4 {
-                  padding-top: 10px;
-                  font-weight: 600;
-                }
-              </style>
-              <h4>Testing and validation</h4>
-              <hr>
-              <p>After the design and fabrication stage, the focus is on testing the concepts and validating the
-                solutions to ensure correct intended operations.
-                Here are some of the things I am versed with processes involving thermal analysis, audio spectrograms,
-                creating BOMs, part tracking, task tracking and testing methodolgies to evaluate a concept.
-              </p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- TM1 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm1-1.webp" class="img-fluid" alt="">
-              <h4>Thermal images of a condenser section</h4>
-              <p>Diagnosing flow distribution issues due to improper flow accross a flow splitter. It was quite evident
-                that one section was hoter than the remain two, implying flow restrictions inside.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm1-2.webp" class="img-fluid" alt="">
-              <p>Consequently, the heat exchangers lost performance and incurred more temperature losses, reducing the
-                efficiency of the hole system </p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- TM2 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm2.webp" class="img-fluid" alt="">
-              <h4>Audio Spectogram analyis</h4>
-              <p>Analysing different acoustics of a compressor due to presence of electrical noise present in the system
-                impairing the compressor through the process.</p>
-            </div>
-          </div>
-
-          <!-- --------------------------------- TM3 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Testing and Validation/tm3-1 auto pid.webm" loading="lazy"
-                  type="video/webm" alt="Video">
-              </video>
-              <h4>Development of Diagnostic performance monitor</h4>
-              <p>Understanding the intricacies of tuning the PID driver expansion valve in the system. Excessive
-                osciallations are bad for the system, given the system never achieves sustained efficiencies.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <video class="img-fluid" autoplay loop muted>
-                <source src="assets/img/portfolio/Testing and Validation/tm3-2 tuned pid.webm" loading="lazy"
-                  type="video/webm" alt="Video">
-              </video>
-              <p>Tuned PID's impact on the system, with the osciallations reduced significantly.</p>
-            </div>
-          </div>
-
-          <!-- -------------------------------- TM-4 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm4 influence of diffuser.webp" class="img-fluid"
-                alt="">
-              <h4>Sensor data comparison for flow with and without diffuser</h4>
-              <p>Full system is integrated with various pressure and temeprature sensors to understand the full picture
-                of air and refrigerant passing through the machine.</p>
-              The data is plotted to visualize impact that the presence of a diffuser has on the system.
-            </div>
-          </div>
-
-          <!-- -------------------------------- TM-5 --------------------------------- 
-    
-              <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-                <div class="portfolio-wrap">
-                  <img src="assets/img/portfolio/Testing and Validation/tm5-1.webp" class="img-fluid" alt="">
-                  <h4>7</h4>
-                  <p>Taking from CAD to CAM</p>
-                </div>
-              </div>
-    
-              <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-                <div class="portfolio-wrap">
-                  <img src="assets/img/portfolio/Testing and Validation/tm5-2.webp" class="img-fluid" alt="">
-                  <h4>7</h4>
-                  <p>Taking from CAD to CAM</p>
-                </div>
-              </div>-->
-
-          <!-- -------------------------------- TM-6 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm6-1 tasks.webp" class="img-fluid" alt="">
-              <h4>Built a task tracker integrated with CAD design and vendor relations.</h4>
-              <p>Built the application on a platform called Coda.io, which tracks design progress, RTM status and
-                assigned priorites based on parts availability.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm6-2 tasks alternate.webp" class="img-fluid"
-                alt="">
-              <h4>Filtered tasks viewer</h4>
-              <p>For rest of the team, to break down key details, such that progress is easily conveyed to all the key
-                people.</p>
-            </div>
-          </div>
-
-          <!-- -------------------------------- TM-7 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm7 timeline.webp" class="img-fluid" alt="">
-              <h4>Using Coda.io for product timeline</h4>
-              <p>Created a project timeline, such that the work has accurate scope of time and effort required to
-                achieve the goal.
-                This includes design, fabrication, testing and prototyping phases for one product.
-              </p>
-            </div>
-          </div>
-
-          <!-- -------------------------------- TM-8 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm8-1 BOM.webp" class="img-fluid" alt="">
-              <h4>Bills of material</h4>
-              <p>Created a custom Bills of material template on Coda.io which is flexible such that it allows for not
-                only the overview of all the components and their properties, but fabrication
-                times, lead times, weight estimations, design version, revisions, status of manufacturing, source etc.
-              </p>
-            </div>
-          </div>
-          <!--
-              <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-                <div class="portfolio-wrap">
-                  <img src="assets/img/portfolio/Testing and Validation/tm8-2 BOM improved.webp" class="img-fluid" alt="">
-                  <h4>7</h4>
-                  <p>Taking from CAD to CAM</p>
-                </div>
-              </div>
-              -->
-
-          <!-- -------------------------------- TM-9 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm9 equipment list.webp" class="img-fluid" alt="">
-              <h4>Generated Auxiliary equipment list using the same platform</h4>
-              <p>For small parts to be sources directly through various small vendors, created and tracked auxiliary
-                list for price estimations, time and cost savings.</p>
-            </div>
-          </div>
-
-          <!-- -------------------------------- TM-10 --------------------------------- -->
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-tnv">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/Testing and Validation/tm10 weight estimation.webp" class="img-fluid"
-                alt="">
-              <h4>Weight distribution of the final product</h4>
-              <p>Accurately determining the overall weight distribution before the physical build to give a general
-                scope of the machine in a physical scene.</p>
-            </div>
-          </div>
-
-
+        </div>
+      </div>
     </section>
-    <!-- End PortfolioSection -->
 
-  </main><!-- End #main -->
+    <!-- ============ Work ============ -->
+    <section class="section section-alt" id="work">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-label mono">02 / Work</span>
+          <h2>Portfolio</h2>
+          <p>Over the years, I have found myself continuously learning new things, adapting, and getting better at them. I
+            started as an aerospace engineer with skills in aircraft design, computational fluid dynamics, and flow
+            visualisation. Things rarely pan out the way you think, and I now find myself fully versed in a different domain
+            of engineering, where:</p>
+        </div>
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
+        <ol class="learnings reveal">
+          <li><strong>Manufacturing, not just design</strong>I fully appreciate the actual manufacturing process. Working with
+            GD&amp;T, manufacturing nuances, and more has emboldened the designer in me.</li>
+          <li><strong>Requirements matter</strong>Gathering design requirements is just as important as the design itself.</li>
+          <li><strong>DfM and DfA</strong>I understand the full picture of hardware product development, with a key focus on
+            design for manufacturing and assembly. Otherwise, the cost in hours and money is too high.</li>
+          <li><strong>Production realities</strong>Sourcing parts, managing timelines, tracking how parts are made, and forming
+            partnerships with OEMs and small vendors ultimately make or break a product.</li>
+        </ol>
+
+        <div class="filters" id="filters" role="group" aria-label="Filter projects by category"></div>
+        <p class="filter-intro" id="filter-intro" aria-live="polite">There is more I have learned and contributed to, but this
+          non-exhaustive selection should give the right idea. Pick a category to narrow it down, and open any project to see
+          every image and video.</p>
+
+        <div class="projects" id="projects"></div>
+        <noscript><p>Please turn on JavaScript to browse the portfolio.</p></noscript>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ Project viewer ============ -->
+  <dialog class="project-dialog" id="project-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-bar">
+      <span class="card-cat mono"></span>
+      <button class="icon-btn" type="button" data-prev aria-label="Previous project">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="icon-btn" type="button" data-next aria-label="Next project">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <button class="icon-btn" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="dialog-scroll">
+      <h2 id="dialog-title"></h2>
+      <p class="dialog-summary"></p>
+      <div class="dialog-media"></div>
+    </div>
+  </dialog>
+
+  <!-- ============ Footer ============ -->
+  <footer class="site-footer">
     <div class="container">
-      <h3>Rahul Sharma</h3>
-      <p>“Everybody is a genius. But if you judge a fish by its ability to climb a tree, it will live its whole life
-        believing that it is stupid.” — Albert Einstein</p>
-      <div class="social-links">
-        <a href="https://www.linkedin.com/in/rahul-sha/" class="linkedin" target="_blank"><i
-            class="bx bxl-linkedin"></i></a>
-        <a href="https://bsky.app/profile/rahulll.com" class="twitter" target="_blank"><i class="bx bxl-twitter"></i></a>
-        <a href="https://github.com/rahul-sha" class="github" target="_blank"><i class="bx bxl-github"></i></a>
-        <a href="https://www.instagram.com/xo_rahulll/" class="instagram" target="_blank"><i
-            class="bx bxl-instagram"></i></a>
-
-        <!--<a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        -->
+      <div class="footer-grid">
+        <blockquote>
+          “Everybody is a genius. But if you judge a fish by its ability to climb a tree, it will live its whole life
+          believing that it is stupid.”
+          <cite class="mono">Albert Einstein</cite>
+        </blockquote>
+        <div class="socials">
+          <a href="https://www.linkedin.com/in/rahul-sha/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg aria-hidden="true"><use href="assets/icons/social.svg#linkedin"/></svg></a>
+          <a href="https://bsky.app/profile/rahulll.com" target="_blank" rel="noopener" aria-label="Bluesky"><svg aria-hidden="true"><use href="assets/icons/social.svg#bluesky"/></svg></a>
+          <a href="https://github.com/rahul-sha" target="_blank" rel="noopener" aria-label="GitHub"><svg aria-hidden="true"><use href="assets/icons/social.svg#github"/></svg></a>
+          <a href="https://www.instagram.com/xo_rahulll/" target="_blank" rel="noopener" aria-label="Instagram"><svg aria-hidden="true"><use href="assets/icons/social.svg#instagram"/></svg></a>
+        </div>
       </div>
-      <div class="copyright">
-        &copy; Copyright, 2025. <strong><span>This is me</span></strong>. All Rights Reserved
-      </div>
-
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: [license-url] -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/free-html-bootstrap-template-my-resume/ -->
-        Modified template, originally designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      <div class="footer-meta">
+        <span>&copy; <span data-year>2026</span> Rahul Sharma</span>
+        <span class="mono">rahulll.com</span>
       </div>
     </div>
-  </footer><!-- End Footer -->
+  </footer>
 
-  <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
-  <div id="preloader"></div>
-
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/jquery/jquery.min.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/waypoints/jquery.waypoints.min.js"></script>
-  <script src="assets/vendor/counterup/counterup.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="assets/vendor/venobox/venobox.min.js"></script>
-  <script src="assets/vendor/owl.carousel/owl.carousel.min.js"></script>
-  <script src="assets/vendor/typed.js/typed.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
-
+  <script src="assets/js/projects.js"></script>
+  <script src="assets/js/site.js"></script>
 </body>
 
 </html>

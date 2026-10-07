@@ -1,382 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 
 <head>
   <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resume | Rahul Sharma</title>
+  <meta name="description"
+    content="Resume of Rahul Sharma: education in aerospace engineering, experience in manufacturing and mechanical design, and skills.">
+  <meta name="author" content="Rahul Sharma">
+  <meta name="color-scheme" content="dark light">
 
-  <title>This is me | Resume</title>
-  <meta content="Personal Website" name="description">
-  <meta content="HTML, CSS, JavaScript, Portfolio, Work, Photography, My work, Learning, Rahul" name="keywords">
-  <meta content="Rahul Sharma" name="author">
+  <!-- Apply the saved or system theme before the page paints -->
+  <script>
+    (function () {
+      var t;
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
 
   <!-- Cloudflare Web Analytics -->
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token": "698974c22c894425bd2ba58de06ae4e2"}'></script>
-  <!-- End Cloudflare Web Analytics -->
 
-  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GDB1FDJ98K"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-GDB1FDJ98K');
+    function gtag() { dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-GDB1FDJ98K");
   </script>
 
-  <!-- Favicons -->
-  <link href="assets/img/favicon.jpg" rel="icon">
-  <link href="assets/img/apple-touch-icon.jpg" rel="apple-touch-icon">
+  <link rel="icon" href="assets/img/favicon.jpg">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.jpg">
 
-  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
     rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/icofont/icofont.min.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
-  <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: MyResume - v2.2.1
-  * Template URL: https://bootstrapmade.com/free-html-bootstrap-template-my-resume/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+  <link rel="stylesheet" href="assets/css/site.css">
 </head>
 
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ======= Mobile nav toggle button ======= -->
-  <button type="button" class="mobile-nav-toggle d-xl-none"><i class="icofont-navigation-menu"></i></button>
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="d-flex flex-column justify-content-center">
-
-    <nav class="nav-menu">
-      <ul>
-        <li><a href="https://rahulll.com"><i class="bx bx-home"></i> <span>Home</span></a></li>
-        <li class="active"><a href="#resume"><i class="bx bx-file-blank"></i> <span>Resume</span></a></li>
-        <li><a href="#skills"><i class="bx bx-file-blank"></i> <span>Skills</span></a></li>
-        <li><a href="https://www.rahulsharma.xyz" target="_blank" class="photos"><i class="bx bx-aperture"></i>
-            <span>Art-Work</span></a></li>
-        <!--<li><a href="#services"><i class="bx bx-server"></i> <span>My Blog!</span></a></li>-->
-
+  <!-- ============ Header ============ -->
+  <header class="site-header">
+    <nav class="nav container" aria-label="Main">
+      <a class="brand" href="index.html">rahulll<span>.</span>com</a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#work">Work</a></li>
+        <li><a href="resume.html" aria-current="page">Resume</a></li>
       </ul>
-
-    </nav><!-- .nav-menu -->
-
-  </header><!-- End Header -->
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch light or dark theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </nav>
+  </header>
 
   <main id="main">
 
-
-
-
-    <!-- ======= Resume Section ======= -->
-    <section id="resume" class="resume">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2>Resume</h2>
-          <p>An Aerospace engineering graduate from Nanyang Technical University, Singapore and Technical University of
-            Munch, Singapore (Joint Degree) and have been in Singapore for over 5 years. Through my graduate tenure I
-            was mostly fascinated by air flows and the physics behind aircraft and ultimately desired a career in
-            aviation, dreaming of working for companies like Airbus or Boeing. However, as my masters came to an end, I
-            found myself part of a startup in HVAC industry, which meant it was more than about just me. I was
-            originally tasked with researching and development of experimental compressors. With time, I discovered my
-            way into industrial design of products.</p>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-6">
-
-            <h3 class="resume-title">Education</h3>
-            <div class="resume-item">
-              <h4>Master of Science in Aerospace Engineering</h4>
-              <h5>2015 - 2018</h5>
-              <p><em>Nanyang Technological University, Singapore and Technical University of Germany, Munich (Joint
-                  Degree)</em></p>
-              <p>With specialization in Boundary Layer theory, Computational Fluid Dynamics and Jet propulsion</p>
-            </div>
-            <div class="resume-item">
-              <h4>Bachelor of Technology in Aerospace Engineering</h4>
-              <h5>2011 - 2015</h5>
-              <p><em>Amity University of Haryana, India</em></p>
-              <p>With specialization in Aerodynamics, fluid flow and Mechanical Design</p>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <h3 class="resume-title">Professional Experience</h3>
-
-            <div class="resume-item">
-              <h4>Manufacturing Engineer</h4>
-              <h5>Jan, 2022 - Present</h5>
-              <p><em>Criswell, Singapore</em></p>
-              <ul>
-                Taking the next step in manufacturing. More to follow.
-              </ul>
-            </div>
-
-            <div class="resume-item">
-              <h4>Consultant as a Developement liason</h4>
-              <h5>Feb, 2021 - Dec, 2021</h5>
-              <p><em>Criswell, Singapore</em></p>
-              <ul>
-                <li>Helped in the design, development, and implementation of the graphic, layout, and production
-                  communication materials</li>
-                <li>Delegate tasks to the 2 members of the team and provide counsel on some aspects of the
-                  project. </li>
-                <li>Oversee the efficient use of production project budgets.</li>
-              </ul>
-            </div>
-
-            <div class="resume-item">
-              <h4>Mechanical Design engineer</h4>
-              <h5>2018 - 2021</h5>
-              <p><em>Disruptive Thermodynamics, Singapore</em></p>
-              <ul>
-                <li>Developed numerous marketing programs (logos, brochures,infographics, presentations, and
-                  advertisements).</li>
-                <li>Managed up to 5 projects or tasks at a given time while under pressure</li>
-                <li>Recommended and consulted with clients on the most appropriate graphic design</li>
-                <li>Created 4+ design presentations and proposals a month for clients and account managers</li>
-              </ul>
-            </div>
-
-            <div class="resume-item">
-              <h4>Research Intern</h4>
-              <h5>2017 - 2018</h5>
-              <p><em>Aquifer Labs, Singapore</em></p>
-              <ul>
-                <li>Developed numerous marketing programs (logos, brochures,infographics, presentations, and
-                  advertisements).</li>
-                <li>Managed up to 5 projects or tasks at a given time while under pressure</li>
-                <li>Recommended and consulted with clients on the most appropriate graphic design</li>
-                <li>Created 4+ design presentations and proposals a month for clients and account managers</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
+    <!-- ============ Intro ============ -->
+    <section class="page-hero">
+      <div class="container">
+        <span class="section-label mono">Resume</span>
+        <h1>Engineer, designer,<br>maker.</h1>
+        <p>An aerospace engineering graduate of Nanyang Technological University, Singapore, and the Technical University of
+          Munich (joint degree), I have been in Singapore for over 5 years. During my graduate studies I was fascinated by
+          airflow and the physics of aircraft, and I dreamed of a career in aviation with companies like Airbus or Boeing. As
+          my master's came to an end, I joined a startup in the HVAC industry, which meant it was about more than just me. I
+          was originally tasked with the research and development of experimental compressors. With time, I found my way
+          into the industrial design of products.</p>
       </div>
-    </section><!-- End Resume Section -->
+    </section>
 
-    <!-- ======= Skills Section ======= -->
-    <section id="skills" class="skills section-bg">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2>Skills</h2>
-          <p>Ever growing knowledge in component manufacturing processes and techniques, Strong ability to plan,
-            prioritize and coordinate with work of others</p>
+    <!-- ============ Experience and education ============ -->
+    <section class="section" id="resume">
+      <div class="container resume-grid">
+        <div class="reveal">
+          <h2>Professional experience</h2>
+          <ol class="timeline">
+            <li class="current">
+              <span class="when mono">Jan 2022 – Present</span>
+              <h3>Manufacturing Engineer</h3>
+              <div class="where">Criswell, Singapore</div>
+              <p>Taking the next step in manufacturing. More to follow.</p>
+            </li>
+            <li>
+              <span class="when mono">Feb 2021 – Dec 2021</span>
+              <h3>Consultant, Development Liaison</h3>
+              <div class="where">Criswell, Singapore</div>
+              <ul>
+                <li>Helped design, develop, and implement graphics, layouts, and production communication materials.</li>
+                <li>Delegated tasks to the 2 members of the team and provided counsel on aspects of the project.</li>
+                <li>Oversaw the efficient use of production project budgets.</li>
+              </ul>
+            </li>
+            <li>
+              <span class="when mono">2018 – 2021</span>
+              <h3>Mechanical Design Engineer</h3>
+              <div class="where">Disruptive Thermodynamics, Singapore</div>
+              <ul>
+                <li>Developed numerous marketing programmes (logos, brochures, infographics, presentations, and advertisements).</li>
+                <li>Managed up to 5 projects or tasks at a given time while under pressure.</li>
+                <li>Recommended and consulted with clients on the most appropriate graphic design.</li>
+                <li>Created 4+ design presentations and proposals a month for clients and account managers.</li>
+              </ul>
+            </li>
+            <li>
+              <span class="when mono">2017 – 2018</span>
+              <h3>Research Intern</h3>
+              <div class="where">Aquifer Labs, Singapore</div>
+              <ul>
+                <li>Developed numerous marketing programmes (logos, brochures, infographics, presentations, and advertisements).</li>
+                <li>Managed up to 5 projects or tasks at a given time while under pressure.</li>
+                <li>Recommended and consulted with clients on the most appropriate graphic design.</li>
+                <li>Created 4+ design presentations and proposals a month for clients and account managers.</li>
+              </ul>
+            </li>
+          </ol>
         </div>
 
-        <div class="row skills-content">
-
-          <div class="col-lg-6">
-
-            <div class="section-title">
-              <p style="color: #2395ff; font-weight: 600; font-style: italic;">Industry relevant knowledge</p>
-            </div>
-
-            <div class="resume-item pb-0">
-              <ul>
-                <li>Design for Assembly & Manufacturing</li>
-                <li>Research & Developement in rapid prototyping environments</li>
-                <li>Multi-axis CNC manufacturing operations</li>
-                <li>Design and Render for CAD designs</li>
-                <li>Data analysis driven product development</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-
-            <div class="section-title">
-              <p style="color: #2395ff; font-weight: 600; font-style: italic;">Interpersonal Skills</p>
-            </div>
-
-            <div class="resume-item pb-0">
-              <ul>
-                <li>Honest and to the point</li>
-                <li>Problem identification, definition and solution</li>
-                <li>Conflict resolution and effective mediation</li>
-                <li>Team Leadership and clear communication</li>
-                <li>Excellent Communication skills, whereby;
-                  <ul>
-                    <li>Clear verbal communications</li>
-                    <li>Effective Listening skills</li>
-                  </ul>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-6">
-
-            <div class="section-title">
-              <br>
-              <p style="color: #2395ff; font-weight: 600; font-style: italic;">Core soft. skills in design and
-                manufacturing</p>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Fusion 360: CAD <i class="val">86%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="86" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Fusion 360: CAM <i class="val">80%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Fusion 360: Simulation <i class="val">80%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Solidworks <i class="val">65%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Ansys/Comsol <i class="val">65%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="col-lg-6">
-
-            <div class="section-title">
-              <br>
-              <p style="color: #2395ff; font-weight: 600; font-style: italic;">Supplementary skills.</p>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Coda.io <i class="val">81%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="81" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Miro<i class="val">65%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">HTML/CSS/Bootstrap <i class="val">40%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Photography <i class="val">75%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Adobe Lightroom <i class="val">65%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-
-
-          </div>
-
+        <div class="reveal">
+          <h2>Education</h2>
+          <ol class="timeline">
+            <li>
+              <span class="when mono">2015 – 2018</span>
+              <h3>MSc Aerospace Engineering</h3>
+              <div class="where">Nanyang Technological University, Singapore, and Technical University of Munich (joint degree)</div>
+              <p>Specialising in boundary layer theory, computational fluid dynamics, and jet propulsion.</p>
+            </li>
+            <li>
+              <span class="when mono">2011 – 2015</span>
+              <h3>BTech Aerospace Engineering</h3>
+              <div class="where">Amity University Haryana, India</div>
+              <p>Specialising in aerodynamics, fluid flow, and mechanical design.</p>
+            </li>
+          </ol>
         </div>
-
       </div>
-    </section><!-- End Skills Section -->
-  </main><!-- End #main -->
+    </section>
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
+    <!-- ============ Skills ============ -->
+    <section class="section section-alt" id="skills">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-label mono">Skills</span>
+          <h2>What I bring</h2>
+          <p>Ever-growing knowledge of component manufacturing processes and techniques, and a strong ability to plan,
+            prioritise, and coordinate with the work of others.</p>
+        </div>
+
+        <div class="skill-groups reveal">
+          <div class="panel">
+            <h3>Industry knowledge</h3>
+            <ul>
+              <li>Design for assembly and manufacturing</li>
+              <li>Research and development in rapid-prototyping environments</li>
+              <li>Multi-axis CNC manufacturing operations</li>
+              <li>Design and rendering of CAD models</li>
+              <li>Data-driven product development</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h3>Interpersonal skills</h3>
+            <ul>
+              <li>Honest and to the point</li>
+              <li>Problem identification, definition, and solution</li>
+              <li>Conflict resolution and effective mediation</li>
+              <li>Team leadership and clear communication</li>
+              <li>Clear verbal communication and effective listening</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h3>Design and manufacturing software</h3>
+            <div class="meters">
+              <div><div class="meter-head"><span>Fusion 360: CAD</span><span class="mono">86%</span></div><div class="meter-track"><div class="meter-fill" style="--v:86%"></div></div></div>
+              <div><div class="meter-head"><span>Fusion 360: CAM</span><span class="mono">80%</span></div><div class="meter-track"><div class="meter-fill" style="--v:80%"></div></div></div>
+              <div><div class="meter-head"><span>Fusion 360: Simulation</span><span class="mono">80%</span></div><div class="meter-track"><div class="meter-fill" style="--v:80%"></div></div></div>
+              <div><div class="meter-head"><span>SolidWorks</span><span class="mono">65%</span></div><div class="meter-track"><div class="meter-fill" style="--v:65%"></div></div></div>
+              <div><div class="meter-head"><span>Ansys / COMSOL</span><span class="mono">65%</span></div><div class="meter-track"><div class="meter-fill" style="--v:65%"></div></div></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Supplementary skills</h3>
+            <div class="meters">
+              <div><div class="meter-head"><span>Coda.io</span><span class="mono">81%</span></div><div class="meter-track"><div class="meter-fill" style="--v:81%"></div></div></div>
+              <div><div class="meter-head"><span>Photography</span><span class="mono">75%</span></div><div class="meter-track"><div class="meter-fill" style="--v:75%"></div></div></div>
+              <div><div class="meter-head"><span>Miro</span><span class="mono">65%</span></div><div class="meter-track"><div class="meter-fill" style="--v:65%"></div></div></div>
+              <div><div class="meter-head"><span>Adobe Lightroom</span><span class="mono">65%</span></div><div class="meter-track"><div class="meter-fill" style="--v:65%"></div></div></div>
+              <div><div class="meter-head"><span>HTML / CSS</span><span class="mono">40%</span></div><div class="meter-track"><div class="meter-fill" style="--v:40%"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="site-footer">
     <div class="container">
-      <h3>Rahul Sharma</h3>
-      <p>“Everybody is a genius. But if you judge a fish by its ability to climb a tree, it will live its whole life
-        believing that it is stupid.” — Albert Einstein</p>
-      <div class="social-links">
-        <a href="https://www.linkedin.com/in/rahul-sha/" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-        <a href="https://twitter.com/xo_rahul" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="https://github.com/rahul-sha" class="github" target="_blank"><i class="bx bxl-github"></i></a>
-        <a href="https://www.instagram.com/xo_rahulll/" class="instagram"><i class="bx bxl-instagram"></i></a>
-
-        <!--<a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        -->
+      <div class="footer-grid">
+        <blockquote>
+          “Everybody is a genius. But if you judge a fish by its ability to climb a tree, it will live its whole life
+          believing that it is stupid.”
+          <cite class="mono">Albert Einstein</cite>
+        </blockquote>
+        <div class="socials">
+          <a href="https://www.linkedin.com/in/rahul-sha/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg aria-hidden="true"><use href="assets/icons/social.svg#linkedin"/></svg></a>
+          <a href="https://bsky.app/profile/rahulll.com" target="_blank" rel="noopener" aria-label="Bluesky"><svg aria-hidden="true"><use href="assets/icons/social.svg#bluesky"/></svg></a>
+          <a href="https://github.com/rahul-sha" target="_blank" rel="noopener" aria-label="GitHub"><svg aria-hidden="true"><use href="assets/icons/social.svg#github"/></svg></a>
+          <a href="https://www.instagram.com/xo_rahulll/" target="_blank" rel="noopener" aria-label="Instagram"><svg aria-hidden="true"><use href="assets/icons/social.svg#instagram"/></svg></a>
+        </div>
       </div>
-      <div class="copyright">
-        &copy; Copyright, 2022. <strong><span>This is me</span></strong>. All Rights Reserved
-      </div>
-
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: [license-url] -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/free-html-bootstrap-template-my-resume/ -->
-        Modified template, originally designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      <div class="footer-meta">
+        <span>&copy; <span data-year>2026</span> Rahul Sharma</span>
+        <span class="mono">rahulll.com</span>
       </div>
     </div>
-  </footer><!-- End Footer -->
+  </footer>
 
-  <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
-  <div id="preloader"></div>
-
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/jquery/jquery.min.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/waypoints/jquery.waypoints.min.js"></script>
-  <script src="assets/vendor/counterup/counterup.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="assets/vendor/venobox/venobox.min.js"></script>
-  <script src="assets/vendor/owl.carousel/owl.carousel.min.js"></script>
-  <script src="assets/vendor/typed.js/typed.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
-
+  <script src="assets/js/site.js"></script>
 </body>
 
 </html>

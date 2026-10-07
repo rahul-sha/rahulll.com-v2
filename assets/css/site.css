@@ -219,12 +219,6 @@ p {
   text-decoration: none;
 }
 
-.nav-links .ext::after {
-  content: "\2197";
-  font-size: 0.8em;
-  opacity: 0.6;
-}
-
 .icon-btn {
   display: inline-grid;
   place-items: center;

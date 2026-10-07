@@ -187,16 +187,19 @@
   });
 
   // Cards
+  const STACK_ICON =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>';
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
   const cards = PROJECTS.map(function (p, index) {
-    const cover = p.media[0];
-    const card = el("button", { type: "button", className: "card" }, [
-      el("div", { className: "card-media" }, [
-        mediaNode(cover, false),
-        el("span", {
-          className: "card-badge mono",
-          textContent: p.media.length + (p.media.length === 1 ? " item" : " items"),
-        }),
-      ]),
+    const multi = p.media.length > 1;
+    const layer = function (m, i) {
+      const l = el("div", { className: "card-layer" + (i === 0 ? " is-active" : "") }, [mediaNode(m, false)]);
+      return l;
+    };
+    const mediaEl = el("div", { className: "card-media" }, [layer(p.media[0], 0)]);
+    const card = el("button", { type: "button", className: "card" + (multi ? " is-multi" : "") }, [
+      mediaEl,
       el("div", { className: "card-body" }, [
         el("span", { className: "card-cat mono", textContent: CATEGORIES[p.category].label }),
         el("h3", { textContent: p.title }),
@@ -205,11 +208,79 @@
     ]);
     card.dataset.cat = p.category;
     card.setAttribute("aria-haspopup", "dialog");
+    card.setAttribute("aria-label", p.title + (multi ? ", " + p.media.length + " images and videos" : ""));
     card.addEventListener("click", function () {
       openProject(index);
     });
-    const v = card.querySelector("video");
-    if (v && videoObserver) videoObserver.observe(v);
+    const coverVideo = card.querySelector("video");
+    if (coverVideo && videoObserver) videoObserver.observe(coverVideo);
+
+    if (multi) {
+      // Always-visible cue: a counter badge and one dot per item
+      const badge = el("span", { className: "card-badge mono" });
+      badge.innerHTML = STACK_ICON;
+      const badgeText = el("span", { textContent: p.media.length + " items" });
+      badge.append(badgeText);
+      const dots = el(
+        "span",
+        { className: "card-dots" },
+        p.media.map(function (_, i) {
+          return el("i", { className: i === 0 ? "is-active" : "" });
+        })
+      );
+      mediaEl.append(badge, dots);
+
+      // Hover preview: cycle through the project's items, then return to the cover
+      let layers = null;
+      let timer = null;
+      let shown = 0;
+      const show = function (i) {
+        layers[shown].classList.remove("is-active");
+        const oldVideo = layers[shown].querySelector("video");
+        if (oldVideo && shown !== 0) oldVideo.pause();
+        shown = i;
+        layers[i].classList.add("is-active");
+        const v = layers[i].querySelector("video");
+        if (v) {
+          const pr = v.play();
+          if (pr && pr.catch) pr.catch(function () {});
+        }
+        dots.querySelectorAll("i").forEach(function (d, k) {
+          d.classList.toggle("is-active", k === i);
+        });
+        badgeText.textContent = i === 0 && !timer ? p.media.length + " items" : i + 1 + " / " + p.media.length;
+      };
+      const start = function () {
+        if (reduceMotion || timer) return;
+        if (!layers) {
+          layers = [mediaEl.querySelector(".card-layer")];
+          p.media.slice(1).forEach(function (m, i) {
+            const l = layer(m, i + 1);
+            mediaEl.insertBefore(l, badge);
+            layers.push(l);
+          });
+        }
+        card.classList.add("is-previewing");
+        timer = setInterval(function () {
+          show((shown + 1) % layers.length);
+        }, 1400);
+        show(shown === 0 ? 1 : shown);
+      };
+      const stop = function () {
+        if (!timer) return;
+        clearInterval(timer);
+        timer = null;
+        card.classList.remove("is-previewing");
+        show(0);
+      };
+      if (canHover) {
+        card.addEventListener("mouseenter", start);
+        card.addEventListener("mouseleave", stop);
+      }
+      card.addEventListener("focus", start);
+      card.addEventListener("blur", stop);
+      card.addEventListener("click", stop);
+    }
     return card;
   });
 

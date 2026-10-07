@@ -424,3 +424,23 @@ const PROJECTS = [
     media: [{ type: "image", src: TNV + "tm10 weight estimation.webp", caption: "Weight distribution of the final product." }],
   },
 ];
+
+/*
+ * Scroll showcase
+ * ---------------
+ * The big pinned section on the home page steps through these frames as you
+ * scroll. Each frame points at a project by its title, and "media" picks which
+ * of that project's images or videos to show (0 is the first).
+ */
+const SHOWCASE = [
+  { title: "5-axis machining", media: 0 },
+  { title: "CAD with cusps and curved surfaces", media: 1 },
+  { title: "CAD for lathe operations", media: 0 },
+  { title: "Swivelling desk mounting", media: 0 },
+  { title: "Mini-IR handheld thermometer", media: 1 },
+  { title: "Volute designs", media: 0 },
+  { title: "Generative designs of a mounting bracket", media: 0 },
+  { title: "Back pressure analysis of an axial fan", media: 0 },
+  { title: "Thermal images of a condenser section", media: 0 },
+  { title: "Audio spectrogram analysis", media: 0 },
+];

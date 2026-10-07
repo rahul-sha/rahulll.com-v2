@@ -312,13 +312,21 @@
       });
   };
 
-  const openProject = function (index) {
-    current = index;
-    const p = PROJECTS[index];
-    dialog.dataset.cat = p.category;
-    dialog.querySelector(".card-cat").textContent = CATEGORIES[p.category].label;
+  let opener = null;
+
+  // Fill the viewer with any item that has a title, summary, and media list
+  const fillDialog = function (p, label, cat) {
+    dialog.dataset.cat = cat;
+    dialog.querySelector(".card-cat").textContent = label;
     dialog.querySelector("h2").textContent = p.title;
     dialog.querySelector(".dialog-summary").textContent = p.summary;
+
+    const highlights = dialog.querySelector(".dialog-highlights");
+    highlights.replaceChildren();
+    (p.highlights || []).forEach(function (h) {
+      highlights.append(el("li", { textContent: h }));
+    });
+    highlights.hidden = !p.highlights || !p.highlights.length;
 
     const list = dialog.querySelector(".dialog-media");
     list.replaceChildren();
@@ -349,7 +357,16 @@
     }
   };
 
+  const openProject = function (index) {
+    current = index;
+    opener = cards[index];
+    dialog.classList.remove("is-single");
+    const p = PROJECTS[index];
+    fillDialog(p, CATEGORIES[p.category].label, p.category);
+  };
+
   const step = function (dir) {
+    if (dialog.classList.contains("is-single")) return;
     const vis = visibleIndexes();
     const pos = vis.indexOf(current);
     openProject(vis[(pos + dir + vis.length) % vis.length]);
@@ -377,6 +394,59 @@
       v.pause();
     });
     dialog.querySelector(".dialog-media").replaceChildren();
-    if (cards[current]) cards[current].focus();
+    if (opener) opener.focus();
   });
+  /* ---------- Off the clock: interests outside work ---------- */
+  const sideGrid = document.getElementById("side-projects");
+  if (sideGrid && typeof SIDE_PROJECTS !== "undefined") {
+    const ART = {
+      rack:
+        '<svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">' +
+        '<rect x="70" y="14" width="100" height="132" rx="6"/>' +
+        '<rect x="80" y="26" width="80" height="22" rx="3"/><rect x="80" y="56" width="80" height="22" rx="3"/>' +
+        '<rect x="80" y="86" width="80" height="22" rx="3"/><rect x="80" y="116" width="80" height="18" rx="3"/>' +
+        '<path d="M90 37h30M90 67h30M90 97h30M90 125h30"/>' +
+        '<circle class="blink" cx="146" cy="37" r="3" fill="currentColor"/><circle class="blink b2" cx="146" cy="67" r="3" fill="currentColor"/>' +
+        '<circle class="blink b3" cx="146" cy="97" r="3" fill="currentColor"/><circle cx="146" cy="125" r="3"/>' +
+        '<path d="M30 60h28M30 60v40h28M182 50h28v60h-28" stroke-dasharray="3 4"/>' +
+        "</svg>",
+      house:
+        '<svg viewBox="0 0 240 160" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M60 80 120 30l60 50"/><path d="M72 70v74h96V70"/><rect x="108" y="106" width="24" height="38" rx="2"/>' +
+        '<rect x="84" y="84" width="18" height="16" rx="2"/><rect x="138" y="84" width="18" height="16" rx="2"/>' +
+        '<path d="M120 30V14M40 54l32 22M200 54l-32 22M40 124h32M168 124h32" stroke-dasharray="3 4"/>' +
+        '<circle class="blink" cx="120" cy="10" r="4"/><circle class="blink b2" cx="36" cy="50" r="4"/>' +
+        '<circle class="blink b3" cx="204" cy="50" r="4"/><circle cx="36" cy="124" r="4"/><circle class="blink b2" cx="204" cy="124" r="4"/>' +
+        "</svg>",
+    };
+
+    SIDE_PROJECTS.forEach(function (item) {
+      const art = el("div", { className: "side-art" });
+      art.innerHTML = ART[item.art] || "";
+      const tile = el("button", { type: "button", className: "side-tile" }, [
+        art,
+        el("div", { className: "side-body" }, [
+          el("span", { className: "card-cat mono", textContent: item.kicker }),
+          el("h3", { textContent: item.title }),
+          el("p", { textContent: item.summary }),
+          el(
+            "ul",
+            { className: "side-tags" },
+            item.tags.map(function (t) {
+              return el("li", { className: "mono", textContent: t });
+            })
+          ),
+          el("span", { className: "side-more", textContent: "Explore" }),
+        ]),
+      ]);
+      tile.dataset.side = item.id;
+      tile.setAttribute("aria-haspopup", "dialog");
+      tile.addEventListener("click", function () {
+        opener = tile;
+        dialog.classList.add("is-single");
+        fillDialog(item, item.kicker, "side-" + item.id);
+      });
+      sideGrid.append(tile);
+    });
+  }
 })();

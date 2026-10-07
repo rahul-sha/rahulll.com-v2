@@ -424,3 +424,47 @@ const PROJECTS = [
     media: [{ type: "image", src: TNV + "tm10 weight estimation.webp", caption: "Weight distribution of the final product." }],
   },
 ];
+
+/*
+ * Off the clock
+ * -------------
+ * Interests outside work, shown as large tiles below the portfolio. Clicking a
+ * tile opens the same viewer as the projects.
+ *   art        : the line drawing on the tile ("rack" or "house")
+ *   highlights : short bullet points shown in the viewer
+ *   media      : optional images or videos, same format as projects above
+ *
+ * Text in [square brackets] is placeholder wording to replace.
+ */
+const SIDE_PROJECTS = [
+  {
+    id: "homelab",
+    art: "rack",
+    kicker: "Self-hosting",
+    title: "Homelab",
+    summary:
+      "[One or two sentences on what your homelab is for and why you run your own services instead of relying on the cloud.]",
+    tags: ["Self-hosted", "Immich", "[Add a tool]"],
+    highlights: [
+      "[Hardware: what it runs on]",
+      "Immich for my photo library, [plus the other services you host]",
+      "[What running it has taught you]",
+    ],
+    media: [],
+  },
+  {
+    id: "home-assistant",
+    art: "house",
+    kicker: "Home Assistant",
+    title: "Home automation",
+    summary:
+      "[One or two sentences on how you use Home Assistant at home, and what you enjoy about automating things.]",
+    tags: ["Home Assistant", "[Add a tool]", "[Add a tool]"],
+    highlights: [
+      "When [something happens], [what the house does]",
+      "When [something happens], [what the house does]",
+      "When [something happens], [what the house does]",
+    ],
+    media: [],
+  },
+];

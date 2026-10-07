@@ -76,9 +76,8 @@ A hand-written HTML, CSS, and JavaScript site with no frameworks or build step.
 * `index.html` is the home page (hero, about, and portfolio).
 * `resume.html` is the resume page.
 * `assets/css/site.css` holds all the styles. Colours are variables at the top of the file.
-* `assets/js/projects.js` holds the portfolio content. Add or edit a project there, and it appears in the archive. The `SHOWCASE` list at the bottom picks the projects shown in the big scrolling section.
-* `assets/js/site.js` handles the menu, scroll effects, showcase, card fan, and project viewer.
-* `assets/img/v3/topo.svg` is the contour-line background.
+* `assets/js/projects.js` holds the portfolio content. Add or edit a project there, and it appears on the home page.
+* `assets/js/site.js` handles the theme switch, menu, typing effect, and project viewer.
 
 To preview locally, run `python3 -m http.server` in this folder and open http://localhost:8000.
 

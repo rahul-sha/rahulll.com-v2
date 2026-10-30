@@ -70,8 +70,19 @@ function renderSite(b, api, s) {
     <p class="br-stack"><b>Built with</b> ${esc(s.stack)} <span>·</span> ${esc(s.stats)}</p>
     <p class="br-note">${note(s, url)}</p>
   </div>`;
-  const go = b.querySelector(".br-go, button.br-live");
-  if (go) go.onclick = () => { b.querySelector(".br-view").innerHTML = `<iframe src="${url}" title="${esc(s.title)}" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen; clipboard-write"></iframe><div class="br-load go"></div>`; };
+  const bindGo = () => {
+    const go = b.querySelector(".br-go, button.br-live");
+    if (go) go.onclick = () => { b.querySelector(".br-view").innerHTML = `<iframe src="${url}" title="${esc(s.title)}" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen; clipboard-write"></iframe><div class="br-load go"></div>`; };
+  };
+  bindGo();
+  /* when the window loses focus, unload the live site and show the picture again, so a site left open stops running */
+  const win = b.closest(".win");
+  if (api.onChange && win) api.onChange(() => {
+    if (!b.isConnected || !b.querySelector("iframe")) return;
+    if (win.classList.contains("focused") || win.classList.contains("float-top")) return;
+    b.querySelector(".br-view").innerHTML = `${view}<div class="br-load"></div>`;
+    bindGo();
+  });
   b.querySelector(".br-reload").onclick = () => {
     const l = b.querySelector(".br-load"); l.classList.remove("go"); void l.offsetWidth; l.classList.add("go");
     const f = b.querySelector("iframe"); if (f) f.src = f.src;

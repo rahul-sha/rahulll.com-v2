@@ -28,7 +28,7 @@ const OPENS = { zoom: ["Zoom", "win-in"], slide: ["Slide up", "win-slide"], drop
 /* Layout defaults every preset shares */
 const LAYOUT = { bar: "floating", dock: "always", labels: "shown", intro: "on", dockWs: "current", scale: 85 };
 /* Rahul's own rice, the default for every visitor (30 Oct 2026) */
-const BASE = { scheme: "tokyo", mode: "dark", wall: "volute", anim: true, blur: 31, winOp: 42, barOp: 60, radius: 21, gap: 10, ring: "a2", ringW: 1, motion: "smooth", open: "slide", ...LAYOUT };
+const BASE = { scheme: "everforest", mode: "dark", wall: "aurora", anim: true, blur: 25, winOp: 59, barOp: 46, radius: 8, gap: 10, ring: "a2", ringW: 1, motion: "smooth", open: "unfold", ...LAYOUT };
 const NOCTALIA = { scheme: "noctalia", mode: "system", wall: "volute", anim: false, blur: 14, winOp: 100, barOp: 78, radius: 18, gap: 16, ring: "a2", ringW: 2, motion: "smooth", open: "zoom", ...LAYOUT };
 const PRESETS = {
   rahul: { name: "Rahul's rice", ...BASE },

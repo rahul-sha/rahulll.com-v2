@@ -39,7 +39,7 @@ function renderSkills(b, api) {
 /* Projects: work highlight and flagships first, then everything by stage */
 function renderProjects2(b, api) {
   const chips = `<button type="button" class="chip on" data-c="all">Everything</button>` + stageOrder.map((k) => `<button type="button" class="chip" data-c="${k}" style="${hueStyle(CATS[k].hue)}">${CATS[k].label}</button>`).join("");
-  const tile = (p, cls = "") => `<li class="${cls}"><button type="button" class="p-tile" data-id="${p.id}" style="${hueStyle(CATS[p.cat].hue)}"><img src="${p.img}" alt=""><span class="p-cat">${CATS[p.cat].label}</span><span class="p-t">${p.title}</span></button></li>`;
+  const tile = (p, cls = "") => `<li class="${cls}"><button type="button" class="p-tile" data-id="${p.id}" style="${hueStyle(CATS[p.cat].hue)}"><img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async"><span class="p-cat">${CATS[p.cat].label}</span><span class="p-t">${p.title}</span></button></li>`;
   b.innerHTML = `<div class="projects"><p class="kicker">Engineering</p><h2>Things I have designed, simulated, made, and tested</h2>
     <div class="chips">${chips}</div>
     <h3 class="p-h">Start here</h3>
@@ -73,7 +73,7 @@ function mediaSlot(m) {
 function renderProject2(b, api, p) {
   const c = CATS[p.cat], related = PROJECTS.filter((x) => x.cat === p.cat && x.id !== p.id).slice(0, 2);
   const skills = SKILLS[p.cat].tools.slice(0, 3);
-  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}"><figcaption>[Caption for this image]</figcaption></figure>
+  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}" decoding="async"><figcaption>[Caption for this image]</figcaption></figure>
     <p class="kicker" style="color:var(--accent-ink)">${c.verb}${FLAGSHIPS.includes(p.id) ? " · Flagship" : ""}</p><h2>${p.title}</h2><p class="lede">${p.outcome || "[One-line outcome, such as: one 5-axis setup instead of three]"}</p>
     <dl class="facts"><div><dt>Year</dt><dd>${p.year || "[year]"}</dd></div><div><dt>Role</dt><dd>${p.role || "[role]"}</dd></div><div><dt>Team</dt><dd>${p.team || "[size]"}</dd></div><div><dt>Tools</dt><dd>${skills.join(", ")}</dd></div></dl>
     <h3>The problem</h3>${p.sum}
@@ -119,7 +119,7 @@ function renderHomelab(b) {
 }
 function renderPrints(b, api) {
   b.innerHTML = `<div class="prints"><p class="kicker">3D prints</p><h2>Printed at home on a Bambu Lab A1</h2>
-    <ul class="pr-grid">${PRINTS.map((p) => `<li style="${hueStyle(p.hue)}"><button type="button" class="pr-card" data-print="${p.id}"><span class="pr-img">${p.img ? `<img src="${p.img}" alt="">` : "<span>[photo]</span>"}</span><b>${esc(p.title)}</b><span class="pr-m">${esc(p.printer)} · ${esc(p.material)}</span><span class="pr-w">${p.why}</span><span class="pr-more">Open ${ICON.fwd}</span></button>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">On MakerWorld ${ICON.ext}</a>` : p.private ? `<span class="pr-p">Private design</span>` : ""}</li>`).join("")}</ul>
+    <ul class="pr-grid">${PRINTS.map((p) => `<li style="${hueStyle(p.hue)}"><button type="button" class="pr-card" data-print="${p.id}"><span class="pr-img">${p.img ? `<img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async">` : "<span>[photo]</span>"}</span><b>${esc(p.title)}</b><span class="pr-m">${esc(p.printer)} · ${esc(p.material)}</span><span class="pr-w">${p.why}</span><span class="pr-more">Open ${ICON.fwd}</span></button>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">On MakerWorld ${ICON.ext}</a>` : p.private ? `<span class="pr-p">Private design</span>` : ""}</li>`).join("")}</ul>
     <p class="hint">Designed in Fusion 360, which runs on Linux through Bottles. The Steam Deck stand is the one shared publicly; the rest are designed for home and [photos in use to come].</p></div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-print]"); if (t) api.open(printSpec(PRINTS.find((p) => p.id === t.dataset.print))); });
 }

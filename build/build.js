@@ -36,6 +36,14 @@ function image(kind, id, file, where, opts = {}) {
   imageJobs.push({ src, out, max: opts.max || 1200, quality: opts.quality || 82 });
   return out;
 }
+/* a smaller copy for tiles and cards, which show the image at a few hundred pixels */
+function thumb(out) {
+  const j = imageJobs.find((x) => x.out === out && x.src);
+  if (!j) return out;
+  const small = out.replace(/\.webp$/, "-sm.webp");
+  imageJobs.push({ src: j.src, out: small, max: 560, quality: 78 });
+  return small;
+}
 async function runImages() {
   for (const j of imageJobs) {
     const dest = path.join(DIST, j.out);
@@ -56,7 +64,7 @@ function projects() {
     need(fm, ["title", "stage", "image"], where);
     if (fm.stage && !STAGE[fm.stage]) fail(where, `stage must be design, simulate, make, or test (got "${fm.stage}")`);
     out.push({
-      id, cat: STAGE[fm.stage] || "design", title: fm.title || id, img: image("projects", id, fm.image, where), sum: html(body) || "",
+      id, cat: STAGE[fm.stage] || "design", title: fm.title || id, img: image("projects", id, fm.image, where), thumb: "", sum: html(body) || "",
       steps: fm.steps || [], outcome: fm.outcome || "", year: String(fm.year || ""), role: fm.role || "", team: fm.team || "", result: fm.result || "",
       flagship: !!fm.flagship, order: fm.order || 99,
       media: (fm.media || []).map((m) => ({ kind: m.kind === "video" ? "video" : "section", label: m.label || "", file: image("projects", id, m.file, where) })),
@@ -72,7 +80,7 @@ function prints() {
     const { fm, body } = readMd(file);
     need(fm, ["title", "printer", "material", "why"], where);
     out.push({
-      id, title: fm.title || id, short: fm.short || "", img: image("prints", id, fm.image, where), printer: fm.printer || "", material: fm.material || "",
+      id, title: fm.title || id, short: fm.short || "", img: image("prints", id, fm.image, where), thumb: "", printer: fm.printer || "", material: fm.material || "",
       why: inline(fm.why), hue: fm.accent || "a1", url: fm.makerworld || "", private: !fm.makerworld, story: html(body), notes: fm.notes || [],
       settings: { layer: fm.layer || "", infill: fm.infill || "", supports: fm.supports || "", time: fm.time || "" },
       photos: (fm.photos || []).map((f) => image("prints", id, f, where)).filter(Boolean), order: fm.order || 99,
@@ -91,6 +99,28 @@ function sites() {
   return out.sort((a, b) => a.order - b.order);
 }
 function single(name) { const f = path.join(CONTENT, name); if (!fs.existsSync(f)) { fail("content", `${name} is missing`); return { fm: {}, body: "" }; } return readMd(f); }
+
+/* ---------- link preview image (1200 x 630) ---------- */
+async function ogImage(about, portrait, dest) {
+  const x = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+    <defs><radialGradient id="g1" cx=".85" cy=".1" r=".7"><stop offset="0" stop-color="#a9aefe" stop-opacity=".45"/><stop offset="1" stop-color="#070722" stop-opacity="0"/></radialGradient>
+    <radialGradient id="g2" cx=".1" cy="1" r=".6"><stop offset="0" stop-color="#9bfece" stop-opacity=".3"/><stop offset="1" stop-color="#070722" stop-opacity="0"/></radialGradient></defs>
+    <rect width="1200" height="630" fill="#070722"/><rect width="1200" height="630" fill="url(#g1)"/><rect width="1200" height="630" fill="url(#g2)"/>
+    <rect x="96" y="150" width="330" height="330" rx="64" fill="none" stroke="#fff59b" stroke-width="10"/>
+    <text x="490" y="250" font-family="DejaVu Sans, Arial, sans-serif" font-size="30" font-weight="700" fill="#a9aefe" letter-spacing="3">${x((about.role || "").toUpperCase())}</text>
+    <text x="490" y="340" font-family="DejaVu Sans, Arial, sans-serif" font-size="76" font-weight="800" fill="#f3edf7">${x(about.name || "")}</text>
+    <text x="490" y="410" font-family="DejaVu Sans, Arial, sans-serif" font-size="32" fill="#c9c6e4">CAD, simulation, machining, and testing</text>
+    <rect x="490" y="450" width="70" height="10" rx="5" fill="#fff59b"/><rect x="568" y="450" width="70" height="10" rx="5" fill="#a9aefe"/><rect x="646" y="450" width="70" height="10" rx="5" fill="#9bfece"/><rect x="724" y="450" width="70" height="10" rx="5" fill="#ff8fa3"/>
+  </svg>`;
+  const layers = [];
+  if (fs.existsSync(portrait) && fs.statSync(portrait).isFile()) {
+    const mask = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="300" height="300" rx="52" fill="#fff"/></svg>`);
+    const face = await sharp(portrait).rotate().resize(300, 300, { fit: "cover" }).composite([{ input: mask, blend: "dest-in" }]).png().toBuffer();
+    layers.push({ input: face, left: 111, top: 165 });
+  }
+  await sharp(Buffer.from(svg)).composite(layers).jpeg({ quality: 86 }).toFile(dest);
+}
 
 /* ---------- resume PDF ---------- */
 function resumePdf(resume, about, dest) {
@@ -125,6 +155,7 @@ async function main() {
   const ME = { name: about.fm.name, role: about.fm.role, place: about.fm.place, line: ap[0] || "", voice: ap[1] || "", links: (about.fm.links || []).map((l) => [l.name, l.url]), email: about.fm.email || "" };
   const ABOUT = { headline: about.fm.headline || "", employer: about.fm.employer || "", open_to: about.fm.open_to || "", image: image("about", "", about.fm.image, "content/about/index.md", { max: 600 }) };
   const PROJECTS = projects(), PRINTS = prints(), SITES = sites();
+  for (const p of PROJECTS.concat(PRINTS)) p.thumb = p.img ? thumb(p.img) : "";
   const tuple = (r) => [r.dates || "", r.title || "", r.place || "", r.line || ""];
   const JOBS = (resume.fm.jobs || []).map(tuple), STUDY = (resume.fm.study || []).map(tuple), TOOLS = (resume.fm.tools || []).map((t) => [t, 0]);
   const stages = skills.fm.stages || {};
@@ -138,6 +169,8 @@ async function main() {
   for (const p of PROJECTS) delete p.flagship;
 
   if (problems.length) { console.error("Content problems:\n  " + problems.join("\n  ")); process.exit(1); }
+  /* the preview image is drawn once with `npm run og` and kept in content/about/, since build servers lack the fonts */
+  if (process.argv.includes("--og")) { await ogImage(about.fm, path.join(CONTENT, "about", about.fm.image || ""), path.join(CONTENT, "about", "og.jpg")); console.log("Wrote content/about/og.jpg"); return; }
   if (check) { console.log(`Content is fine: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites.`); return; }
 
   fs.rmSync(DIST, { recursive: true, force: true }); fs.mkdirSync(path.join(DIST, "site"), { recursive: true });
@@ -145,7 +178,14 @@ async function main() {
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`).join("\n");
   fs.writeFileSync(path.join(DIST, "site/content.js"), `/* Generated by build/build.js from the content/ folders. Do not edit; edit the Markdown instead. */\n${out}\n`);
   for (const f of fs.readdirSync(path.join(ROOT, "site"))) fs.copyFileSync(path.join(ROOT, "site", f), path.join(DIST, "site", f));
-  for (const f of ["index.html", "favicon.svg", "robots.txt"]) if (fs.existsSync(path.join(ROOT, f))) fs.copyFileSync(path.join(ROOT, f), path.join(DIST, f));
+  /* the address for link previews and search engines: Vercel's production domain when it builds there, rahulll.com otherwise */
+  const SITE = "https://" + (process.env.SITE_HOST || process.env.VERCEL_PROJECT_PRODUCTION_URL || "rahulll.com");
+  fs.writeFileSync(path.join(DIST, "index.html"), fs.readFileSync(path.join(ROOT, "index.html"), "utf8").replaceAll("%SITE%", SITE));
+  fs.copyFileSync(path.join(ROOT, "favicon.svg"), path.join(DIST, "favicon.svg"));
+  fs.writeFileSync(path.join(DIST, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
+  fs.writeFileSync(path.join(DIST, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${SITE}/</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url>\n</urlset>\n`);
+  const og = path.join(CONTENT, "about", "og.jpg");
+  if (fs.existsSync(og)) fs.copyFileSync(og, path.join(DIST, "og.jpg"));
   await runImages();
   await resumePdf({ jobs: JOBS, study: STUDY, tools: TOOLS.map(([t]) => t) }, { ...ME, link: "" }, path.join(DIST, "site/resume.pdf"));
   console.log(`Built dist/: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites, ${imageJobs.length} images, resume.pdf.`);

@@ -35,13 +35,14 @@ const STANDIN = {
   chopshop: () => `<div class="s-cs">
     <nav><b>Chop Shop</b><span class="cs-badge">Private</span></nav>
     <div class="cs-body"><aside>${["Today", "Plan", "Pantry", "Recipes", "Ingredients", "Body"].map((n, i) => `<i class="${i ? "" : "on"}">${n}</i>`).join("")}</aside>
-      <main><p class="cs-k">Today · sample day</p><h1>Good evening. 3 meals logged.</h1>
+      <div class="main"><p class="cs-k">Today · sample day</p><h1>Good evening. 3 meals logged.</h1>
       <div class="cs-mac">${[["Protein", 72], ["Carbs", 54], ["Fat", 40], ["Fibre", 63]].map(([n, v]) => `<div><span style="height:${v}%"></span><b>${n}</b></div>`).join("")}</div>
       <div class="cs-cards">${["Overnight oats", "Chicken rice bowl", "Greek yoghurt"].map((n) => `<div><span></span><b>${n}</b><small>[kcal] · [protein]</small></div>`).join("")}</div>
-      <p>Sample screen: the app sits behind a password, so this is a drawing of the Today page.</p></main></div></div>`,
+      <p>Sample screen: the app sits behind a password, so this is a drawing of the Today page.</p></div></div></div>`,
 };
 
-const standin = (s) => (STANDIN[s.id] || (() => `<div class="s-generic" style="--accent:var(--${s.accent});--accent-ink:var(--${s.accent}-ink)"><b>${esc(s.title)}</b><span>${esc(s.host)}</span><p>${s.blurb}</p></div>`))();
+/* the stand-ins are drawings of other sites, so their nav, header, and aside are not landmarks of this page */
+const standin = (s) => (STANDIN[s.id] || (() => `<div class="s-generic" style="--accent:var(--${s.accent});--accent-ink:var(--${s.accent}-ink)"><b>${esc(s.title)}</b><span>${esc(s.host)}</span><p>${s.blurb}</p></div>`))().replace(/<(nav|header|footer|aside)\b/g, '<$1 role="none"');
 function renderSite(b, api, s) {
   const url = s.private ? "" : "https://" + s.host + "/";
   /* the stand-in draws first; the live site loads only when the visitor asks, so four windows do not cost four page loads */
@@ -70,7 +71,7 @@ function renderSite(b, api, s) {
 function renderSitesIndex(b, api) {
   b.innerHTML = `<div class="sites"><p class="kicker">Shipped</p><h2>Things I built outside work</h2>
     <p class="lede">Each one was built with Claude, one pull request at a time, and opens here as a browser window. Press <kbd>Shift</kbd> <kbd>F</kbd> or the corner button to take it fullscreen.</p>
-    <ul class="si-list">${SITES.map((s) => `<li><button type="button" class="si" data-id="${s.id}" style="--accent:var(--${s.accent});--accent-ink:var(--${s.accent}-ink)"><span class="si-prev"><span class="si-mini">${standin(s).replace(/<(\/?)button\b[^>]*>/g, "<$1span>")}</span></span><span class="si-t">${s.title}</span><span class="si-h">${s.private ? "Private" : s.host}</span><span class="si-b">${s.blurb}</span><span class="si-s">${s.stats}</span><span class="si-tag">${s.tag}</span></button></li>`).join("")}</ul></div>`;
+    <ul class="si-list">${SITES.map((s) => `<li><button type="button" class="si" data-id="${s.id}" style="--accent:var(--${s.accent});--accent-ink:var(--${s.accent}-ink)"><span class="si-prev"><span class="si-mini" aria-hidden="true">${standin(s).replace(/<(\/?)button\b[^>]*>/g, "<$1span>")}</span></span><span class="si-t">${s.title}</span><span class="si-h">${s.private ? "Private" : s.host}</span><span class="si-b">${s.blurb}</span><span class="si-s">${s.stats}</span><span class="si-tag">${s.tag}</span></button></li>`).join("")}</ul></div>`;
   b.querySelector(".si-list").addEventListener("click", (e) => { const t = e.target.closest(".si"); if (t) api.open(siteSpec(SITES.find((s) => s.id === t.dataset.id))); });
 }
 function siteExtras(api) { return SITES.map((s) => ({ label: s.title, hint: s.private ? "Private project" : s.host, icon: ICON.globe, run: () => api.open(siteSpec(s)) })); }

@@ -30,6 +30,8 @@ dist/           Build output (ignored by git). Vercel serves this.
 
 To update the resume, edit `content/resume.md`. The PDF on the site is generated from it on every build.
 
+The picture shown when someone shares a link to the site is `content/about/og.jpg`. If you change your name, role, or portrait in `content/about/index.md`, run `npm run og` to redraw it, then commit the new image.
+
 ## Running it locally
 
 You need Node 22 or newer.

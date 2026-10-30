@@ -37,7 +37,7 @@ function Niri(opts) {
     if (spec.kind) el.dataset.kind = spec.kind;
     setAccent(el, spec.accent);
     el.innerHTML = `<header class="tb"><span class="tb-ic">${spec.icon || ""}</span><span class="tb-t">${esc(spec.title)}</span>
-      <span class="tb-b"><button type="button" data-act="width" title="Cycle width (R)" aria-label="Cycle width"><span class="wl">1/2</span></button><button type="button" data-act="max" title="Maximise column (F)" aria-label="Maximise column">${ICON.max}</button><button type="button" data-act="full" title="Fullscreen (Shift F)" aria-label="Fullscreen">${ICON.full}</button><button type="button" data-act="pin" title="Pin to every workspace" aria-label="Pin to every workspace">${ICON.pin}</button><button type="button" data-act="float" title="Float or tile (V)" aria-label="Float or tile">${ICON.float}</button><button type="button" data-act="close" title="Close (Q)" aria-label="Close">${ICON.close}</button></span></header>
+      <span class="tb-b"><button type="button" data-act="width" title="Cycle width (R)" aria-label="Cycle width, now 1/2"><span class="wl">1/2</span></button><button type="button" data-act="max" title="Maximise column (F)" aria-label="Maximise column">${ICON.max}</button><button type="button" data-act="full" title="Fullscreen (Shift F)" aria-label="Fullscreen">${ICON.full}</button><button type="button" data-act="pin" title="Pin to every workspace" aria-label="Pin to every workspace">${ICON.pin}</button><button type="button" data-act="float" title="Float or tile (V)" aria-label="Float or tile">${ICON.float}</button><button type="button" data-act="close" title="Close (Q)" aria-label="Close">${ICON.close}</button></span></header>
       <div class="wb"></div><span class="rz" aria-hidden="true"></span>`;
     const col = { key: spec.key, spec, el, w: spec.width ?? 1, full: false, x: 0, px: 0 };
     el.addEventListener("pointerdown", () => focusEl(col));
@@ -160,7 +160,8 @@ function Niri(opts) {
         if (top) x = top.x;
         const h = top || low ? Math.round((S.H - 3 * g) / 2) : S.H - 2 * g, y = top ? 2 * g + h : g;
         c.x = x; c.px = px; c.y = y; c.ph = h;
-        c.el.querySelector(".wl").textContent = lead.full ? "full" : WLABEL[lead.w] || "";
+        const wl = c.el.querySelector(".wl"), wt = lead.full ? "full" : WLABEL[lead.w] || "";
+        if (wl.textContent !== wt) { wl.textContent = wt; wl.parentElement.setAttribute("aria-label", "Cycle width, now " + wt); }
         if (c.kiosk) { if (!low) x += px + g; return; }
         c.el.style.width = px + "px";
         c.el.style.height = h + "px";
@@ -350,7 +351,7 @@ function Niri(opts) {
   if (dock && opts.dock) {
     /* the dock takes app ids, or groups of them: { name, ws, items } puts a labelled group per workspace */
     const btn = (id, wsI, a = opts.apps[id], extra = "") => {
-      return `<button type="button" class="dk${extra}" data-app="${id}"${wsI != null ? ` data-ws="${wsI}"` : ""} style="--accent:var(--${a.accent || "a1"});--accent-ink:var(--${a.accent || "a1"}-ink, var(--${a.accent || "a1"}))" aria-label="${esc(a.title)}"><span class="dk-ic">${a.icon}</span><span class="dk-l">${esc(a.dockLabel || a.title)}</span><span class="dk-tip">${esc(a.dockLabel || a.title)}${a.hotkey ? ` <kbd>${a.hotkey}</kbd>` : ""}</span><span class="dk-run"></span></button>`;
+      return `<button type="button" class="dk${extra}" data-app="${id}"${wsI != null ? ` data-ws="${wsI}"` : ""} style="--accent:var(--${a.accent || "a1"});--accent-ink:var(--${a.accent || "a1"}-ink, var(--${a.accent || "a1"}))" aria-label="${esc(a.dockLabel || a.title)}"><span class="dk-ic">${a.icon}</span><span class="dk-l">${esc(a.dockLabel || a.title)}</span><span class="dk-tip">${esc(a.dockLabel || a.title)}${a.hotkey ? ` <kbd>${a.hotkey}</kbd>` : ""}</span><span class="dk-run"></span></button>`;
     };
     dock.innerHTML = opts.dock.map((x) => typeof x === "string" ? btn(x) :
       `<div class="dk-g"${x.ws != null ? ` data-g="${x.ws}"` : ""} role="group" aria-label="${esc(x.name)}"><button type="button" class="dk-gl"${x.ws != null ? ` data-goto="${x.ws}" title="Go to workspace ${x.ws + 1}: ${esc(x.name)} (${x.ws + 1})"` : " disabled"}>${x.ws != null ? `<b>${x.ws + 1}</b>` : `<b>${ICON.grid}</b>`}<span>${esc(x.name)}</span></button>${x.items.map((id) => btn(id, x.ws)).join("")}</div>`).join("");

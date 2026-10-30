@@ -3,6 +3,17 @@
    when the visitor clicks it. A site that refuses to be framed (embed: false in its Markdown) opens in a new tab.
    A site without a screenshot falls back to a stand-in drawn from the live page. */
 const canFrame = (s) => !s.private && s.embed;
+/* screenshots and clips load only when their window comes on screen, since Shipped is not where a visit starts */
+const nearby = "IntersectionObserver" in window ? new IntersectionObserver((es) => es.forEach((e) => {
+  if (!e.isIntersecting) return;
+  const m = e.target; nearby.unobserve(m);
+  /* the intro flies over every workspace at once; look again once it settles */
+  const d = document.getElementById("desk");
+  if (d && (d.classList.contains("booting") || d.classList.contains("preboot"))) return setTimeout(() => nearby.observe(m), 1500);
+  if (m.dataset.poster) m.poster = m.dataset.poster;
+  m.src = m.dataset.src;
+}), { rootMargin: "200px" }) : null;
+const watchMedia = (root) => root.querySelectorAll(".br-shot[data-src]").forEach((m) => nearby ? nearby.observe(m) : (m.src = m.dataset.src, m.dataset.poster && (m.poster = m.dataset.poster)));
 /* SITES comes from site/content.js, built from content/sites/*.md */
 const siteSpec = (s) => ({ key: "site-" + s.id, kind: "site", title: s.title, icon: ICON.globe, accent: s.accent, width: s.width ?? 2, render: renderSite, arg: s, under: s.under ? "site-" + s.under : undefined });
 
@@ -54,7 +65,7 @@ function renderSite(b, api, s) {
   const url = s.private ? "" : "https://" + s.host + "/";
   /* the picture shows first; the live site loads only when the visitor asks, so four windows do not cost four page loads */
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const media = s.video ? `<video class="br-shot" src="${s.video}" poster="${s.shot}" muted loop playsinline preload="metadata"${still ? "" : " autoplay"} aria-label="${esc(s.title)}, a short clip of the site"></video>` : `<img class="br-shot" src="${s.shot}" alt="${esc(s.title)}, the home page" decoding="async">`;
+  const media = s.video ? `<video class="br-shot" data-src="${s.video}" data-poster="${s.shot}" muted loop playsinline preload="metadata"${still ? "" : " autoplay"} aria-label="${esc(s.title)}, a short clip of the site"></video>` : `<img class="br-shot" data-src="${s.shot}" alt="${esc(s.title)}, the home page" decoding="async">`;
   const view = !s.shot
     ? `<div class="standin" tabindex="0">${standin(s)}</div>${canFrame(s) ? `<button type="button" class="br-go">${ICON.globe} Load ${esc(s.host)} here</button>` : ""}`
     : s.private ? `<div class="br-live is-static">${media}</div>`
@@ -75,6 +86,7 @@ function renderSite(b, api, s) {
     if (go) go.onclick = () => { b.querySelector(".br-view").innerHTML = `<iframe src="${url}" title="${esc(s.title)}" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen; clipboard-write"></iframe><div class="br-load go"></div>`; };
   };
   bindGo();
+  watchMedia(b);
   /* when the window loses focus, unload the live site and show the picture again, so a site left open stops running */
   const win = b.closest(".win");
   if (api.onChange && win) api.onChange(() => {
@@ -82,6 +94,7 @@ function renderSite(b, api, s) {
     if (win.classList.contains("focused") || win.classList.contains("float-top")) return;
     b.querySelector(".br-view").innerHTML = `${view}<div class="br-load"></div>`;
     bindGo();
+    watchMedia(b);
   });
   b.querySelector(".br-reload").onclick = () => {
     const l = b.querySelector(".br-load"); l.classList.remove("go"); void l.offsetWidth; l.classList.add("go");

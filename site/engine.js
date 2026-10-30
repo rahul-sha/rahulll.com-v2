@@ -237,7 +237,9 @@ function Niri(opts) {
   vp.appendChild(FL);
   S.floats = [];
   let lastFloat = null;
-  function front(c) { FL.appendChild(c.el); lastFloat = c; S.floats.forEach((f) => f.el.classList.toggle("float-top", f === c)); }
+  /* raise with z-index, not by moving the element: re-appending it on pointerdown swallowed the click, so buttons in floats did nothing */
+  let zTop = 1;
+  function front(c) { if (c.el.parentNode !== FL) FL.appendChild(c.el); c.el.style.zIndex = ++zTop; lastFloat = c; S.floats.forEach((f) => f.el.classList.toggle("float-top", f === c)); }
   function fitFloat(f) {
     f.w = Math.max(220, Math.min(f.w, S.W - 16)); f.h = Math.max(120, Math.min(f.h, S.H - 16));
     f.x = Math.max(8, Math.min(f.x, S.W - f.w - 8)); f.y = Math.max(8, Math.min(f.y, S.H - f.h - 8));

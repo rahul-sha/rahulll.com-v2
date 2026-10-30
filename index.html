@@ -58,7 +58,7 @@ body { font: 15px/1.55 var(--ui); background: var(--bg); }
 .bar { display: flex; align-items: center; gap: 10px; margin: 10px 12px 0; padding: 6px 8px; padding-left: max(8px, env(safe-area-inset-left)); background: color-mix(in srgb, var(--surf) var(--bar-op), transparent); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4); backdrop-filter: blur(var(--blur)) saturate(1.4); border-radius: calc(var(--r) * .85); border: 1px solid var(--line); min-height: 36px; transition: margin var(--dur) var(--ease), border-radius var(--dur) var(--ease); }
 .b-sec { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .b-left { flex: 1; } .b-right { flex: 1; justify-content: flex-end; }
-.ib { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; border: 0; background: transparent; color: var(--fg); cursor: pointer; }
+.ib { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: calc(var(--r) * .6); border: 0; background: transparent; color: var(--fg); cursor: pointer; }
 .ib:hover { background: var(--surf2); }
 .ib svg { width: 18px; height: 18px; }
 /* Zoom out: the three columns fold into a grid of tiles on hover, and stay that way in the overview */
@@ -82,20 +82,20 @@ body { font: 15px/1.55 var(--ui); background: var(--bg); }
 @media (prefers-reduced-motion: reduce) { .zoomb rect, .zoomb .zl span { transition: none; } }
 .logo { background: var(--a1); color: var(--on-a); }
 .logo:hover { background: var(--a1); filter: brightness(1.05); }
-.pills { display: flex; gap: 3px; align-items: center; padding: 2px; border-radius: 12px; background: color-mix(in srgb, var(--surf2) 70%, transparent); }
-.pill { --wa: var(--a2); display: inline-flex; gap: 6px; align-items: center; height: 30px; padding: 0 9px 0 3px; border-radius: 10px; border: 0; background: transparent; color: var(--mute); font: 700 12.5px var(--ui); cursor: pointer; white-space: nowrap; transition: background .25s, color .25s; }
+.pills { display: flex; gap: 3px; align-items: center; padding: 2px; border-radius: calc(var(--r) * .65); background: color-mix(in srgb, var(--surf2) 70%, transparent); }
+.pill { --wa: var(--a2); display: inline-flex; gap: 6px; align-items: center; height: 30px; padding: 0 9px 0 3px; border-radius: calc(var(--r) * .55); border: 0; background: transparent; color: var(--mute); font: 700 12.5px var(--ui); cursor: pointer; white-space: nowrap; transition: background .25s, color .25s; }
 .pill[data-i="0"] { --wa: var(--a1); } .pill[data-i="1"] { --wa: var(--a2); } .pill[data-i="2"] { --wa: var(--a3); } .pill[data-i="3"] { --wa: var(--a4); }
 /* each workspace keeps its own colour: the icon is tinted at rest and fills in when that workspace is open */
-.pill b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; color: color-mix(in srgb, var(--wa) 72%, var(--fg)); transition: background .25s, color .25s, transform .25s; }
+.pill b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: calc(var(--r) * .45); color: color-mix(in srgb, var(--wa) 72%, var(--fg)); transition: background .25s, color .25s, transform .25s; }
 .pill b svg { width: 16px; height: 16px; }
 .pill:hover { color: var(--fg); background: color-mix(in srgb, var(--wa) 10%, transparent); }
 .pill:hover b { transform: translateY(-1px); }
 .pill.on { background: color-mix(in srgb, var(--wa) 18%, var(--surf)); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.15); }
 .pill.on b { background: var(--wa); color: var(--on-a); }
 .phone .b-right { flex: none; } .phone .b-left { gap: 4px; } .phone .pills { flex: 0 1 auto; min-width: 0; overflow: hidden; gap: 1px; } .phone .pill { min-width: 26px; justify-content: center; padding: 0 2px; gap: 4px; } .phone .pill b { width: 22px; height: 22px; } .phone .pill span { display: none; }
-.clock { font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; padding: 6px 12px; border-radius: 11px; background: var(--surf2); border: 0; color: var(--fg); cursor: pointer; white-space: nowrap; }
+.clock { font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; padding: 6px 12px; border-radius: calc(var(--r) * .6); background: var(--surf2); border: 0; color: var(--fg); cursor: pointer; white-space: nowrap; }
 .clock span { color: var(--mute); font-weight: 600; margin-left: 6px; }
-.chipb { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 11px; background: var(--surf2); white-space: nowrap; }
+.chipb { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: calc(var(--r) * .6); background: var(--surf2); white-space: nowrap; }
 .chipb b { color: var(--a3-ink); font-variant-numeric: tabular-nums; }
 
 /* dock */
@@ -403,7 +403,9 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
 #desk.phone { grid-template-rows: max(8px, env(safe-area-inset-top)) minmax(0, 1fr) auto; }
 .phone > .viewport { grid-row: 2; } .phone > .dock { grid-row: 3; }
 #desk.phone > .bar { position: absolute; z-index: 40; }
-.phone .bar, .phone.bar-attached .bar { right: max(6px, env(safe-area-inset-right)); bottom: calc(max(8px, env(safe-area-inset-bottom)) + 76px); margin: 0; flex-direction: column; gap: 6px; min-height: 0; padding: 6px; border-radius: 16px; border-width: 1px; box-shadow: 0 10px 30px rgb(0 0 0 / .28); }
+.phone .bar, .phone.bar-attached .bar { right: max(6px, env(safe-area-inset-right)); bottom: calc(max(8px, env(safe-area-inset-bottom)) + 76px); margin: 0; flex-direction: column; gap: 6px; min-height: 0; padding: 6px; border-radius: var(--r); border-width: 1px; box-shadow: 0 10px 30px rgb(0 0 0 / .28); }
+/* the rail matches the dock: its corners follow the Appearance radius, its buttons the dock buttons' */
+.phone .bar .ib, .phone .pill { border-radius: calc(var(--r) * .7); } .phone .pills { border-radius: calc(var(--r) * .8); } .phone .pill b { border-radius: calc(var(--r) * .5); }
 .phone.dock-hide .bar { bottom: calc(max(8px, env(safe-area-inset-bottom)) + 16px); }
 .phone .b-sec { flex-direction: column; gap: 4px; flex: none; }
 .phone .b-left { gap: 6px; }

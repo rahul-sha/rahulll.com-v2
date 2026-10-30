@@ -4,7 +4,7 @@
    A site without a screenshot falls back to a stand-in drawn from the live page. */
 const canFrame = (s) => !s.private && s.embed;
 /* SITES comes from site/content.js, built from content/sites/*.md */
-const siteSpec = (s) => ({ key: "site-" + s.id, kind: "site", title: s.title, icon: ICON.globe, accent: s.accent, width: 2, render: renderSite, arg: s });
+const siteSpec = (s) => ({ key: "site-" + s.id, kind: "site", title: s.title, icon: ICON.globe, accent: s.accent, width: 2, render: renderSite, arg: s, under: s.under ? "site-" + s.under : undefined });
 
 const STANDIN = {
   aperture: () => `<div class="s-ap">

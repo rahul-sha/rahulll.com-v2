@@ -98,8 +98,8 @@ body { font: 15px/1.55 var(--ui); background: var(--bg); }
 .wb { padding: 4px 22px 22px; }
 .tb-b button, .ib, .clock, .chipb, .dk { transition-duration: .2s; }
 .ws-empty kbd, kbd { font: 600 12px var(--mono); padding: 1px 6px; border-radius: 6px; background: var(--surf2); border: 1px solid var(--line); color: var(--fg); }
-.overview .ws { border-radius: 40px; background: color-mix(in srgb, var(--surf) 35%, transparent); scale: .9; }
-.overview .ws.current { background: color-mix(in srgb, var(--a2) 14%, transparent); }
+.overview .ws { scale: .9; }
+.overview .ws.current .ws-label { color: var(--a2-ink, var(--a2)); }
 .overview .ws-label { font-weight: 900; color: var(--fg); top: -70px; font-size: 48px; }
 
 /* content */

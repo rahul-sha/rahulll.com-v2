@@ -94,9 +94,14 @@ function Niri(opts) {
       }
     }
   }
+  /* the window a column's lower half sits under, if it is stacked; phones and short screens keep one window per column */
+  const upper = (ws, i) => { const c = ws.cols[i], p = ws.cols[i - 1]; return !S.phone && S.H >= 520 && c && p && c.spec.under && p.key === c.spec.under ? p : null; };
+  const lead = (c) => { const ws = S.ws.find((w) => w.cols.includes(c)); return (ws && upper(ws, ws.cols.indexOf(c))) || c; };
   const W = () => S.ws[S.cur];
   const F = () => W().cols[W().focus];
   function focusCol(d) { const ws = W(); if (!ws.cols.length) return; ws.focus = Math.max(0, Math.min(ws.cols.length - 1, ws.focus + d)); ws.centred = false; update(); }
+  /* swipes and drags move a whole column, so they step over the other half of a stacked pair */
+  function stepCol(d) { const x = F() && F().x; focusCol(d); if (F() && F().x === x && !atEdge(d)) focusCol(d); }
   function focusTo(i) { const ws = W(); if (!ws.cols.length) return; ws.focus = i < 0 ? ws.cols.length - 1 : Math.min(i, ws.cols.length - 1); update(); }
   function moveCol(d) {
     const ws = W(), i = ws.focus, j = i + d;
@@ -115,8 +120,8 @@ function Niri(opts) {
     to.strip.appendChild(c.el);
     S.cur = t; update();
   }
-  function cycleWidth() { const c = F(); if (!c) return; if (c.full) c.full = false; else c.w = (c.w + 1) % WIDTHS.length; update(); }
-  function maximise() { const c = F(); if (!c) return; c.full = !c.full; update(); }
+  function cycleWidth() { const c = F() && lead(F()); if (!c) return; if (c.full) c.full = false; else c.w = (c.w + 1) % WIDTHS.length; update(); }
+  function maximise() { const c = F() && lead(F()); if (!c) return; c.full = !c.full; update(); }
   function centre() { const ws = W(); if (!F()) return; ws.centred = true; update(); }
   function close() {
     const ws = W(), c = F();
@@ -149,17 +154,20 @@ function Niri(opts) {
       ws.el.style.top = wi * st + "px";
       let x = g;
       ws.cols.forEach((c, ci) => {
-        const px = S.phone || c.full ? S.W - 2 * g : Math.round(WIDTHS[c.w] * (S.W - g) - g);
-        c.x = x; c.px = px;
-        c.el.querySelector(".wl").textContent = c.full ? "full" : WLABEL[c.w] || "";
-        if (c.kiosk) { x += px + g; return; }
+        /* a window can share its column with the one before it, stacked underneath; the top one sets the width */
+        const top = upper(ws, ci), low = upper(ws, ci + 1), lead = top || c;
+        const px = S.phone || lead.full ? S.W - 2 * g : Math.round(WIDTHS[lead.w] * (S.W - g) - g);
+        if (top) x = top.x;
+        const h = top || low ? Math.round((S.H - 3 * g) / 2) : S.H - 2 * g, y = top ? 2 * g + h : g;
+        c.x = x; c.px = px; c.y = y; c.ph = h;
+        c.el.querySelector(".wl").textContent = lead.full ? "full" : WLABEL[lead.w] || "";
+        if (c.kiosk) { if (!low) x += px + g; return; }
         c.el.style.width = px + "px";
-        c.el.style.height = S.H - 2 * g + "px";
-        c.el.style.transform = `translate(${x}px, ${g}px)`;
+        c.el.style.height = h + "px";
+        c.el.style.transform = `translate(${x}px, ${y}px)`;
         c.el.classList.toggle("focused", wi === S.cur && ci === ws.focus);
         c.el.classList.toggle("active-in-ws", ci === ws.focus);
-        c.el.querySelector(".wl").textContent = c.full ? "full" : WLABEL[c.w] || "";
-        x += px + g;
+        if (!low) x += px + g;
       });
       ws.total = x;
       ws.el.classList.toggle("is-empty", !ws.cols.length);
@@ -201,7 +209,7 @@ function Niri(opts) {
   const place = (el, r) => Object.assign(el.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
   function slotRect(c) {
     const v = vp.getBoundingClientRect(), r = root.getBoundingClientRect(), ws = S.ws.find((w) => w.cols.includes(c)) || W(), z = zoom();
-    return { left: (v.left - r.left) / z + c.x - ws.cam, top: (v.top - r.top) / z + S.gap, width: c.px, height: S.H - 2 * S.gap };
+    return { left: (v.left - r.left) / z + c.x - ws.cam, top: (v.top - r.top) / z + (c.y ?? S.gap), width: c.px, height: c.ph ?? S.H - 2 * S.gap };
   }
   function screenRect() { const b = S.phone ? 6 : opts.bezel ?? 12; return { left: b, top: b, width: root.clientWidth - 2 * b, height: root.clientHeight - 2 * b }; }
   function fullscreen(v, instant) {
@@ -519,7 +527,7 @@ function Niri(opts) {
     if (lock !== "x") return;
     const dx = e.changedTouches[0].clientX - tx;
     W().strip.style.transition = "";
-    if (Math.abs(dx) > 50) { const dir = dx < 0 ? 1 : -1; if (atEdge(dir)) spill(dir); else focusCol(dir); } else update();
+    if (Math.abs(dx) > 50) { const dir = dx < 0 ? 1 : -1; if (atEdge(dir)) spill(dir); else stepCol(dir); } else update();
     lock = null;
   });
   /* mouse: press and drag on the desktop or a tiled title bar to slide the strip, like a swipe.
@@ -562,7 +570,7 @@ function Niri(opts) {
     let n = Math.abs(dx) > 60 ? Math.max(1, Math.round(Math.abs(dx) / cw)) : 0;
     dragEnd = Date.now();
     if (!n) return update();
-    while (n--) { if (atEdge(dir)) { spill(dir); break; } focusCol(dir); }
+    while (n--) { if (atEdge(dir)) { spill(dir); break; } stepCol(dir); }
     dragEnd = Date.now();
   });
   /* the click that ends a drag should not also press whatever it lands on */

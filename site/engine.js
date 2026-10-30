@@ -546,16 +546,24 @@ function Niri(opts) {
      Inside a window, press and hold still for a moment first, so selecting text and clicking keep working. */
   /* resting the mouse near the left or right edge brings the next window that way into focus, and keeps stepping while it stays there */
   let hoverT = 0, hoverSide = 0;
+  const glows = [-1, 1].map((d) => { const g = document.createElement("div"); g.className = "edge-glow " + (d < 0 ? "l" : "r"); g.setAttribute("aria-hidden", "true"); vp.append(g); return g; });
+  const glow = (side, ms) => glows.forEach((g, j) => {
+    const on = side === (j ? 1 : -1);
+    g.classList.toggle("on", on);
+    if (on) { g.classList.remove("fill"); void g.offsetWidth; g.style.setProperty("--fill", ms + "ms"); g.classList.add("fill"); }
+  });
+  const hoverOff = () => { clearTimeout(hoverT); hoverSide = 0; glow(0); };
   vp.addEventListener("pointermove", (e) => {
-    if (e.pointerType !== "mouse" || e.buttons || S.overview || S.phone || grab) { clearTimeout(hoverT); hoverSide = 0; return; }
+    if (e.pointerType !== "mouse" || e.buttons || S.overview || S.phone || grab) { if (hoverSide) hoverOff(); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
     const side = e.target.closest(".float-layer") ? 0 : x < 0.1 ? -1 : x > 0.9 ? 1 : 0;
     if (side === hoverSide) return;
     clearTimeout(hoverT); hoverSide = side;
-    const tick = () => { if (hoverSide !== side || atEdge(side)) return; stepCol(side); hoverT = setTimeout(tick, 750); };
-    if (side) hoverT = setTimeout(tick, 350);
+    const wait = (ms) => { if (atEdge(side)) return glow(0); glow(side, ms); hoverT = setTimeout(tick, ms); };
+    const tick = () => { if (hoverSide !== side) return; stepCol(side); wait(750); };
+    if (side) wait(350); else glow(0);
   });
-  vp.addEventListener("pointerleave", () => { clearTimeout(hoverT); hoverSide = 0; });
+  vp.addEventListener("pointerleave", hoverOff);
   let grab = null, holdT = 0;
   const HOLD = 280;
   vp.addEventListener("pointerdown", (e) => {

@@ -3,6 +3,8 @@ html, body { height: 100%; }
 body { margin: 0; overflow: hidden; background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; }
 #desk { position: relative; height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; overflow: hidden; }
 .viewport { position: relative; overflow: hidden; min-height: 0; touch-action: pan-y; }
+/* let window shadows fall past the bottom edge, under the dock */
+@supports (clip-path: inset(0 0 -48px 0)) { .viewport { overflow: visible; clip-path: inset(0 0 -48px 0); } }
 .wsstack { position: absolute; inset: 0; transform-origin: 0 0; transition: transform calc(var(--dur, .45s) * 1.2) var(--ease); }
 .ws { position: absolute; left: 0; right: 0; transition: background .3s, border-radius .3s, scale .4s var(--ease); }
 .strip { position: absolute; inset: 0; transition: transform var(--dur, .45s) var(--ease); }

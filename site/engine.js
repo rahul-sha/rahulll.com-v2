@@ -142,9 +142,11 @@ function Niri(opts) {
     S.W = vp.clientWidth; S.H = vp.clientHeight;
     S.phone = S.W < 700;
     const g = (S.gap = S.phone ? Math.min(10, opts.gap ?? 16) : opts.gap ?? 16);
+    /* workspaces sit a little apart, so window shadows can spill past the bottom edge without showing the next one */
+    const st = (S.step = S.H + 64);
     S.ws.forEach((ws, wi) => {
       ws.el.style.height = S.H + "px";
-      ws.el.style.top = wi * S.H + "px";
+      ws.el.style.top = wi * st + "px";
       let x = g;
       ws.cols.forEach((c, ci) => {
         const px = S.phone || c.full ? S.W - 2 * g : Math.round(WIDTHS[c.w] * (S.W - g) - g);
@@ -178,11 +180,12 @@ function Niri(opts) {
     if (S.overview) {
       /* sized so two and a half workspaces fit; the camera follows the current one and stops at the ends */
       const padF = 0.08, s = (1 - 2 * padF) / 2.5, n = S.ws.length, pad = S.H * padF;
-      let y = S.H / 2 - s * (S.cur * S.H + S.H / 2);
-      if (s * n * S.H + 2 * pad <= S.H) y = (S.H - s * n * S.H) / 2;
-      else y = Math.max(S.H - s * n * S.H - pad, Math.min(pad, y));
+      const tot = s * (n * st - 64);
+      let y = S.H / 2 - s * (S.cur * st + S.H / 2);
+      if (tot + 2 * pad <= S.H) y = (S.H - tot) / 2;
+      else y = Math.max(S.H - tot - pad, Math.min(pad, y));
       stack.style.transform = `translate(${S.W / 2 - (s * S.W) / 2}px, ${y}px) scale(${s})`;
-    } else stack.style.transform = `translateY(${-S.cur * S.H}px)`;
+    } else stack.style.transform = `translateY(${-S.cur * st}px)`;
     root.classList.toggle("overview", S.overview);
     root.classList.toggle("phone", S.phone);
   }

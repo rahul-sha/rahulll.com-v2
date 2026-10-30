@@ -1,6 +1,7 @@
 /* ---------- Live sites: browser windows for Rahul's live projects ----------
-   Each window shows a stand-in drawn from the live page, and loads the real site in an iframe
-   when the visitor asks. A site that refuses to be framed (embed: false in its Markdown) only opens in a new tab. */
+   Each window shows a screenshot (or a short clip) of the site, and loads the real site in an iframe
+   when the visitor clicks it. A site that refuses to be framed (embed: false in its Markdown) opens in a new tab.
+   A site without a screenshot falls back to a stand-in drawn from the live page. */
 const canFrame = (s) => !s.private && s.embed;
 /* SITES comes from site/content.js, built from content/sites/*.md */
 const siteSpec = (s) => ({ key: "site-" + s.id, kind: "site", title: s.title, icon: ICON.globe, accent: s.accent, width: 2, render: renderSite, arg: s });
@@ -43,10 +44,22 @@ const STANDIN = {
 
 /* the stand-ins are drawings of other sites, so their nav, header, and aside are not landmarks of this page */
 const standin = (s) => (STANDIN[s.id] || (() => `<div class="s-generic" style="--accent:var(--${s.accent});--accent-ink:var(--${s.accent}-ink)"><b>${esc(s.title)}</b><span>${esc(s.host)}</span><p>${s.blurb}</p></div>`))().replace(/<(nav|header|footer|aside)\b/g, '<$1 role="none"');
+function note(s, url) {
+  const thing = s.private ? "app" : "site", what = s.shot ? (s.video ? `A short clip of the ${thing}.` : `A screenshot of the ${thing}.`) : `A drawing of the ${thing}.`;
+  if (s.private) return `${what.slice(0, -1)}, which is private, so there is no live version to open.`;
+  if (!canFrame(s)) return `${what} ${esc(s.host)} cannot be shown inside another page, so <a href="${url}" target="_blank" rel="noopener">open it in a new tab</a>.`;
+  return `${what} ${s.shot ? "Click it" : "The Load button"} to use <a href="${url}" target="_blank" rel="noopener">${esc(s.host)}</a> live in this window.`;
+}
 function renderSite(b, api, s) {
   const url = s.private ? "" : "https://" + s.host + "/";
-  /* the stand-in draws first; the live site loads only when the visitor asks, so four windows do not cost four page loads */
-  const view = `<div class="standin" tabindex="0">${standin(s)}</div>${canFrame(s) ? `<button type="button" class="br-go">${ICON.globe} Load ${esc(s.host)} here</button>` : ""}`;
+  /* the picture shows first; the live site loads only when the visitor asks, so four windows do not cost four page loads */
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const media = s.video ? `<video class="br-shot" src="${s.video}" poster="${s.shot}" muted loop playsinline preload="metadata"${still ? "" : " autoplay"} aria-label="${esc(s.title)}, a short clip of the site"></video>` : `<img class="br-shot" src="${s.shot}" alt="${esc(s.title)}, the home page" decoding="async">`;
+  const view = !s.shot
+    ? `<div class="standin" tabindex="0">${standin(s)}</div>${canFrame(s) ? `<button type="button" class="br-go">${ICON.globe} Load ${esc(s.host)} here</button>` : ""}`
+    : s.private ? `<div class="br-live is-static">${media}</div>`
+    : canFrame(s) ? `<button type="button" class="br-live" aria-label="Load ${esc(s.host)} live in this window">${media}<span class="br-hint">${ICON.globe} Click to load the live site</span></button>`
+    : `<a class="br-live" href="${url}" target="_blank" rel="noopener" aria-label="Open ${esc(s.host)} in a new tab">${media}<span class="br-hint">${ICON.ext} Open ${esc(s.host)} in a new tab</span></a>`;
   b.innerHTML = `<div class="br">
     <div class="br-bar">
       <button type="button" class="br-ib" aria-label="Back" disabled>${ICON.back}</button><button type="button" class="br-ib" aria-label="Forward" disabled>${ICON.fwd}</button><button type="button" class="br-ib br-reload" aria-label="Reload">${ICON.reload}</button>
@@ -55,9 +68,9 @@ function renderSite(b, api, s) {
     </div>
     <div class="br-view">${view}<div class="br-load"></div></div>
     <p class="br-stack"><b>Built with</b> ${esc(s.stack)} <span>·</span> ${esc(s.stats)}</p>
-    <p class="br-note">${s.private ? "A drawing of the Today page. The app itself is private." : canFrame(s) ? `A drawing of the site. The Load button shows <a href="${url}" target="_blank" rel="noopener">${esc(s.host)}</a> live in this window.` : `A drawing of the site. ${esc(s.host)} cannot be shown inside another page, so <a href="${url}" target="_blank" rel="noopener">open it in a new tab</a>.`}</p>
+    <p class="br-note">${note(s, url)}</p>
   </div>`;
-  const go = b.querySelector(".br-go");
+  const go = b.querySelector(".br-go, button.br-live");
   if (go) go.onclick = () => { b.querySelector(".br-view").innerHTML = `<iframe src="${url}" title="${esc(s.title)}" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen; clipboard-write"></iframe><div class="br-load go"></div>`; };
   b.querySelector(".br-reload").onclick = () => {
     const l = b.querySelector(".br-load"); l.classList.remove("go"); void l.offsetWidth; l.classList.add("go");
@@ -71,7 +84,7 @@ function renderSite(b, api, s) {
 function renderSitesIndex(b, api) {
   b.innerHTML = `<div class="sites"><p class="kicker">Shipped</p><h2>Things I built outside work</h2>
     <p class="lede">Each one was built with Claude, one pull request at a time, and opens here as a browser window. Press <kbd>Shift</kbd> <kbd>F</kbd> or the corner button to take it fullscreen.</p>
-    <ul class="si-list">${SITES.map((s) => `<li><button type="button" class="si" data-id="${s.id}" style="--accent:var(--${s.accent});--accent-ink:var(--${s.accent}-ink)"><span class="si-prev"><span class="si-mini" aria-hidden="true">${standin(s).replace(/<(\/?)button\b[^>]*>/g, "<$1span>")}</span></span><span class="si-t">${s.title}</span><span class="si-h">${s.private ? "Private" : s.host}</span><span class="si-b">${s.blurb}</span><span class="si-s">${s.stats}</span><span class="si-tag">${s.tag}</span></button></li>`).join("")}</ul></div>`;
+    <ul class="si-list">${SITES.map((s) => `<li><button type="button" class="si" data-id="${s.id}" style="--accent:var(--${s.accent});--accent-ink:var(--${s.accent}-ink)"><span class="si-prev">${s.thumb ? `<img class="si-shot" src="${s.thumb}" alt="" loading="lazy" decoding="async">` : `<span class="si-mini" aria-hidden="true">${standin(s).replace(/<(\/?)button\b[^>]*>/g, "<$1span>")}</span>`}</span><span class="si-t">${s.title}</span><span class="si-h">${s.private ? "Private" : s.host}</span><span class="si-b">${s.blurb}</span><span class="si-s">${s.stats}</span><span class="si-tag">${s.tag}</span></button></li>`).join("")}</ul></div>`;
   b.querySelector(".si-list").addEventListener("click", (e) => { const t = e.target.closest(".si"); if (t) api.open(siteSpec(SITES.find((s) => s.id === t.dataset.id))); });
 }
 function siteExtras(api) { return SITES.map((s) => ({ label: s.title, hint: s.private ? "Private project" : s.host, icon: ICON.globe, run: () => api.open(siteSpec(s)) })); }

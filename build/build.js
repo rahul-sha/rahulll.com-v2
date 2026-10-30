@@ -29,7 +29,7 @@ const imageJobs = [];
 function image(kind, id, file, where, opts = {}) {
   if (!file) return "";
   const src = path.join(CONTENT, kind, id, file), seg = [kind, id].filter(Boolean).join("/");
-  if (!fs.existsSync(src)) { fail(where, `image "${file}" not found beside index.md`); return ""; }
+  if (!fs.existsSync(src)) { fail(where, `image "${file}" not found in ${rel(path.dirname(src))}/`); return ""; }
   const ext = path.extname(file).toLowerCase();
   if ([".webm", ".mp4"].includes(ext)) { const out = `site/media/${seg}/${file}`; imageJobs.push({ copy: src, out }); return out; }
   const out = `site/img/${seg}/${path.basename(file, ext)}.webp`;
@@ -102,7 +102,8 @@ function sites() {
     if (!name.endsWith(".md")) continue;
     const file = path.join(CONTENT, "sites", name), where = rel(file), { fm, body } = readMd(file);
     need(fm, ["title", "host", "accent"], where);
-    out.push({ id: path.basename(name, ".md"), title: fm.title, host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, embed: fm.embed !== false, order: fm.order || 99 });
+    const id = path.basename(name, ".md"), shot = image("sites", id, fm.shot, where, { max: 1600, quality: 84 });
+    out.push({ id, shot, thumb: shot ? thumb(shot) : "", video: image("sites", id, fm.video, where), title: fm.title, host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, embed: fm.embed !== false, order: fm.order || 99 });
   }
   return out.sort((a, b) => a.order - b.order);
 }

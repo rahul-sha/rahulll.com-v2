@@ -224,6 +224,14 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
 /* the button that swaps the stand-in for the live site, floating over the drawing in the window's accent */
 .br-go { position: absolute; left: 50%; bottom: 16px; translate: -50% 0; z-index: 2; display: inline-flex; gap: 8px; align-items: center; padding: 9px 16px; border: 0; border-radius: 999px; background: var(--accent, var(--a1)); color: var(--on-a); font: 700 13px var(--ui); cursor: pointer; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .6); white-space: nowrap; }
 .br-go:hover { filter: brightness(1.06); }
+.br-live { position: absolute; inset: 0; display: block; padding: 0; border: 0; background: #000; color: inherit; cursor: pointer; overflow: hidden; }
+.br-live.is-static { cursor: default; }
+.br-shot { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .5s, filter .3s; }
+.br-live:not(.is-static):hover .br-shot, .br-live:focus-visible .br-shot { transform: scale(1.015); filter: brightness(.72); }
+.br-hint { position: absolute; left: 50%; top: 50%; translate: -50% -50%; display: inline-flex; gap: 8px; align-items: center; padding: 11px 18px; border-radius: 999px; background: var(--accent, var(--a1)); color: var(--on-a); font: 700 14px var(--ui); white-space: nowrap; box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .7); opacity: 0; scale: .96; transition: opacity .25s, scale .25s; pointer-events: none; }
+.br-hint svg { width: 16px; height: 16px; }
+.br-live:hover .br-hint, .br-live:focus-visible .br-hint { opacity: 1; scale: 1; }
+.phone .br-hint { opacity: 1; scale: 1; top: auto; bottom: 14px; translate: -50% 0; }
 .br-go svg { width: 16px; height: 16px; }
 .br-load { position: absolute; left: 0; top: 0; height: 3px; width: 0; background: var(--accent); }
 .br-load.go { animation: br-load .9s var(--ease); }
@@ -316,6 +324,7 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
 .si { display: grid; grid-template-columns: 120px minmax(0, 1fr); grid-template-rows: auto auto 1fr auto; column-gap: 14px; width: 100%; padding: 8px; border: 1px solid var(--line); border-radius: var(--r); background: color-mix(in srgb, var(--surf2) var(--win-op), transparent); color: var(--fg); font: inherit; text-align: left; cursor: pointer; transition: border-color .2s, translate .2s var(--ease); }
 .si:hover { border-color: var(--accent); translate: 0 -2px; }
 .si-prev { grid-row: 1 / -1; position: relative; height: 96px; border-radius: calc(var(--r) * .6); overflow: hidden; background: #000; }
+.si-shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .si-mini { position: absolute; left: 0; top: 0; width: 480px; transform: scale(.25); transform-origin: 0 0; pointer-events: none; }
 .si-t { font-weight: 800; font-size: 16px; }
 .si-h { font: 500 12px var(--mono); color: var(--accent-ink); }

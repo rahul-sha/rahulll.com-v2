@@ -6,6 +6,7 @@ accent: a3
 stats: 10 pull requests in a day · Lighthouse accessibility 100
 stack: Plain HTML, CSS, and JavaScript, Three.js, Vercel
 private: false
+shot: screenshot.png
 order: 3
 ---
 

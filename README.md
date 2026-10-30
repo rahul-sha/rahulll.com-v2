@@ -1,116 +1,47 @@
 # rahulll.com
-Personal Website and Portfolio
 
+Rahul Sharma's portfolio, built as a small desktop: a Noctalia-style shell on a niri-like scrolling window manager. Every page is a window, every section is a workspace, and the whole thing is plain HTML, CSS, and JavaScript with one small build step that turns Markdown content into the data the site reads.
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
+Live mockup of the design: https://claude.ai/artifact/XnEaQfCCDmAvqNpVYd6d9m
+Design system: https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS
 
-<!--[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url] -->
-[![LinkedIn][linkedin-shield]][linkedin-url]
+## How the repo is laid out
 
-<!-- PROJECT LOGO -->
+```
+content/        Everything you edit. Markdown files with a short header, images beside them.
+  projects/     One folder per project (index.md + hero image). Copy _template.md to start.
+  prints/       One folder per 3D print (index.md + render + photos).
+  sites/        One .md per live site shown in the Shipped workspace.
+  about/        index.md (name, role, headline, links) + portrait.
+  resume.md     Jobs, study, tools. The build also makes the PDF from it.
+  skills.md, homelab.md, home.md, gaming.md, highlight.md
+site/           The desk itself: engine (windows, workspaces, overview), shell, styles.
+build/build.js  Reads content/, resizes images to WebP, writes dist/.
+index.html      The page shell.
+dist/           Build output (ignored by git). Vercel serves this.
+```
 
-Update Branch, to bring over fixes and features over to the published site.
+## Adding something
 
-<p align="center">
-  <a href="https://github.com/rahul-sha/rahulll.com">
-    <img src="assets/img/profile-img2.jpg" alt="Logo" height="100">
-  </a>
+1. Copy the `_template.md` in the kind you want (for a project or print, copy it into a new folder and name the file `index.md`).
+2. Give the folder a short id in kebab-case, for example `prints/desk-hook/`.
+3. Fill in the header fields and write the body in Markdown. Put the render or photo next to it and name it in the header.
+4. Commit and push. The build check on the pull request tells you if a field is missing. When the change lands on `main`, Vercel builds and deploys it.
 
-  <h3 align="center">Rahulll.com</h3>
+To update the resume, edit `content/resume.md`. The PDF on the site is generated from it on every build.
 
-  <p align="center">
-  
-  A dedicated place for my work and art.
+## Running it locally
 
-  <br />
-  <a href="https://github.com/rahul-sha/rahulll.com"><strong>Explore the docs »</strong></a>
-  <br />
-  <!--
-  <a href="https://github.com/rahul-sha/the-aperture">View Demo</a>
-  ·
-  <a href="https://github.com/rahul-sha/the-aperture/issues">Report Bug</a>
-  ·
-  <a href="https://github.com/rahul-sha/the-aperture/issues">Request Feature</a>-->
-  </p>
-</p>
+You need Node 22 or newer.
 
+```
+npm install
+npm run build
+npx serve dist
+```
 
+Then open the address `serve` prints. `npm run check` validates the content without building images, which is quicker when you only changed text.
 
-<!-- TABLE OF CONTENTS -->
-## Table of Contents
+## Keyboard
 
-* [About the Project](#about-the-project)
-* [Usage](#usage)
-* [Roadmap](#roadmap)
-* [Contact](#contact)
-
-
-<!-- ABOUT THE PROJECT -->
-## About The Project
-
-Hello, this is not a project more or less an interest to move my portfolio from wix to a custom made website with images hosted here.
-
-<!--### Built With
-
-* []()
-* []()
-* []()
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-A hand-written HTML, CSS, and JavaScript site with no frameworks or build step.
-
-* `index.html` is the home page (hero, about, and portfolio).
-* `resume.html` is the resume page.
-* `assets/css/site.css` holds all the styles. Colours are variables at the top of the file.
-* `assets/js/projects.js` holds the portfolio content. Add or edit a project there, and it appears on the home page.
-* `assets/js/site.js` handles the theme switch, menu, typing effect, and project viewer.
-
-To preview locally, run `python3 -m http.server` in this folder and open http://localhost:8000.
-
-<!-- ROADMAP -->
-## Roadmap (Pending)
-
-See the [open issues](https://github.com/rahul-sha/rahulll.com/issues) for a list of proposed features (and known issues).
-
-<!-- CONTACT -->
-## Contact
-
-Rahul Sharma - [@xo_rahul](https://twitter.com/xo_rahul) - rahulsharma@outlook.sg
-
-Project Link: [https://github.com/rahul-sha/rahulll.com](https://github.com/rahul-sha/rahulll.com)<br />
-Website Link: [https://rahulll.com/](https://rahulll.com)<br />
-Other Website link: [https://www.rahulsharma.xyz](https://www.rahulsharma.xyz)
-
-
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/rahul-sha/repo.svg?style=flat-square
-[contributors-url]: https://github.com/rahul-sha/repo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/rahul-sha/repo.svg?style=flat-square
-[forks-url]: https://github.com/rahul-sha/repo/network/members
-[stars-shield]: https://img.shields.io/github/stars/rahul-sha/repo.svg?style=flat-square
-[stars-url]: https://github.com/rahul-sha/repo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/rahul-sha/repo.svg?style=flat-square
-[issues-url]: https://github.com/rahul-sha/repo/issues
-[license-shield]: https://img.shields.io/github/license/rahul-sha/repo.svg?style=flat-square
-[license-url]: https://github.com/rahul-sha/repo/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/rahul-sha
-[product-screenshot]: images/screenshot.png
+The desk has shortcuts: `?` shows them all. `1` to `4` jump between workspaces, `H` and `L` move between windows, `Space` opens the launcher, `S` opens Appearance.

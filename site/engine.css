@@ -95,3 +95,6 @@ body { margin: 0; overflow: hidden; background: var(--bg); color: var(--fg); -we
 /* press and drag the desktop or a tiled title bar to slide between windows */
 .strip .tb { cursor: grab; }
 .grabbing, .grabbing * { cursor: grabbing !important; user-select: none; }
+.grab-ready, .grab-ready * { cursor: grab !important; user-select: none; }
+.grab-ready .strip .win.focused { transition: scale .15s; scale: .995; }
+.strip img, .strip video { -webkit-user-drag: none; }

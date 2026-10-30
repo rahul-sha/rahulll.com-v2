@@ -519,21 +519,38 @@ function Niri(opts) {
     if (Math.abs(dx) > 50) { const dir = dx < 0 ? 1 : -1; if (atEdge(dir)) spill(dir); else focusCol(dir); } else update();
     lock = null;
   });
-  /* mouse: press and drag on the desktop or a tiled title bar to slide the strip, like a swipe; window contents keep their own clicks */
-  let grab = null;
+  /* mouse: press and drag on the desktop or a tiled title bar to slide the strip, like a swipe.
+     Inside a window, press and hold still for a moment first, so selecting text and clicking keep working. */
+  let grab = null, holdT = 0;
+  const HOLD = 280;
   vp.addEventListener("pointerdown", (e) => {
     if (e.pointerType !== "mouse" || e.button !== 0 || S.overview || !W().cols.length) return;
-    if (e.target.closest("button, a, input, textarea, select, label, iframe, .wb, .rz, .float-layer")) return;
-    grab = { x: e.clientX, on: false, z: zoom() };
+    if (e.target.closest("input, textarea, select, iframe, .rz, .float-layer, .tb button")) return;
+    const inside = !!e.target.closest(".wb");
+    grab = { x: e.clientX, y: e.clientY, on: false, ready: !inside, z: zoom() };
+    clearTimeout(holdT);
+    if (inside) holdT = setTimeout(() => {
+      if (!grab || grab.on) return;
+      grab.ready = grab.held = true; root.classList.add("grab-ready"); getSelection().removeAllRanges();
+    }, HOLD);
   });
   addEventListener("pointermove", (e) => {
     if (!grab) return;
-    const dx = (e.clientX - grab.x) / grab.z;
-    if (!grab.on) { if (Math.abs(dx) < 8) return; grab.on = true; root.classList.add("grabbing"); W().strip.style.transition = "none"; }
+    const dx = (e.clientX - grab.x) / grab.z, dy = (e.clientY - grab.y) / grab.z;
+    /* moving before the hold completes means the visitor is selecting or scrolling: let them */
+    if (!grab.ready) { if (Math.abs(dx) > 6 || Math.abs(dy) > 6) { clearTimeout(holdT); grab = null; } return; }
+    if (!grab.on) { if (Math.abs(dx) < 8) return; grab.on = true; root.classList.add("grabbing"); W().strip.style.transition = "none"; getSelection().removeAllRanges(); }
+    e.preventDefault();
     W().strip.style.transform = `translateX(${-W().cam + dx}px)`;
   });
+  /* once a hold has started a grab, stop the browser selecting text or dragging pictures instead */
+  addEventListener("selectstart", (e) => { if (grab && grab.ready) e.preventDefault(); });
+  addEventListener("pointercancel", () => { if (!grab) return; clearTimeout(holdT); grab = null; root.classList.remove("grab-ready", "grabbing"); W().strip.style.transition = ""; update(); });
   addEventListener("pointerup", (e) => {
     const g = grab; grab = null;
+    clearTimeout(holdT); root.classList.remove("grab-ready");
+    /* a long press that never moved is not a click either */
+    if (g && g.held && !g.on) dragEnd = Date.now();
     if (!g || !g.on) return;
     root.classList.remove("grabbing");
     W().strip.style.transition = "";

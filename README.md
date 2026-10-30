@@ -14,7 +14,7 @@ content/        Everything you edit. Markdown files with a short header, images 
   sites/        One .md per live site shown in the Shipped workspace.
   about/        index.md (name, role, headline, links) + portrait.
   resume.md     Jobs, study, tools. The build also makes the PDF from it.
-  skills.md, homelab.md, home.md, gaming.md, highlight.md
+  skills.md, homelab.md, home/index.md, gaming.md, highlight.md
 site/           The desk itself: engine (windows, workspaces, overview), shell, styles.
 build/build.js  Reads content/, resizes images to WebP, writes dist/.
 index.html      The page shell.

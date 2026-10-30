@@ -145,15 +145,22 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
 .ph-0 { background: linear-gradient(160deg, #fff59b, #ff9a6b); } .ph-1 { background: linear-gradient(160deg, #9bfece, #4c8cff); }
 .ph-2 { background: linear-gradient(160deg, #a9aefe, #ff8fa3); } .ph-3 { background: linear-gradient(160deg, #303080, #9bfece); color: #fff; }
 .ph-4 { background: linear-gradient(160deg, #ff8fa3, #fff59b); } .ph-5 { background: linear-gradient(160deg, #4c8cff, #a9aefe); }
-.ha-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.ha { border-radius: var(--r); background: color-mix(in srgb, var(--surf2) var(--win-op), transparent); min-height: 92px; }
-.ha-temp { display: grid; padding: 14px; align-content: space-between; }
-.ha-n { font-weight: 700; font-size: 14px; display: block; }
-.ha-v { font-size: 30px; font-weight: 900; font-variant-numeric: tabular-nums; color: var(--a3-ink); }
-.ha-v small { font-size: 14px; color: var(--mute); margin-left: 2px; }
-.ha-btn { border: 0; border-radius: 18px; background: transparent; padding: 14px; display: grid; align-content: space-between; transition: background .25s; }
-.ha-btn.on { background: var(--a1); color: var(--on-a); }
-.ha-s { font-weight: 900; font-size: 22px; }
+.ha-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.ha-tab { display: grid; gap: 4px; align-content: start; text-align: left; min-height: 72px; padding: 12px 14px; border: 0; border-radius: var(--r); background: color-mix(in srgb, var(--surf2) var(--win-op), transparent); color: var(--fg); font: inherit; cursor: pointer; transition: background .25s, color .25s, transform .2s; }
+.ha-tab b { font-size: 15px; font-weight: 800; }
+.ha-tab span { font-size: 12.5px; color: var(--mute); }
+.ha-tab:hover:not(.soon):not(.on) { transform: translateY(-1px); background: color-mix(in srgb, var(--accent) 16%, var(--surf2)); }
+.ha-tab.on { background: var(--accent); color: var(--on-a); }
+.ha-tab.on span { color: inherit; opacity: .8; }
+.ha-tab.soon { background: transparent; outline: 1.5px dashed color-mix(in srgb, var(--mute) 50%, transparent); outline-offset: -1.5px; cursor: default; }
+.ha-shot { position: relative; display: block; border-radius: var(--r); overflow: hidden; background: var(--surf2); }
+.ha-shot img { display: block; width: 100%; height: auto; aspect-ratio: 1891 / 1057; object-fit: cover; }
+.ha-zoom { position: absolute; right: 10px; bottom: 10px; display: inline-flex; gap: 6px; align-items: center; padding: 6px 10px; border-radius: 10px; background: rgba(11, 12, 26, .72); color: #fff; font: 700 12px var(--ui); opacity: 0; transition: opacity .2s; }
+.ha-zoom svg { width: 14px; height: 14px; }
+.ha-shot:hover .ha-zoom, .ha-shot:focus-visible .ha-zoom { opacity: 1; }
+.ha-empty { padding: 40px 16px; text-align: center; color: var(--mute); }
+.phone .ha-zoom { opacity: 1; }
+.phone .ha-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; } .phone .ha-tab { min-height: 0; padding: 10px; } .phone .ha-tab b { font-size: 13.5px; } .phone .ha-tab span { font-size: 11.5px; }
 .lab { display: grid; gap: 6px; font-size: 14px; }
 .lab li { padding: 8px 12px; border-radius: 12px; background: var(--surf2); }
 .contact .c-mail { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font: 600 18px var(--mono); }
@@ -430,7 +437,7 @@ const apps = {
   resume: { title: "Resume", icon: ICON.resume, accent: "a2", width: 1, dockLabel: "Resume", render: renderResume2 },
   projects: { title: "Projects", icon: ICON.work, accent: "a1", width: 2, dockLabel: "Projects", render: renderProjects2 },
   sites: { title: "Shipped", icon: ICON.globe, accent: "a1", width: 0, dockLabel: "Shipped", render: renderSitesIndex },
-  home: { title: "Smart home", icon: ICON.home, accent: "a3", width: 0, dockLabel: "Smart home", render: renderSmartHome },
+  home: { title: "Smart home", icon: ICON.home, accent: "a3", width: 1, dockLabel: "Smart home", render: renderSmartHome },
   homelab: { title: "Homelab", icon: ICON.lab, accent: "a2", width: 0, dockLabel: "Homelab", render: renderHomelab },
   prints: { title: "3D prints", icon: ICON.work, accent: "a1", width: 1, dockLabel: "3D prints", render: renderPrints },
   gaming: { title: "Gaming", icon: ICON.play, accent: "a4", width: 0, dockLabel: "Gaming", render: renderGaming },

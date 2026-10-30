@@ -61,8 +61,8 @@ body { font: 15px/1.55 var(--ui); background: var(--bg); }
 .ib:hover { background: var(--surf2); }
 .ib svg { width: 18px; height: 18px; }
 /* Zoom out: the three columns fold into a grid of tiles on hover, and stay that way in the overview */
-.zoomb { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px 0 10px; border: 0; border-radius: calc(var(--r) * .55); background: transparent; color: var(--fg); font: 700 13px var(--ui); cursor: pointer; transition: background .2s, color .2s; }
-.zoomb:hover { background: var(--surf2); }
+.zoomb { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px 0 10px; border: 0; border-radius: calc(var(--r) * .55); background: var(--surf2); color: var(--fg); font: 700 13px var(--ui); cursor: pointer; transition: background .2s, color .2s; }
+.zoomb:hover, .zoomb:focus-visible { background: color-mix(in srgb, var(--a2) 22%, var(--surf2)); }
 .zoomb.on { background: var(--a2); color: var(--on-a); }
 .zoomb svg { width: 16px; height: 16px; flex: none; }
 .zoomb rect { transition: x .35s var(--ease), y .35s var(--ease), width .35s var(--ease), height .35s var(--ease), opacity .25s; }

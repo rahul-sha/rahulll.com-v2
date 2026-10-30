@@ -68,7 +68,7 @@ const guideSpec = { key: "guide", title: "Guide", icon: ICON.guide, accent: "a3"
 const guideOpen = () => wm.floats().some((c) => c.key === "guide");
 function toggleGuide(v) {
   const on = v ?? !guideOpen();
-  if (on && !guideOpen()) { guideSpec.float = wm.S.phone ? { w: wm.S.W - 16, h: 150, x: "left", sticky: true } : { w: 300, h: 340, sticky: true }; wm.open(guideSpec); D.guide = true; saveD(); }
+  if (on && !guideOpen()) { guideSpec.float = wm.S.phone ? { w: wm.S.W - 70, h: 150, x: "left", sticky: true } : { w: 300, h: 340, sticky: true }; wm.open(guideSpec); D.guide = true; saveD(); }
   else if (!on && guideOpen()) wm.closeFloat(wm.floats().find((c) => c.key === "guide"));
   syncCC();
 }

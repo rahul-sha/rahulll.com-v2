@@ -1,7 +1,7 @@
 /* ---------- Live sites: browser windows for Rahul's live projects ----------
-   On rahulll.com each window loads the real site in an iframe. Anywhere else (such as this preview)
-   it shows a stand-in drawn from the live page, because the preview cannot frame other sites. */
-const CAN_FRAME = /(^|\.)rahulll\.com$/.test(location.hostname);
+   Each window shows a stand-in drawn from the live page, and loads the real site in an iframe
+   when the visitor asks. A site that refuses to be framed (embed: false in its Markdown) only opens in a new tab. */
+const canFrame = (s) => !s.private && s.embed;
 /* SITES comes from site/content.js, built from content/sites/*.md */
 const siteSpec = (s) => ({ key: "site-" + s.id, kind: "site", title: s.title, icon: ICON.globe, accent: s.accent, width: 2, render: renderSite, arg: s });
 
@@ -46,7 +46,7 @@ const standin = (s) => (STANDIN[s.id] || (() => `<div class="s-generic" style="-
 function renderSite(b, api, s) {
   const url = s.private ? "" : "https://" + s.host + "/";
   /* the stand-in draws first; the live site loads only when the visitor asks, so four windows do not cost four page loads */
-  const view = `<div class="standin" tabindex="0">${standin(s)}</div>${CAN_FRAME && !s.private ? `<button type="button" class="br-go">${ICON.globe} Load ${esc(s.host)} here</button>` : ""}`;
+  const view = `<div class="standin" tabindex="0">${standin(s)}</div>${canFrame(s) ? `<button type="button" class="br-go">${ICON.globe} Load ${esc(s.host)} here</button>` : ""}`;
   b.innerHTML = `<div class="br">
     <div class="br-bar">
       <button type="button" class="br-ib" aria-label="Back" disabled>${ICON.back}</button><button type="button" class="br-ib" aria-label="Forward" disabled>${ICON.fwd}</button><button type="button" class="br-ib br-reload" aria-label="Reload">${ICON.reload}</button>
@@ -55,7 +55,7 @@ function renderSite(b, api, s) {
     </div>
     <div class="br-view">${view}<div class="br-load"></div></div>
     <p class="br-stack"><b>Built with</b> ${esc(s.stack)} <span>·</span> ${esc(s.stats)}</p>
-    ${CAN_FRAME && !s.private ? `<p class="br-note">A drawing of the site. The button above loads <a href="${url}" target="_blank" rel="noopener">${esc(s.host)}</a> in this window.</p>` : `<p class="br-note">${s.private ? "A drawing of the Today page. The app itself is private." : `Stand-in preview. On rahulll.com this window loads <a href="${url}" target="_blank" rel="noopener">${esc(s.host)}</a> live.`}</p>`}
+    <p class="br-note">${s.private ? "A drawing of the Today page. The app itself is private." : canFrame(s) ? `A drawing of the site. The Load button shows <a href="${url}" target="_blank" rel="noopener">${esc(s.host)}</a> live in this window.` : `A drawing of the site. ${esc(s.host)} cannot be shown inside another page, so <a href="${url}" target="_blank" rel="noopener">open it in a new tab</a>.`}</p>
   </div>`;
   const go = b.querySelector(".br-go");
   if (go) go.onclick = () => { b.querySelector(".br-view").innerHTML = `<iframe src="${url}" title="${esc(s.title)}" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen; clipboard-write"></iframe><div class="br-load go"></div>`; };

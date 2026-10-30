@@ -279,6 +279,7 @@ function boot(force) {
   desk.classList.add("booting");
   wm.S.cur = 0; wm.S.ws[0].focus = 0;
   wm.overview(true);
+  desk.classList.remove("preboot");
   clearTimeout(boot.t1); clearTimeout(boot.t2);
   boot.t1 = setTimeout(() => {
     desk.classList.add("boot-zoom");
@@ -290,7 +291,7 @@ function finishBoot(silent) {
   clearTimeout(boot.t1); clearTimeout(boot.t2);
   if (wm.S.overview && booting) wm.overview(false);
   booting = false;
-  desk.classList.remove("booting", "boot-zoom");
+  desk.classList.remove("preboot", "booting", "boot-zoom");
   if (D.guide && !guideOpen()) setTimeout(() => toggleGuide(true), silent ? 0 : 150);
 }
 ["keydown", "pointerdown", "wheel"].forEach((ev) => addEventListener(ev, () => { if (booting && desk.classList.contains("booting")) finishBoot(); }, { capture: true, passive: true }));

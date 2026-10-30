@@ -114,6 +114,10 @@
 .boot b { font-size: clamp(30px, 5vw, 56px); font-weight: 900; letter-spacing: -.02em; color: var(--fg); text-shadow: 0 6px 30px rgba(0, 0, 0, .35); }
 .boot b span { color: var(--a1-ink); }
 .boot small { font: 600 12px var(--mono); color: var(--mute); }
+/* until desk.js starts the intro, keep the windows and chrome hidden so they do not flash in place first;
+   the delayed reveal is a safety net in case the script never runs */
+.preboot .bar, .preboot .viewport, .preboot .dock { visibility: hidden; animation: preboot-show 0s 3s forwards; }
+@keyframes preboot-show { to { visibility: visible; } }
 .booting:not(.boot-zoom) .boot { opacity: 1; }
 .booting .wsstack .win { animation: boot-in .7s var(--ease) both; animation-delay: calc(var(--i, 0) * 80ms + 250ms); }
 .booting .ws-label { opacity: 0; }

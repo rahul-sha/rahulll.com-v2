@@ -30,6 +30,7 @@ const HINTS = {
 };
 const TIPS = [
   "<kbd>H</kbd> and <kbd>L</kbd> scroll between windows, like niri. The arrow keys work too.",
+  "Scroll or swipe past the last window and you move on to the next workspace. Scroll back past the first to return.",
   "<kbd>J</kbd> and <kbd>K</kbd> move between workspaces. The icons in the top bar show where you are.",
   "<kbd>O</kbd> zooms out to show every workspace. Click one to jump in.",
   "<kbd>V</kbd> floats the focused window above the others. Drag it by its title bar, resize it from the corner.",

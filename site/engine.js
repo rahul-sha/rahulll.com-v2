@@ -131,6 +131,9 @@ function Niri(opts) {
   }
   function ws(d) { gotoWs(S.cur + d); }
   function gotoWs(i) { if (i < 0 || i >= S.ws.length) return; S.cur = i; update(); }
+/* past the first or last window: on to the neighbouring workspace, landing on its nearest window */
+  const atEdge = (d) => { const w = W(); return !w.cols.length || (d > 0 ? w.focus >= w.cols.length - 1 : w.focus <= 0); };
+  function spill(d) { const t = S.cur + d; if (t < 0 || t >= S.ws.length) return bump(d); const w = S.ws[t]; w.focus = d > 0 ? 0 : Math.max(0, w.cols.length - 1); gotoWs(t); }
   function bump(d) { const c = F(); if (!c || reduce()) return; c.el.animate([{ translate: "0" }, { translate: `${d * 14}px` }, { translate: "0" }], { duration: 260, easing: "ease-out" }); }
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -467,7 +470,7 @@ function Niri(opts) {
       act();
     }
   });
-  let acc = 0, lastWheel = 0;
+  let acc = 0, lastWheel = 0, lastEvt = 0, edge = 0, edgeT = 0, fresh = false;
   vp.addEventListener("click", (e) => { if (S.overview && !e.target.closest(".ws")) toggleOverview(false); });
   let oAcc = 0, oLast = 0;
   vp.addEventListener("wheel", (e) => {
@@ -488,9 +491,18 @@ function Niri(opts) {
     if (inBody && !horiz && !e.shiftKey) return;
     e.preventDefault();
     const d = horiz ? e.deltaX : e.deltaY;
-    acc += d;
     const now = Date.now();
-    if (Math.abs(acc) > 60 && now - lastWheel > 280) { focusCol(acc > 0 ? 1 : -1); acc = 0; lastWheel = now; }
+    /* a pause means a new gesture: start counting afresh so leftovers from the last one cannot push the wrong way */
+    if (now - lastEvt > 180) { fresh = true; acc = 0; }
+    lastEvt = now;
+    acc += d;
+    if (Math.abs(acc) > 60 && now - lastWheel > 280) {
+      const dir = acc > 0 ? 1 : -1; acc = 0; lastWheel = now;
+      if (!atEdge(dir)) { edge = 0; focusCol(dir); }
+      /* at the end of the strip the first push only nudges; a second, separate push moves workspace, so a flick's momentum cannot skip ahead */
+      else if (edge === dir && fresh && now - edgeT < 2000) { edge = 0; spill(dir); }
+      else { edge = dir; edgeT = now; fresh = false; bump(dir); }
+    }
   }, { passive: false });
   let tx = 0, ty = 0, lock = null;
   vp.addEventListener("touchstart", (e) => { if (S.overview) return; tx = e.touches[0].clientX; ty = e.touches[0].clientY; lock = null; }, { passive: true });
@@ -504,7 +516,7 @@ function Niri(opts) {
     if (lock !== "x") return;
     const dx = e.changedTouches[0].clientX - tx;
     W().strip.style.transition = "";
-    if (Math.abs(dx) > 50) focusCol(dx < 0 ? 1 : -1); else update();
+    if (Math.abs(dx) > 50) { const dir = dx < 0 ? 1 : -1; if (atEdge(dir)) spill(dir); else focusCol(dir); } else update();
     lock = null;
   });
 

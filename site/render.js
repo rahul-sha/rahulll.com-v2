@@ -100,15 +100,21 @@ function renderResume2(b) {
 }
 
 /* Off the clock */
-function renderSmartHome(b, api) {
+/* the Home Assistant dashboards as screenshots; the tabs are styled like Home Assistant tiles */
+function renderSmartHome(b) {
+  const ready = HOME.filter((d) => d.img);
   b.innerHTML = `<div class="hass"><p class="kicker">Smart home</p><h2>The flat, automated</h2>
-    <ul class="ha-grid">${HOME.map((h, i) => h.kind === "temp" ? `<li class="ha ha-temp"><span class="ha-n">${h.name}</span><span class="ha-v">${h.val}<small>${h.unit}</small></span></li>` : `<li class="ha ha-light"><button type="button" class="ha-btn${h.on ? " on" : ""}" data-i="${i}" aria-pressed="${h.on}"><span class="ha-n">${h.name}</span><span class="ha-s">${h.on ? "On" : "Off"}</span></button></li>`).join("")}</ul>
+    <div class="ha-tabs" role="tablist" aria-label="Dashboards">${HOME.map((d, i) => d.img
+      ? `<button type="button" class="ha-tab${d === ready[0] ? " on" : ""}" role="tab" aria-selected="${d === ready[0]}" aria-controls="ha-shot" data-i="${i}"><b>${esc(d.name)}</b><span>${esc(d.line)}</span></button>`
+      : `<button type="button" class="ha-tab soon" disabled aria-disabled="true"><b>${esc(d.name)}</b><span>${esc(d.line || "Coming soon")}</span></button>`).join("")}</div>
+    ${ready.length ? `<a class="ha-shot" id="ha-shot" role="tabpanel" href="${ready[0].full}" target="_blank" rel="noopener" title="Open full size in a new tab"><img src="${ready[0].img}" alt="${esc(ready[0].alt)}" decoding="async"><span class="ha-zoom">${ICON.ext} Full size</span></a>` : `<p class="ha-shot ha-empty">[Dashboard screenshots to come]</p>`}
     ${HOME_NOTE ? `<p class="hint">${HOME_NOTE}</p>` : ""}</div>`;
-  b.querySelector(".ha-grid").addEventListener("click", (e) => {
-    const t = e.target.closest(".ha-btn"); if (!t) return;
-    const on = !t.classList.contains("on");
-    t.classList.toggle("on", on); t.setAttribute("aria-pressed", on); t.querySelector(".ha-s").textContent = on ? "On" : "Off";
-    api.toast(HOME[+t.dataset.i].name, on ? "Switched on" : "Switched off", 2200);
+  const shot = b.querySelector("a.ha-shot");
+  b.querySelector(".ha-tabs").addEventListener("click", (e) => {
+    const t = e.target.closest(".ha-tab:not(.soon)"); if (!t || !shot) return;
+    const d = HOME[+t.dataset.i];
+    b.querySelectorAll(".ha-tab").forEach((x) => { const on = x === t; x.classList.toggle("on", on); if (!x.disabled) x.setAttribute("aria-selected", on); });
+    shot.href = d.full; const img = shot.querySelector("img"); img.src = d.img; img.alt = d.alt;
   });
 }
 function renderHomelab(b) {

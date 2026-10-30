@@ -17,7 +17,7 @@ const HINTS = {
   projects: ["Projects", "Start with the four tiles under <b>Start here</b>. Each project opens as its own window, right next to this one."],
   highlight: ["Work highlight", "A current work project, shown as a mockup once the video is in. Press <kbd>Q</kbd> to close it."],
   sites: ["Shipped", "Four sites I built outside work. Each opens as a browser window. <kbd>Shift</kbd> <kbd>F</kbd> takes one fullscreen."],
-  home: ["Smart home", "A sample Home Assistant panel. The switches work; the numbers are placeholders."],
+  home: ["Smart home", "Screenshots of the real Home Assistant dashboards. Pick a tile to switch, or click the picture to see it full size."],
   homelab: ["Homelab", "The services behind the sites, all on one NAS at home."],
   prints: ["3D prints", "Parts printed at home on a Bambu Lab A1. Click a card for the full story; the MakerWorld link opens the shared model."],
   gaming: ["Gaming", "What I play and what I play it on. Half the Linux notes exist because of this."],

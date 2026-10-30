@@ -44,6 +44,14 @@ function thumb(out) {
   imageJobs.push({ src: j.src, out: small, max: 560, quality: 78 });
   return small;
 }
+/* the untouched-size copy a screenshot opens to in a new tab */
+function fullCopy(out) {
+  const j = imageJobs.find((x) => x.out === out && x.src);
+  if (!j) return out;
+  const big = out.replace(/\.webp$/, "-full.webp");
+  imageJobs.push({ src: j.src, out: big, max: 2400, quality: 86 });
+  return big;
+}
 async function runImages() {
   for (const j of imageJobs) {
     const dest = path.join(DIST, j.out);
@@ -149,7 +157,7 @@ function resumePdf(resume, about, dest) {
 /* ---------- build ---------- */
 async function main() {
   const check = process.argv.includes("--check");
-  const about = single("about/index.md"), resume = single("resume.md"), skills = single("skills.md"), lab = single("homelab.md"), home = single("home.md"), games = single("gaming.md"), hl = single("highlight.md");
+  const about = single("about/index.md"), resume = single("resume.md"), skills = single("skills.md"), lab = single("homelab.md"), home = single("home/index.md"), games = single("gaming.md"), hl = single("highlight.md");
   need(about.fm, ["name", "role", "place"], "content/about/index.md");
   const ap = paras(about.body);
   const ME = { name: about.fm.name, role: about.fm.role, place: about.fm.place, line: ap[0] || "", voice: ap[1] || "", links: (about.fm.links || []).map((l) => [l.name, l.url]), email: about.fm.email || "" };
@@ -162,7 +170,7 @@ async function main() {
   const SKILLS = Object.fromEntries(Object.entries(STAGE).map(([k, v]) => [v, { tools: (stages[k] || {}).tools || [], proof: ((stages[k] || {}).proof || []).filter((id) => { const ok = PROJECTS.some((p) => p.id === id); if (!ok) fail("content/skills.md", `proof "${id}" is not a project id`); return ok; }) }]));
   const BEYOND = (skills.fm.beyond || []).map((b) => [b.name, b.line, b.opens]);
   const LAB = (lab.fm.services || []).map((x) => [x.name, x.line, x.accent || "a2"]), DEVICES = (lab.fm.devices || []).map((x) => [x.name, x.line]);
-  const HOME = (home.fm.tiles || []).map((t) => t.kind === "temp" ? { name: t.name, kind: "temp", val: String(t.value), unit: t.unit || "" } : { name: t.name, kind: "light", on: !!t.on });
+  const HOME = (home.fm.dashboards || []).map((d, i) => { need(d, ["name"], `content/home/index.md dashboard ${i + 1}`); const img = image("home", "", d.image, "content/home/index.md", { max: 1600, quality: 84 }); return { name: d.name, line: d.line || "", img, full: img ? fullCopy(img) : "", alt: d.alt || `${d.name} dashboard` }; });
   const GAMES = { now: games.fm.now || [], alltime: games.fm.alltime || [], kit: games.fm.kit || [] };
   const HIGHLIGHT = { title: hl.fm.title || "Work highlight", line: hl.fm.outcome || "", note: inline(hl.body), video: image("", "", hl.fm.video, "content/highlight.md"), image: image("", "", hl.fm.image, "content/highlight.md") };
   const FLAGSHIPS = PROJECTS.filter((p) => p.flagship).map((p) => p.id);

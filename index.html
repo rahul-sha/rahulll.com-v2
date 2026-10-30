@@ -211,6 +211,10 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
 .br-view { position: relative; flex: 1; min-height: 0; margin: 0 8px; border-radius: calc(var(--r) * .7); overflow: hidden; border: 1px solid var(--line); }
 .br-view iframe { width: 100%; height: 100%; border: 0; display: block; background: #fff; }
 .standin { position: absolute; inset: 0; overflow: auto; overscroll-behavior: contain; }
+/* the button that swaps the stand-in for the live site, floating over the drawing in the window's accent */
+.br-go { position: absolute; left: 50%; bottom: 16px; translate: -50% 0; z-index: 2; display: inline-flex; gap: 8px; align-items: center; padding: 9px 16px; border: 0; border-radius: 999px; background: var(--accent, var(--a1)); color: var(--on-a); font: 700 13px var(--ui); cursor: pointer; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .6); white-space: nowrap; }
+.br-go:hover { filter: brightness(1.06); }
+.br-go svg { width: 16px; height: 16px; }
 .br-load { position: absolute; left: 0; top: 0; height: 3px; width: 0; background: var(--accent); }
 .br-load.go { animation: br-load .9s var(--ease); }
 @keyframes br-load { 0% { width: 0; opacity: 1; } 80% { width: 100%; opacity: 1; } 100% { width: 100%; opacity: 0; } }
@@ -373,7 +377,7 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
 <link rel="stylesheet" href="site/desk.css">
 </head>
 <body>
-<div id="desk">
+<div id="desk" class="preboot">
   <canvas id="wall" aria-hidden="true"></canvas>
   <header class="bar">
     <div class="b-sec b-left">

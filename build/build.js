@@ -94,7 +94,7 @@ function sites() {
     if (!name.endsWith(".md")) continue;
     const file = path.join(CONTENT, "sites", name), where = rel(file), { fm, body } = readMd(file);
     need(fm, ["title", "host", "accent"], where);
-    out.push({ id: path.basename(name, ".md"), title: fm.title, host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, order: fm.order || 99 });
+    out.push({ id: path.basename(name, ".md"), title: fm.title, host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, embed: fm.embed !== false, order: fm.order || 99 });
   }
   return out.sort((a, b) => a.order - b.order);
 }

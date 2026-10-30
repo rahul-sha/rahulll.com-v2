@@ -349,9 +349,8 @@ function Niri(opts) {
   const dock = root.querySelector(".dock");
   if (dock && opts.dock) {
     /* the dock takes app ids, or groups of them: { name, ws, items } puts a labelled group per workspace */
-    const btn = (id, wsI) => {
-      const a = opts.apps[id];
-      return `<button type="button" class="dk" data-app="${id}"${wsI != null ? ` data-ws="${wsI}"` : ""} style="--accent:var(--${a.accent || "a1"});--accent-ink:var(--${a.accent || "a1"}-ink, var(--${a.accent || "a1"}))" aria-label="${esc(a.title)}"><span class="dk-ic">${a.icon}</span><span class="dk-l">${esc(a.dockLabel || a.title)}</span><span class="dk-tip">${esc(a.dockLabel || a.title)}${a.hotkey ? ` <kbd>${a.hotkey}</kbd>` : ""}</span><span class="dk-run"></span></button>`;
+    const btn = (id, wsI, a = opts.apps[id], extra = "") => {
+      return `<button type="button" class="dk${extra}" data-app="${id}"${wsI != null ? ` data-ws="${wsI}"` : ""} style="--accent:var(--${a.accent || "a1"});--accent-ink:var(--${a.accent || "a1"}-ink, var(--${a.accent || "a1"}))" aria-label="${esc(a.title)}"><span class="dk-ic">${a.icon}</span><span class="dk-l">${esc(a.dockLabel || a.title)}</span><span class="dk-tip">${esc(a.dockLabel || a.title)}${a.hotkey ? ` <kbd>${a.hotkey}</kbd>` : ""}</span><span class="dk-run"></span></button>`;
     };
     dock.innerHTML = opts.dock.map((x) => typeof x === "string" ? btn(x) :
       `<div class="dk-g"${x.ws != null ? ` data-g="${x.ws}"` : ""} role="group" aria-label="${esc(x.name)}"><button type="button" class="dk-gl"${x.ws != null ? ` data-goto="${x.ws}" title="Go to workspace ${x.ws + 1}: ${esc(x.name)} (${x.ws + 1})"` : " disabled"}>${x.ws != null ? `<b>${x.ws + 1}</b>` : `<b>${ICON.grid}</b>`}<span>${esc(x.name)}</span></button>${x.items.map((id) => btn(id, x.ws)).join("")}</div>`).join("");
@@ -367,11 +366,24 @@ function Niri(opts) {
       const g = e.target.closest("[data-goto]");
       if (g) return gotoWs(+g.dataset.goto);
       const b = e.target.closest(".dk");
+      if (b && b.classList.contains("dk-tmp")) { const h = find(b.dataset.app); if (h) { S.cur = h[0]; S.ws[h[0]].focus = h[1]; if (S.overview) S.overview = false; update(); } return; }
       if (b) open(b.dataset.app, b.dataset.ws != null ? { ws: +b.dataset.ws } : {});
     });
+    /* windows opened from inside other windows (a project, a site) get a dock button in their workspace's group while they are open */
+    dock.tmp = (ws, wi) => {
+      const g = dock.querySelector(`.dk-g[data-g="${wi}"]`);
+      if (!g) return;
+      const keys = new Set(ws.cols.map((c) => c.key));
+      g.querySelectorAll(".dk-tmp").forEach((b) => { if (!keys.has(b.dataset.app)) b.remove(); });
+      ws.cols.forEach((c) => {
+        if (g.querySelector(`.dk[data-app="${CSS.escape(c.key)}"]`)) return;
+        g.insertAdjacentHTML("beforeend", btn(c.key, wi, c.spec, " dk-tmp"));
+      });
+    };
   }
   function syncDock() {
     if (!dock) return;
+    if (dock.tmp) S.ws.forEach(dock.tmp);
     dock.querySelectorAll(".dk").forEach((b) => {
       const h = find(b.dataset.app), fl = S.floats.find((c) => c.key === b.dataset.app);
       b.classList.toggle("running", !!h || !!fl);

@@ -12,6 +12,11 @@
   .dock-labels .dk-l { font-size: 11px; }
 }
 .phone.dock-labels .dk { height: 52px; min-width: 56px; }
+/* buttons for windows opened from inside other windows: long titles are cut short */
+.dk-tmp .dk-l { max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+.dk-tmp { animation: dk-in .3s var(--ease) both; }
+@keyframes dk-in { from { opacity: 0; scale: .6; } }
+@media (prefers-reduced-motion: reduce) { .dk-tmp { animation: none; } }
 
 /* floating windows */
 .float-layer .win { box-shadow: 0 30px 60px -24px rgba(0, 0, 0, .65), 0 0 0 1px color-mix(in srgb, var(--accent, var(--a2)) 35%, transparent); background: color-mix(in srgb, var(--surf) calc(var(--win-op) * .92), transparent); }

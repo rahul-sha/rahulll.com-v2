@@ -139,11 +139,11 @@
 
 /* dock grouped by workspace: a numbered label, then the windows that live there */
 .dock.grouped { gap: 4px; padding: 6px; align-items: stretch; }
-.dk-g { display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: 18px; flex: none; transition: background .3s; }
+.dk-g { display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: calc(var(--r) * .85); flex: none; transition: background .3s; }
 .dk-g + .dk-g { margin-left: 2px; }
 .dk-g.current { background: color-mix(in srgb, var(--a2) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--a2) 40%, transparent); }
-.dk-gl { display: grid; justify-items: center; align-content: center; gap: 3px; width: 50px; align-self: stretch; padding: 0 2px; border: 0; border-radius: 14px; background: transparent; color: var(--mute); font: 700 10px/1.1 var(--ui); text-align: center; cursor: pointer; }
-.dk-gl b { display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: var(--surf2); color: var(--fg); font: 800 12px var(--mono); }
+.dk-gl { display: grid; justify-items: center; align-content: center; gap: 3px; width: 50px; align-self: stretch; padding: 0 2px; border: 0; border-radius: calc(var(--r) * .7); background: transparent; color: var(--mute); font: 700 10px/1.1 var(--ui); text-align: center; cursor: pointer; }
+.dk-gl b { display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 4px; box-sizing: border-box; border-radius: calc(var(--r) * .4); background: var(--surf2); color: var(--fg); font: 800 12px var(--mono); }
 .dk-gl b svg { width: 13px; height: 13px; }
 .dk-gl:not(:disabled):hover { color: var(--fg); background: var(--surf2); }
 .dk-gl:not(:disabled):hover b { background: var(--a2); color: var(--on-a); }

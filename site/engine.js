@@ -94,9 +94,14 @@ function Niri(opts) {
       }
     }
   }
+  /* the window a column's lower half sits under, if it is stacked; phones and short screens keep one window per column */
+  const upper = (ws, i) => { const c = ws.cols[i], p = ws.cols[i - 1]; return !S.phone && S.H >= 520 && c && p && c.spec.under && p.key === c.spec.under ? p : null; };
+  const lead = (c) => { const ws = S.ws.find((w) => w.cols.includes(c)); return (ws && upper(ws, ws.cols.indexOf(c))) || c; };
   const W = () => S.ws[S.cur];
   const F = () => W().cols[W().focus];
   function focusCol(d) { const ws = W(); if (!ws.cols.length) return; ws.focus = Math.max(0, Math.min(ws.cols.length - 1, ws.focus + d)); ws.centred = false; update(); }
+  /* swipes and drags move a whole column, so they step over the other half of a stacked pair */
+  function stepCol(d) { const x = F() && F().x; focusCol(d); if (F() && F().x === x && !atEdge(d)) focusCol(d); }
   function focusTo(i) { const ws = W(); if (!ws.cols.length) return; ws.focus = i < 0 ? ws.cols.length - 1 : Math.min(i, ws.cols.length - 1); update(); }
   function moveCol(d) {
     const ws = W(), i = ws.focus, j = i + d;
@@ -115,8 +120,8 @@ function Niri(opts) {
     to.strip.appendChild(c.el);
     S.cur = t; update();
   }
-  function cycleWidth() { const c = F(); if (!c) return; if (c.full) c.full = false; else c.w = (c.w + 1) % WIDTHS.length; update(); }
-  function maximise() { const c = F(); if (!c) return; c.full = !c.full; update(); }
+  function cycleWidth() { const c = F() && lead(F()); if (!c) return; if (c.full) c.full = false; else c.w = (c.w + 1) % WIDTHS.length; update(); }
+  function maximise() { const c = F() && lead(F()); if (!c) return; c.full = !c.full; update(); }
   function centre() { const ws = W(); if (!F()) return; ws.centred = true; update(); }
   function close() {
     const ws = W(), c = F();
@@ -142,22 +147,27 @@ function Niri(opts) {
     S.W = vp.clientWidth; S.H = vp.clientHeight;
     S.phone = S.W < 700;
     const g = (S.gap = S.phone ? Math.min(10, opts.gap ?? 16) : opts.gap ?? 16);
+    /* workspaces sit a little apart, so window shadows can spill past the bottom edge without showing the next one */
+    const st = (S.step = S.H + 64);
     S.ws.forEach((ws, wi) => {
       ws.el.style.height = S.H + "px";
-      ws.el.style.top = wi * S.H + "px";
+      ws.el.style.top = wi * st + "px";
       let x = g;
       ws.cols.forEach((c, ci) => {
-        const px = S.phone || c.full ? S.W - 2 * g : Math.round(WIDTHS[c.w] * (S.W - g) - g);
-        c.x = x; c.px = px;
-        c.el.querySelector(".wl").textContent = c.full ? "full" : WLABEL[c.w] || "";
-        if (c.kiosk) { x += px + g; return; }
+        /* a window can share its column with the one before it, stacked underneath; the top one sets the width */
+        const top = upper(ws, ci), low = upper(ws, ci + 1), lead = top || c;
+        const px = S.phone || lead.full ? S.W - 2 * g : Math.round(WIDTHS[lead.w] * (S.W - g) - g);
+        if (top) x = top.x;
+        const h = top || low ? Math.round((S.H - 3 * g) / 2) : S.H - 2 * g, y = top ? 2 * g + h : g;
+        c.x = x; c.px = px; c.y = y; c.ph = h;
+        c.el.querySelector(".wl").textContent = lead.full ? "full" : WLABEL[lead.w] || "";
+        if (c.kiosk) { if (!low) x += px + g; return; }
         c.el.style.width = px + "px";
-        c.el.style.height = S.H - 2 * g + "px";
-        c.el.style.transform = `translate(${x}px, ${g}px)`;
+        c.el.style.height = h + "px";
+        c.el.style.transform = `translate(${x}px, ${y}px)`;
         c.el.classList.toggle("focused", wi === S.cur && ci === ws.focus);
         c.el.classList.toggle("active-in-ws", ci === ws.focus);
-        c.el.querySelector(".wl").textContent = c.full ? "full" : WLABEL[c.w] || "";
-        x += px + g;
+        if (!low) x += px + g;
       });
       ws.total = x;
       ws.el.classList.toggle("is-empty", !ws.cols.length);
@@ -178,11 +188,12 @@ function Niri(opts) {
     if (S.overview) {
       /* sized so two and a half workspaces fit; the camera follows the current one and stops at the ends */
       const padF = 0.08, s = (1 - 2 * padF) / 2.5, n = S.ws.length, pad = S.H * padF;
-      let y = S.H / 2 - s * (S.cur * S.H + S.H / 2);
-      if (s * n * S.H + 2 * pad <= S.H) y = (S.H - s * n * S.H) / 2;
-      else y = Math.max(S.H - s * n * S.H - pad, Math.min(pad, y));
+      const tot = s * (n * st - 64);
+      let y = S.H / 2 - s * (S.cur * st + S.H / 2);
+      if (tot + 2 * pad <= S.H) y = (S.H - tot) / 2;
+      else y = Math.max(S.H - tot - pad, Math.min(pad, y));
       stack.style.transform = `translate(${S.W / 2 - (s * S.W) / 2}px, ${y}px) scale(${s})`;
-    } else stack.style.transform = `translateY(${-S.cur * S.H}px)`;
+    } else stack.style.transform = `translateY(${-S.cur * st}px)`;
     root.classList.toggle("overview", S.overview);
     root.classList.toggle("phone", S.phone);
   }
@@ -198,7 +209,7 @@ function Niri(opts) {
   const place = (el, r) => Object.assign(el.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
   function slotRect(c) {
     const v = vp.getBoundingClientRect(), r = root.getBoundingClientRect(), ws = S.ws.find((w) => w.cols.includes(c)) || W(), z = zoom();
-    return { left: (v.left - r.left) / z + c.x - ws.cam, top: (v.top - r.top) / z + S.gap, width: c.px, height: S.H - 2 * S.gap };
+    return { left: (v.left - r.left) / z + c.x - ws.cam, top: (v.top - r.top) / z + (c.y ?? S.gap), width: c.px, height: c.ph ?? S.H - 2 * S.gap };
   }
   function screenRect() { const b = S.phone ? 6 : opts.bezel ?? 12; return { left: b, top: b, width: root.clientWidth - 2 * b, height: root.clientHeight - 2 * b }; }
   function fullscreen(v, instant) {
@@ -338,9 +349,8 @@ function Niri(opts) {
   const dock = root.querySelector(".dock");
   if (dock && opts.dock) {
     /* the dock takes app ids, or groups of them: { name, ws, items } puts a labelled group per workspace */
-    const btn = (id, wsI) => {
-      const a = opts.apps[id];
-      return `<button type="button" class="dk" data-app="${id}"${wsI != null ? ` data-ws="${wsI}"` : ""} style="--accent:var(--${a.accent || "a1"});--accent-ink:var(--${a.accent || "a1"}-ink, var(--${a.accent || "a1"}))" aria-label="${esc(a.title)}"><span class="dk-ic">${a.icon}</span><span class="dk-l">${esc(a.dockLabel || a.title)}</span><span class="dk-tip">${esc(a.dockLabel || a.title)}${a.hotkey ? ` <kbd>${a.hotkey}</kbd>` : ""}</span><span class="dk-run"></span></button>`;
+    const btn = (id, wsI, a = opts.apps[id], extra = "") => {
+      return `<button type="button" class="dk${extra}" data-app="${id}"${wsI != null ? ` data-ws="${wsI}"` : ""} style="--accent:var(--${a.accent || "a1"});--accent-ink:var(--${a.accent || "a1"}-ink, var(--${a.accent || "a1"}))" aria-label="${esc(a.title)}"><span class="dk-ic">${a.icon}</span><span class="dk-l">${esc(a.dockLabel || a.title)}</span><span class="dk-tip">${esc(a.dockLabel || a.title)}${a.hotkey ? ` <kbd>${a.hotkey}</kbd>` : ""}</span><span class="dk-run"></span></button>`;
     };
     dock.innerHTML = opts.dock.map((x) => typeof x === "string" ? btn(x) :
       `<div class="dk-g"${x.ws != null ? ` data-g="${x.ws}"` : ""} role="group" aria-label="${esc(x.name)}"><button type="button" class="dk-gl"${x.ws != null ? ` data-goto="${x.ws}" title="Go to workspace ${x.ws + 1}: ${esc(x.name)} (${x.ws + 1})"` : " disabled"}>${x.ws != null ? `<b>${x.ws + 1}</b>` : `<b>${ICON.grid}</b>`}<span>${esc(x.name)}</span></button>${x.items.map((id) => btn(id, x.ws)).join("")}</div>`).join("");
@@ -356,11 +366,24 @@ function Niri(opts) {
       const g = e.target.closest("[data-goto]");
       if (g) return gotoWs(+g.dataset.goto);
       const b = e.target.closest(".dk");
+      if (b && b.classList.contains("dk-tmp")) { const h = find(b.dataset.app); if (h) { S.cur = h[0]; S.ws[h[0]].focus = h[1]; if (S.overview) S.overview = false; update(); } return; }
       if (b) open(b.dataset.app, b.dataset.ws != null ? { ws: +b.dataset.ws } : {});
     });
+    /* windows opened from inside other windows (a project, a site) get a dock button in their workspace's group while they are open */
+    dock.tmp = (ws, wi) => {
+      const g = dock.querySelector(`.dk-g[data-g="${wi}"]`);
+      if (!g) return;
+      const keys = new Set(ws.cols.map((c) => c.key));
+      g.querySelectorAll(".dk-tmp").forEach((b) => { if (!keys.has(b.dataset.app)) b.remove(); });
+      ws.cols.forEach((c) => {
+        if (g.querySelector(`.dk[data-app="${CSS.escape(c.key)}"]`)) return;
+        g.insertAdjacentHTML("beforeend", btn(c.key, wi, c.spec, " dk-tmp"));
+      });
+    };
   }
   function syncDock() {
     if (!dock) return;
+    if (dock.tmp) S.ws.forEach(dock.tmp);
     dock.querySelectorAll(".dk").forEach((b) => {
       const h = find(b.dataset.app), fl = S.floats.find((c) => c.key === b.dataset.app);
       b.classList.toggle("running", !!h || !!fl);
@@ -516,9 +539,55 @@ function Niri(opts) {
     if (lock !== "x") return;
     const dx = e.changedTouches[0].clientX - tx;
     W().strip.style.transition = "";
-    if (Math.abs(dx) > 50) { const dir = dx < 0 ? 1 : -1; if (atEdge(dir)) spill(dir); else focusCol(dir); } else update();
+    if (Math.abs(dx) > 50) { const dir = dx < 0 ? 1 : -1; if (atEdge(dir)) spill(dir); else stepCol(dir); } else update();
     lock = null;
   });
+  /* mouse: press and drag on the desktop or a tiled title bar to slide the strip, like a swipe.
+     Inside a window, press and hold still for a moment first, so selecting text and clicking keep working. */
+  let grab = null, holdT = 0;
+  const HOLD = 280;
+  vp.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse" || e.button !== 0 || S.overview || !W().cols.length) return;
+    if (e.target.closest("input, textarea, select, iframe, .rz, .float-layer, .tb button")) return;
+    const inside = !!e.target.closest(".wb");
+    grab = { x: e.clientX, y: e.clientY, on: false, ready: !inside, z: zoom() };
+    clearTimeout(holdT);
+    if (inside) holdT = setTimeout(() => {
+      if (!grab || grab.on) return;
+      grab.ready = grab.held = true; root.classList.add("grab-ready"); getSelection().removeAllRanges();
+    }, HOLD);
+  });
+  addEventListener("pointermove", (e) => {
+    if (!grab) return;
+    const dx = (e.clientX - grab.x) / grab.z, dy = (e.clientY - grab.y) / grab.z;
+    /* moving before the hold completes means the visitor is selecting or scrolling: let them */
+    if (!grab.ready) { if (Math.abs(dx) > 6 || Math.abs(dy) > 6) { clearTimeout(holdT); grab = null; } return; }
+    if (!grab.on) { if (Math.abs(dx) < 8) return; grab.on = true; root.classList.add("grabbing"); W().strip.style.transition = "none"; getSelection().removeAllRanges(); }
+    e.preventDefault();
+    W().strip.style.transform = `translateX(${-W().cam + dx}px)`;
+  });
+  /* once a hold has started a grab, stop the browser selecting text or dragging pictures instead */
+  addEventListener("selectstart", (e) => { if (grab && grab.ready) e.preventDefault(); });
+  addEventListener("pointercancel", () => { if (!grab) return; clearTimeout(holdT); grab = null; root.classList.remove("grab-ready", "grabbing"); W().strip.style.transition = ""; update(); });
+  addEventListener("pointerup", (e) => {
+    const g = grab; grab = null;
+    clearTimeout(holdT); root.classList.remove("grab-ready");
+    /* a long press that never moved is not a click either */
+    if (g && g.held && !g.on) dragEnd = Date.now();
+    if (!g || !g.on) return;
+    root.classList.remove("grabbing");
+    W().strip.style.transition = "";
+    const dx = (e.clientX - g.x) / g.z, dir = dx < 0 ? 1 : -1, cw = F() ? F().el.offsetWidth : S.W / 2;
+    /* one window per column-width dragged, at least one once past 60px; past either end it moves on to the next workspace */
+    let n = Math.abs(dx) > 60 ? Math.max(1, Math.round(Math.abs(dx) / cw)) : 0;
+    dragEnd = Date.now();
+    if (!n) return update();
+    while (n--) { if (atEdge(dir)) { spill(dir); break; } stepCol(dir); }
+    dragEnd = Date.now();
+  });
+  /* the click that ends a drag should not also press whatever it lands on */
+  let dragEnd = 0;
+  addEventListener("click", (c) => { if (Date.now() - dragEnd < 60) { c.stopPropagation(); c.preventDefault(); } }, { capture: true });
 
   /* ---------- theme ---------- */
   root.querySelectorAll("[data-theme-toggle]").forEach((b) => b.addEventListener("click", () => {

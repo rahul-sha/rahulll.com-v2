@@ -6,7 +6,7 @@ const stageOrder = Object.keys(CATS);
 /* About: three lines, a photo, and a "Currently" line */
 function renderAbout2(b, api) {
   b.innerHTML = `<div class="about">
-    <img class="about-me" src="${IMG.ME}" alt="Portrait of Rahul">
+    <img class="about-me" src="${IMG.ME}" alt="Portrait of Rahul" fetchpriority="high">
     <p class="kicker">${ME.role}, ${ME.place}</p>
     <h1 class="about-h">${ABOUT.headline}</h1>
     <p class="lede">${ME.line}</p>
@@ -73,7 +73,7 @@ function mediaSlot(m) {
 function renderProject2(b, api, p) {
   const c = CATS[p.cat], related = PROJECTS.filter((x) => x.cat === p.cat && x.id !== p.id).slice(0, 2);
   const skills = SKILLS[p.cat].tools.slice(0, 3);
-  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}" decoding="async"><figcaption>[Caption for this image]</figcaption></figure>
+  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async"><figcaption>[Caption for this image]</figcaption></figure>
     <p class="kicker" style="color:var(--accent-ink)">${c.verb}${FLAGSHIPS.includes(p.id) ? " · Flagship" : ""}</p><h2>${p.title}</h2><p class="lede">${p.outcome || "[One-line outcome, such as: one 5-axis setup instead of three]"}</p>
     <dl class="facts"><div><dt>Year</dt><dd>${p.year || "[year]"}</dd></div><div><dt>Role</dt><dd>${p.role || "[role]"}</dd></div><div><dt>Team</dt><dd>${p.team || "[size]"}</dd></div><div><dt>Tools</dt><dd>${skills.join(", ")}</dd></div></dl>
     <h3>The problem</h3>${p.sum}
@@ -106,8 +106,8 @@ function renderSmartHome(b) {
   b.innerHTML = `<div class="hass"><p class="kicker">Smart home</p><h2>The flat, automated</h2>
     <div class="ha-tabs" role="tablist" aria-label="Dashboards">${HOME.map((d, i) => d.img
       ? `<button type="button" class="ha-tab${d === ready[0] ? " on" : ""}" role="tab" aria-selected="${d === ready[0]}" aria-controls="ha-shot" data-i="${i}"><b>${esc(d.name)}</b><span>${esc(d.line)}</span></button>`
-      : `<button type="button" class="ha-tab soon" disabled aria-disabled="true"><b>${esc(d.name)}</b><span>${esc(d.line || "Coming soon")}</span></button>`).join("")}</div>
-    ${ready.length ? `<a class="ha-shot" id="ha-shot" role="tabpanel" href="${ready[0].full}" target="_blank" rel="noopener" title="Open full size in a new tab"><img src="${ready[0].img}" alt="${esc(ready[0].alt)}" decoding="async"><span class="ha-zoom">${ICON.ext} Full size</span></a>` : `<p class="ha-shot ha-empty">[Dashboard screenshots to come]</p>`}
+      : `<button type="button" class="ha-tab soon" role="tab" aria-selected="false" disabled aria-disabled="true"><b>${esc(d.name)}</b><span>${esc(d.line || "Coming soon")}</span></button>`).join("")}</div>
+    ${ready.length ? `<div id="ha-shot" role="tabpanel"><a class="ha-shot" href="${ready[0].full}" target="_blank" rel="noopener" title="Open full size in a new tab"><img src="${ready[0].img}" alt="${esc(ready[0].alt)}" decoding="async"><span class="ha-zoom">${ICON.ext} Full size</span></a></div>` : `<p class="ha-shot ha-empty">[Dashboard screenshots to come]</p>`}
     ${HOME_NOTE ? `<p class="hint">${HOME_NOTE}</p>` : ""}</div>`;
   const shot = b.querySelector("a.ha-shot");
   b.querySelector(".ha-tabs").addEventListener("click", (e) => {
@@ -132,7 +132,7 @@ function renderPrints(b, api) {
 /* one print in detail: render, the story, design notes, print settings, and slots for photos in use */
 function renderPrint(b, api, p) {
   const others = PRINTS.filter((x) => x.id !== p.id).slice(0, 3);
-  b.innerHTML = `<div class="project print" style="${hueStyle(p.hue)}"><figure>${p.img ? `<img src="${p.img}" alt="${esc(p.title)}">` : `<span class="pr-img"><span>[render]</span></span>`}<figcaption>${p.img ? "Render from Fusion 360" : "[Render to come]"}</figcaption></figure>
+  b.innerHTML = `<div class="project print" style="${hueStyle(p.hue)}"><figure>${p.img ? `<img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async">` : `<span class="pr-img"><span>[render]</span></span>`}<figcaption>${p.img ? "Render from Fusion 360" : "[Render to come]"}</figcaption></figure>
     <p class="kicker" style="color:var(--accent-ink)">3D print${p.private ? " · Private design" : " · On MakerWorld"}</p><h2>${esc(p.title)}</h2><p class="lede">${p.why}</p>
     <dl class="facts"><div><dt>Printer</dt><dd>${esc(p.printer)}</dd></div><div><dt>Material</dt><dd>${esc(p.material)}</dd></div><div><dt>Layer</dt><dd>${esc(p.settings.layer)}</dd></div><div><dt>Infill</dt><dd>${esc(p.settings.infill)}</dd></div><div><dt>Supports</dt><dd>${esc(p.settings.supports)}</dd></div><div><dt>Print time</dt><dd>${esc(p.settings.time)}</dd></div></dl>
     <h3>Why it exists</h3>${p.story}

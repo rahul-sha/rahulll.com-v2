@@ -52,6 +52,14 @@ function fullCopy(out) {
   imageJobs.push({ src: j.src, out: big, max: 2400, quality: 86 });
   return big;
 }
+/* width and height of a converted image, so the page can hold its space before it loads */
+async function size(out) {
+  const j = imageJobs.find((x) => x.out === out && x.src);
+  if (!j) return null;
+  const m = await sharp(j.src).metadata(), turned = (m.orientation || 1) >= 5;
+  const w = turned ? m.height : m.width, h = turned ? m.width : m.height, k = Math.min(1, j.max / Math.max(w, h));
+  return [Math.round(w * k), Math.round(h * k)];
+}
 async function runImages() {
   for (const j of imageJobs) {
     const dest = path.join(DIST, j.out);
@@ -103,9 +111,15 @@ function sites() {
     const file = path.join(CONTENT, "sites", name), where = rel(file), { fm, body } = readMd(file);
     need(fm, ["title", "host", "accent"], where);
     const id = path.basename(name, ".md"), shot = image("sites", id, fm.shot, where, { max: 1600, quality: 84 });
+    if (!fm.private && fm.embed !== false && fm.host && !frameHosts().includes("https://" + fm.host)) fail(where, `add https://${fm.host} (and its www. address if it redirects there) to frame-src in vercel.json, or set embed: false`);
     out.push({ id, shot, thumb: shot ? thumb(shot) : "", video: image("sites", id, fm.video, where), title: fm.title, host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, embed: fm.embed !== false, under: fm.under || "", width: { "1/3": 0, "1/2": 1, "2/3": 2 }[fm.width] ?? 2, order: fm.order || 99 });
   }
   return out.sort((a, b) => a.order - b.order);
+}
+/* the sites the security policy lets a Shipped window load, from frame-src in vercel.json */
+function frameHosts() {
+  const csp = JSON.parse(fs.readFileSync(path.join(ROOT, "vercel.json"), "utf8")).headers.flatMap((h) => h.headers).find((h) => h.key === "Content-Security-Policy");
+  return ((csp && csp.value.match(/frame-src ([^;]*)/)) || ["", ""])[1].split(/\s+/);
 }
 function single(name) { const f = path.join(CONTENT, name); if (!fs.existsSync(f)) { fail("content", `${name} is missing`); return { fm: {}, body: "" }; } return readMd(f); }
 
@@ -164,7 +178,7 @@ async function main() {
   const ME = { name: about.fm.name, role: about.fm.role, place: about.fm.place, line: ap[0] || "", voice: ap[1] || "", links: (about.fm.links || []).map((l) => [l.name, l.url]), email: about.fm.email || "" };
   const ABOUT = { headline: about.fm.headline || "", employer: about.fm.employer || "", open_to: about.fm.open_to || "", image: image("about", "", about.fm.image, "content/about/index.md", { max: 600 }) };
   const PROJECTS = projects(), PRINTS = prints(), SITES = sites();
-  for (const p of PROJECTS.concat(PRINTS)) p.thumb = p.img ? thumb(p.img) : "";
+  for (const p of PROJECTS.concat(PRINTS)) { p.thumb = p.img ? thumb(p.img) : ""; p.size = p.img ? await size(p.img) : null; }
   const tuple = (r) => [r.dates || "", r.title || "", r.place || "", r.line || ""];
   const JOBS = (resume.fm.jobs || []).map(tuple), STUDY = (resume.fm.study || []).map(tuple), TOOLS = (resume.fm.tools || []).map((t) => [t, 0]);
   const stages = skills.fm.stages || {};
@@ -189,7 +203,7 @@ async function main() {
   for (const f of fs.readdirSync(path.join(ROOT, "site"))) fs.copyFileSync(path.join(ROOT, "site", f), path.join(DIST, "site", f));
   /* the address for link previews and search engines: Vercel's production domain when it builds there, rahulll.com otherwise */
   const SITE = "https://" + (process.env.SITE_HOST || process.env.VERCEL_PROJECT_PRODUCTION_URL || "rahulll.com");
-  fs.writeFileSync(path.join(DIST, "index.html"), fs.readFileSync(path.join(ROOT, "index.html"), "utf8").replaceAll("%SITE%", SITE));
+  fs.writeFileSync(path.join(DIST, "index.html"), fs.readFileSync(path.join(ROOT, "index.html"), "utf8").replaceAll("%SITE%", SITE).replaceAll("%PORTRAIT%", ABOUT.image));
   fs.copyFileSync(path.join(ROOT, "favicon.svg"), path.join(DIST, "favicon.svg"));
   fs.writeFileSync(path.join(DIST, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
   fs.writeFileSync(path.join(DIST, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${SITE}/</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url>\n</urlset>\n`);

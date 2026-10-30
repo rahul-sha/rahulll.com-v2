@@ -5,6 +5,7 @@ Rahul's portfolio as a Noctalia-style desktop on a niri-like scrolling window ma
 ## Commands
 
 - `npm run build` reads `content/`, converts images to WebP (max 1200px), writes the resume PDF, and emits `dist/`.
+- `npm run og` redraws the link preview image `content/about/og.jpg` from the About name, role, and portrait. Run it after changing those, then commit the image.
 - `npm run check` validates content only. Both exit non-zero and list every problem when a required field is missing.
 - No test runner. Verify in a browser (Playwright is fine) at 1440, 1024, 390 portrait, and 844 landscape widths, in light and dark, with the console clean and no horizontal overflow.
 

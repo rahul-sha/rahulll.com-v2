@@ -53,6 +53,9 @@ function Niri(opts) {
     el.querySelector(".tb").addEventListener("dblclick", (e) => { if (!e.target.closest("button") && !col.float) { focusEl(col); fullscreen(); } });
     el.addEventListener("animationend", () => el.classList.remove("opening"), { once: true });
     spec.render(el.querySelector(".wb"), api, spec.arg, el);
+    /* a window with nothing focusable inside still needs keyboard scrolling */
+    const wb = el.querySelector(".wb");
+    if (!wb.querySelector("a[href], button, input, select, textarea, video, [tabindex]")) wb.tabIndex = 0;
     return col;
   }
   function find(key) {
@@ -545,6 +548,8 @@ function Term(body, api, cmds, o = {}) {
   }, cmds);
   for (const k of ["sudo", "rm", "vim", "emacs", "exit"]) if (all[k]) all[k].secret = !["exit"].includes(k);
   body.closest(".win").addEventListener("click", (e) => { if (!e.target.closest("a,button")) inp.focus({ preventScroll: true }); });
+  /* take the keyboard when the window opens, so typed letters reach the shell and not the desktop shortcuts */
+  setTimeout(() => { if (body.closest(".win").classList.contains("focused")) inp.focus({ preventScroll: true }); }, 0);
   inp.addEventListener("keydown", (e) => {
     if (e.key === "ArrowUp" && !e.altKey) { if (hist.length) { hi = Math.max(0, hi - 1); inp.value = hist[hi]; } e.preventDefault(); }
     if (e.key === "ArrowDown" && !e.altKey) { hi = Math.min(hist.length, hi + 1); inp.value = hist[hi] || ""; e.preventDefault(); }

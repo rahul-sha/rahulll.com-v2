@@ -92,3 +92,6 @@ body { margin: 0; overflow: hidden; background: var(--bg); color: var(--fg); -we
 .dk-l { display: none; }
 
 .launcher[hidden], .hotkeys[hidden], .session[hidden] { display: none; }
+/* press and drag the desktop or a tiled title bar to slide between windows */
+.strip .tb { cursor: grab; }
+.grabbing, .grabbing * { cursor: grabbing !important; user-select: none; }

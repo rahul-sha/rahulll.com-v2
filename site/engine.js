@@ -519,6 +519,35 @@ function Niri(opts) {
     if (Math.abs(dx) > 50) { const dir = dx < 0 ? 1 : -1; if (atEdge(dir)) spill(dir); else focusCol(dir); } else update();
     lock = null;
   });
+  /* mouse: press and drag on the desktop or a tiled title bar to slide the strip, like a swipe; window contents keep their own clicks */
+  let grab = null;
+  vp.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse" || e.button !== 0 || S.overview || !W().cols.length) return;
+    if (e.target.closest("button, a, input, textarea, select, label, iframe, .wb, .rz, .float-layer")) return;
+    grab = { x: e.clientX, on: false, z: zoom() };
+  });
+  addEventListener("pointermove", (e) => {
+    if (!grab) return;
+    const dx = (e.clientX - grab.x) / grab.z;
+    if (!grab.on) { if (Math.abs(dx) < 8) return; grab.on = true; root.classList.add("grabbing"); W().strip.style.transition = "none"; }
+    W().strip.style.transform = `translateX(${-W().cam + dx}px)`;
+  });
+  addEventListener("pointerup", (e) => {
+    const g = grab; grab = null;
+    if (!g || !g.on) return;
+    root.classList.remove("grabbing");
+    W().strip.style.transition = "";
+    const dx = (e.clientX - g.x) / g.z, dir = dx < 0 ? 1 : -1, cw = F() ? F().el.offsetWidth : S.W / 2;
+    /* one window per column-width dragged, at least one once past 60px; past either end it moves on to the next workspace */
+    let n = Math.abs(dx) > 60 ? Math.max(1, Math.round(Math.abs(dx) / cw)) : 0;
+    dragEnd = Date.now();
+    if (!n) return update();
+    while (n--) { if (atEdge(dir)) { spill(dir); break; } focusCol(dir); }
+    dragEnd = Date.now();
+  });
+  /* the click that ends a drag should not also press whatever it lands on */
+  let dragEnd = 0;
+  addEventListener("click", (c) => { if (Date.now() - dragEnd < 60) { c.stopPropagation(); c.preventDefault(); } }, { capture: true });
 
   /* ---------- theme ---------- */
   root.querySelectorAll("[data-theme-toggle]").forEach((b) => b.addEventListener("click", () => {

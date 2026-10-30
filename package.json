@@ -1,0 +1,30 @@
+{
+  "name": "rahulll.com",
+  "version": "1.0.0",
+  "description": "Personal Website and Portfolio",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build/build.js",
+    "check": "node build/build.js --check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rahul-sha/rahulll.com-v2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rahul-sha/rahulll.com-v2/issues"
+  },
+  "homepage": "https://github.com/rahul-sha/rahulll.com-v2#readme",
+  "private": "true",
+  "type": "commonjs",
+  "devDependencies": {
+    "js-yaml": "^4.1.0",
+    "marked": "^12.0.2",
+    "pdfkit": "^0.15.0",
+    "sharp": "^0.33.5"
+  }
+}

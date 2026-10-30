@@ -1,0 +1,153 @@
+/* Builds rahulll.com into dist/.
+   Reads the content/ folders (Markdown with a YAML header), writes site/content.js, resizes images to WebP,
+   typesets the resume PDF, and copies the shell. Run with `npm run build`; Vercel runs the same command. */
+const fs = require("fs"), path = require("path");
+const yaml = require("js-yaml"), { marked } = require("marked"), sharp = require("sharp"), PDFDocument = require("pdfkit");
+
+const ROOT = path.resolve(__dirname, ".."), CONTENT = path.join(ROOT, "content"), DIST = path.join(ROOT, "dist");
+const problems = [];
+const fail = (where, what) => problems.push(`${where}: ${what}`);
+
+/* ---------- reading ---------- */
+function readMd(file) {
+  const raw = fs.readFileSync(file, "utf8");
+  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+  if (!m) { fail(rel(file), "no YAML header between --- lines"); return { fm: {}, body: "" }; }
+  let fm = {};
+  try { fm = yaml.load(m[1]) || {}; } catch (e) { fail(rel(file), "YAML header: " + e.message.split("\n")[0]); }
+  return { fm, body: m[2].trim() };
+}
+const rel = (f) => path.relative(ROOT, f);
+const html = (md) => (md ? marked.parse(md, { mangle: false, headerIds: false }).trim() : "");
+const inline = (md) => (md ? marked.parseInline(String(md)).trim() : "");
+const paras = (md) => (md ? md.split(/\n\s*\n/).map((p) => inline(p.trim())).filter(Boolean) : []);
+const need = (fm, keys, where) => keys.forEach((k) => { if (fm[k] == null || fm[k] === "") fail(where, `missing "${k}"`); });
+const listItems = (dir) => fs.existsSync(dir) ? fs.readdirSync(dir).filter((n) => !n.startsWith("_") && !n.startsWith(".")) : [];
+
+/* ---------- images ---------- */
+const imageJobs = [];
+function image(kind, id, file, where, opts = {}) {
+  if (!file) return "";
+  const src = path.join(CONTENT, kind, id, file), seg = [kind, id].filter(Boolean).join("/");
+  if (!fs.existsSync(src)) { fail(where, `image "${file}" not found beside index.md`); return ""; }
+  const ext = path.extname(file).toLowerCase();
+  if ([".webm", ".mp4"].includes(ext)) { const out = `site/media/${seg}/${file}`; imageJobs.push({ copy: src, out }); return out; }
+  const out = `site/img/${seg}/${path.basename(file, ext)}.webp`;
+  imageJobs.push({ src, out, max: opts.max || 1200, quality: opts.quality || 82 });
+  return out;
+}
+async function runImages() {
+  for (const j of imageJobs) {
+    const dest = path.join(DIST, j.out);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    if (j.copy) { fs.copyFileSync(j.copy, dest); continue; }
+    await sharp(j.src).rotate().resize({ width: j.max, height: j.max, fit: "inside", withoutEnlargement: true }).webp({ quality: j.quality }).toFile(dest);
+  }
+}
+
+/* ---------- kinds ---------- */
+const STAGE = { design: "design", simulate: "rnd", make: "mnfg", test: "test" };
+function projects() {
+  const out = [];
+  for (const id of listItems(path.join(CONTENT, "projects"))) {
+    const file = path.join(CONTENT, "projects", id, "index.md"), where = rel(file);
+    if (!fs.existsSync(file)) { fail(`content/projects/${id}`, "folder has no index.md"); continue; }
+    const { fm, body } = readMd(file);
+    need(fm, ["title", "stage", "image"], where);
+    if (fm.stage && !STAGE[fm.stage]) fail(where, `stage must be design, simulate, make, or test (got "${fm.stage}")`);
+    out.push({
+      id, cat: STAGE[fm.stage] || "design", title: fm.title || id, img: image("projects", id, fm.image, where), sum: html(body) || "",
+      steps: fm.steps || [], outcome: fm.outcome || "", year: String(fm.year || ""), role: fm.role || "", team: fm.team || "", result: fm.result || "",
+      flagship: !!fm.flagship, order: fm.order || 99,
+      media: (fm.media || []).map((m) => ({ kind: m.kind === "video" ? "video" : "section", label: m.label || "", file: image("projects", id, m.file, where) })),
+    });
+  }
+  return out.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+}
+function prints() {
+  const out = [];
+  for (const id of listItems(path.join(CONTENT, "prints"))) {
+    const file = path.join(CONTENT, "prints", id, "index.md"), where = rel(file);
+    if (!fs.existsSync(file)) { fail(`content/prints/${id}`, "folder has no index.md"); continue; }
+    const { fm, body } = readMd(file);
+    need(fm, ["title", "printer", "material", "why"], where);
+    out.push({
+      id, title: fm.title || id, short: fm.short || "", img: image("prints", id, fm.image, where), printer: fm.printer || "", material: fm.material || "",
+      why: inline(fm.why), hue: fm.accent || "a1", url: fm.makerworld || "", private: !fm.makerworld, story: html(body), notes: fm.notes || [],
+      settings: { layer: fm.layer || "", infill: fm.infill || "", supports: fm.supports || "", time: fm.time || "" },
+      photos: (fm.photos || []).map((f) => image("prints", id, f, where)).filter(Boolean), order: fm.order || 99,
+    });
+  }
+  return out.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+}
+function sites() {
+  const out = [];
+  for (const name of listItems(path.join(CONTENT, "sites"))) {
+    if (!name.endsWith(".md")) continue;
+    const file = path.join(CONTENT, "sites", name), where = rel(file), { fm, body } = readMd(file);
+    need(fm, ["title", "host", "accent"], where);
+    out.push({ id: path.basename(name, ".md"), title: fm.title, host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, order: fm.order || 99 });
+  }
+  return out.sort((a, b) => a.order - b.order);
+}
+function single(name) { const f = path.join(CONTENT, name); if (!fs.existsSync(f)) { fail("content", `${name} is missing`); return { fm: {}, body: "" }; } return readMd(f); }
+
+/* ---------- resume PDF ---------- */
+function resumePdf(resume, about, dest) {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ size: "A4", margins: { top: 56, bottom: 56, left: 56, right: 56 }, info: { Title: `${about.name} resume`, Author: about.name } });
+    const s = fs.createWriteStream(dest); doc.pipe(s);
+    const ink = "#1b1a33", mute = "#5e5f8c", accent = "#4048c9";
+    doc.font("Helvetica-Bold").fontSize(22).fillColor(ink).text(about.name);
+    doc.font("Helvetica").fontSize(11).fillColor(mute).text(`${about.role}, ${about.place}`);
+    doc.moveDown(0.3).fontSize(10).fillColor(ink).text([about.email, ...about.links.map(([n, u]) => u)].filter((x) => x && !x.startsWith("[")).join("  ·  "));
+    const section = (t) => { doc.moveDown(1).font("Helvetica-Bold").fontSize(9).fillColor(accent).text(t.toUpperCase(), { characterSpacing: 1 }); doc.moveDown(0.3); };
+    const rows = (list) => list.forEach(([d, t, o, x]) => {
+      doc.font("Helvetica-Bold").fontSize(11).fillColor(ink).text(t, { continued: true }).font("Helvetica").fillColor(mute).text(`   ${d}`);
+      doc.font("Helvetica").fontSize(10).fillColor(mute).text(o);
+      if (x && !x.startsWith("[")) doc.fillColor(ink).text(x);
+      doc.moveDown(0.5);
+    });
+    doc.moveDown(0.6).font("Helvetica").fontSize(10.5).fillColor(ink).text(about.line);
+    section("Experience"); rows(resume.jobs);
+    section("Education"); rows(resume.study);
+    if (resume.tools.length) { section("Tools"); doc.font("Helvetica").fontSize(10).fillColor(ink).text(resume.tools.join("  ·  ")); }
+    doc.end(); s.on("finish", resolve); s.on("error", reject);
+  });
+}
+
+/* ---------- build ---------- */
+async function main() {
+  const check = process.argv.includes("--check");
+  const about = single("about/index.md"), resume = single("resume.md"), skills = single("skills.md"), lab = single("homelab.md"), home = single("home.md"), games = single("gaming.md"), hl = single("highlight.md");
+  need(about.fm, ["name", "role", "place"], "content/about/index.md");
+  const ap = paras(about.body);
+  const ME = { name: about.fm.name, role: about.fm.role, place: about.fm.place, line: ap[0] || "", voice: ap[1] || "", links: (about.fm.links || []).map((l) => [l.name, l.url]), email: about.fm.email || "" };
+  const ABOUT = { headline: about.fm.headline || "", employer: about.fm.employer || "", open_to: about.fm.open_to || "", image: image("about", "", about.fm.image, "content/about/index.md", { max: 600 }) };
+  const PROJECTS = projects(), PRINTS = prints(), SITES = sites();
+  const tuple = (r) => [r.dates || "", r.title || "", r.place || "", r.line || ""];
+  const JOBS = (resume.fm.jobs || []).map(tuple), STUDY = (resume.fm.study || []).map(tuple), TOOLS = (resume.fm.tools || []).map((t) => [t, 0]);
+  const stages = skills.fm.stages || {};
+  const SKILLS = Object.fromEntries(Object.entries(STAGE).map(([k, v]) => [v, { tools: (stages[k] || {}).tools || [], proof: ((stages[k] || {}).proof || []).filter((id) => { const ok = PROJECTS.some((p) => p.id === id); if (!ok) fail("content/skills.md", `proof "${id}" is not a project id`); return ok; }) }]));
+  const BEYOND = (skills.fm.beyond || []).map((b) => [b.name, b.line, b.opens]);
+  const LAB = (lab.fm.services || []).map((x) => [x.name, x.line, x.accent || "a2"]), DEVICES = (lab.fm.devices || []).map((x) => [x.name, x.line]);
+  const HOME = (home.fm.tiles || []).map((t) => t.kind === "temp" ? { name: t.name, kind: "temp", val: String(t.value), unit: t.unit || "" } : { name: t.name, kind: "light", on: !!t.on });
+  const GAMES = { now: games.fm.now || [], alltime: games.fm.alltime || [], kit: games.fm.kit || [] };
+  const HIGHLIGHT = { title: hl.fm.title || "Work highlight", line: hl.fm.outcome || "", note: inline(hl.body), video: image("", "", hl.fm.video, "content/highlight.md"), image: image("", "", hl.fm.image, "content/highlight.md") };
+  const FLAGSHIPS = PROJECTS.filter((p) => p.flagship).map((p) => p.id);
+  for (const p of PROJECTS) delete p.flagship;
+
+  if (problems.length) { console.error("Content problems:\n  " + problems.join("\n  ")); process.exit(1); }
+  if (check) { console.log(`Content is fine: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites.`); return; }
+
+  fs.rmSync(DIST, { recursive: true, force: true }); fs.mkdirSync(path.join(DIST, "site"), { recursive: true });
+  const out = Object.entries({ ME, ABOUT, IMG: { ME: ABOUT.image }, FLAGSHIPS, HIGHLIGHT, SKILLS, SKILLS_NOTE: html(skills.body), BEYOND, PROJECTS, PRINTS, SITES, JOBS, STUDY, TOOLS, LAB, LAB_NOTE: inline(lab.body), DEVICES, HOME, HOME_NOTE: inline(home.body), GAMES, GAMES_NOTE: inline(games.body) })
+    .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`).join("\n");
+  fs.writeFileSync(path.join(DIST, "site/content.js"), `/* Generated by build/build.js from the content/ folders. Do not edit; edit the Markdown instead. */\n${out}\n`);
+  for (const f of fs.readdirSync(path.join(ROOT, "site"))) fs.copyFileSync(path.join(ROOT, "site", f), path.join(DIST, "site", f));
+  for (const f of ["index.html", "favicon.svg", "robots.txt"]) if (fs.existsSync(path.join(ROOT, f))) fs.copyFileSync(path.join(ROOT, f), path.join(DIST, f));
+  await runImages();
+  await resumePdf({ jobs: JOBS, study: STUDY, tools: TOOLS.map(([t]) => t) }, { ...ME, link: "" }, path.join(DIST, "site/resume.pdf"));
+  console.log(`Built dist/: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites, ${imageJobs.length} images, resume.pdf.`);
+}
+main().catch((e) => { console.error(e); process.exit(1); });

@@ -544,7 +544,7 @@ function Niri(opts) {
   });
   /* mouse: press and drag on the desktop or a tiled title bar to slide the strip, like a swipe.
      Inside a window, press and hold still for a moment first, so selecting text and clicking keep working. */
-  /* resting the mouse near the left or right edge brings the next window that way into focus, one step per visit */
+  /* resting the mouse near the left or right edge brings the next window that way into focus, and keeps stepping while it stays there */
   let hoverT = 0, hoverSide = 0;
   vp.addEventListener("pointermove", (e) => {
     if (e.pointerType !== "mouse" || e.buttons || S.overview || S.phone || grab) { clearTimeout(hoverT); hoverSide = 0; return; }
@@ -552,7 +552,8 @@ function Niri(opts) {
     const side = e.target.closest(".float-layer") ? 0 : x < 0.1 ? -1 : x > 0.9 ? 1 : 0;
     if (side === hoverSide) return;
     clearTimeout(hoverT); hoverSide = side;
-    if (side) hoverT = setTimeout(() => { if (hoverSide === side && !atEdge(side)) stepCol(side); }, 350);
+    const tick = () => { if (hoverSide !== side || atEdge(side)) return; stepCol(side); hoverT = setTimeout(tick, 750); };
+    if (side) hoverT = setTimeout(tick, 350);
   });
   vp.addEventListener("pointerleave", () => { clearTimeout(hoverT); hoverSide = 0; });
   let grab = null, holdT = 0;

@@ -212,7 +212,7 @@ function riceExtras() { return Object.entries(PRESETS).map(([k, p]) => ({ label:
 /* the Appearance window */
 let sBody = null;
 function refreshSettings() { if (sBody && sBody.isConnected) renderSettings(sBody); }
-const seg = (key, opts) => `<div class="seg" role="group">${Object.entries(opts).map(([k, v]) => `<button type="button" data-k="${key}" data-v="${k}" aria-pressed="${R[key] === k}" class="${R[key] === k ? "on" : ""}">${Array.isArray(v) ? v[0] : v}</button>`).join("")}</div>`;
+const seg = (key, opts) => `<div class="seg" role="group">${Object.entries(opts).map(([k, v]) => `<button type="button" data-k="${key}" data-v="${k}" aria-pressed="${String(R[key]) === k}" class="${String(R[key]) === k ? "on" : ""}">${Array.isArray(v) ? v[0] : v}</button>`).join("")}</div>`;
 const slider = (key, label, min, max, unit) => `<label class="sl"><span>${label}</span><input type="range" id="rice-${key}" data-k="${key}" min="${min}" max="${max}" value="${R[key]}"><output>${R[key]}${unit}</output></label>`;
 const sw = (C) => `<span class="sw">${["bg", "a1", "a2", "a3", "a4"].map((k) => `<i style="background:${C[k]}"></i>`).join("")}</span>`;
 function renderSettings(b) {

@@ -32,6 +32,7 @@ const TIPS = [
   "<kbd>H</kbd> and <kbd>L</kbd> scroll between windows, like niri. The arrow keys work too.",
   "Scroll or swipe past the last window and you move on to the next workspace. Scroll back past the first to return.",
   "With a mouse, drag the desktop or a title bar to slide between windows. Inside a window, press and hold for a moment, then drag.",
+  "Rest the mouse near the left or right edge and the windows that way keep sliding into focus until you move it back.",
   "<kbd>J</kbd> and <kbd>K</kbd> move between workspaces. The icons in the top bar show where you are.",
   "<kbd>O</kbd> zooms out to show every workspace. Click one to jump in.",
   "<kbd>V</kbd> floats the focused window above the others. Drag it by its title bar, resize it from the corner.",

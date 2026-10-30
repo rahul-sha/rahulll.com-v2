@@ -28,7 +28,7 @@ const OPENS = { zoom: ["Zoom", "win-in"], slide: ["Slide up", "win-slide"], drop
 /* Layout defaults every preset shares */
 const LAYOUT = { bar: "floating", dock: "always", labels: "shown", intro: "on", dockWs: "current", scale: 85 };
 /* Rahul's own rice, the default for every visitor (30 Oct 2026) */
-const BASE = { scheme: "tokyo", mode: "dark", wall: "volute", anim: true, blur: 31, winOp: 42, barOp: 60, radius: 21, gap: 10, ring: "a2", ringW: 1, motion: "smooth", open: "slide", ...LAYOUT };
+const BASE = { scheme: "everforest", mode: "dark", wall: "aurora", anim: true, blur: 25, winOp: 59, barOp: 46, radius: 8, gap: 10, ring: "a2", ringW: 1, motion: "smooth", open: "unfold", ...LAYOUT };
 const NOCTALIA = { scheme: "noctalia", mode: "system", wall: "volute", anim: false, blur: 14, winOp: 100, barOp: 78, radius: 18, gap: 16, ring: "a2", ringW: 2, motion: "smooth", open: "zoom", ...LAYOUT };
 const PRESETS = {
   rahul: { name: "Rahul's rice", ...BASE },
@@ -212,7 +212,7 @@ function riceExtras() { return Object.entries(PRESETS).map(([k, p]) => ({ label:
 /* the Appearance window */
 let sBody = null;
 function refreshSettings() { if (sBody && sBody.isConnected) renderSettings(sBody); }
-const seg = (key, opts) => `<div class="seg" role="group">${Object.entries(opts).map(([k, v]) => `<button type="button" data-k="${key}" data-v="${k}" aria-pressed="${R[key] === k}" class="${R[key] === k ? "on" : ""}">${Array.isArray(v) ? v[0] : v}</button>`).join("")}</div>`;
+const seg = (key, opts) => `<div class="seg" role="group">${Object.entries(opts).map(([k, v]) => `<button type="button" data-k="${key}" data-v="${k}" aria-pressed="${String(R[key]) === k}" class="${String(R[key]) === k ? "on" : ""}">${Array.isArray(v) ? v[0] : v}</button>`).join("")}</div>`;
 const slider = (key, label, min, max, unit) => `<label class="sl"><span>${label}</span><input type="range" id="rice-${key}" data-k="${key}" min="${min}" max="${max}" value="${R[key]}"><output>${R[key]}${unit}</output></label>`;
 const sw = (C) => `<span class="sw">${["bg", "a1", "a2", "a3", "a4"].map((k) => `<i style="background:${C[k]}"></i>`).join("")}</span>`;
 function renderSettings(b) {

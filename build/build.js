@@ -103,7 +103,7 @@ function sites() {
     const file = path.join(CONTENT, "sites", name), where = rel(file), { fm, body } = readMd(file);
     need(fm, ["title", "host", "accent"], where);
     const id = path.basename(name, ".md"), shot = image("sites", id, fm.shot, where, { max: 1600, quality: 84 });
-    out.push({ id, shot, thumb: shot ? thumb(shot) : "", video: image("sites", id, fm.video, where), title: fm.title, host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, embed: fm.embed !== false, under: fm.under || "", order: fm.order || 99 });
+    out.push({ id, shot, thumb: shot ? thumb(shot) : "", video: image("sites", id, fm.video, where), title: fm.title, host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, embed: fm.embed !== false, under: fm.under || "", width: { "1/3": 0, "1/2": 1, "2/3": 2 }[fm.width] ?? 2, order: fm.order || 99 });
   }
   return out.sort((a, b) => a.order - b.order);
 }

@@ -8,6 +8,7 @@ stack: Next.js 16, Jolpica F1 API, GitHub Actions, Vercel
 private: false
 embed: false   # the site sends X-Frame-Options: DENY, so it cannot load inside a window here
 shot: screenshot.png
+width: 1/3   # Chop Shop sits underneath, sharing this width
 order: 2
 ---
 

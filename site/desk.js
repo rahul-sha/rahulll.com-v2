@@ -463,7 +463,7 @@ CM.addEventListener("keydown", (e) => {
   else e.stopPropagation();
 });
 
-/* ---------- Overview pinned at the start of the dock: the same as Zoom out in the bar; desktop only ---------- */
+/* ---------- Overview pinned at the start of the dock: the same as Overview in the bar; desktop only ---------- */
 const OVERVIEW_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>';
 document.querySelector(".dock").insertAdjacentHTML("afterbegin", `<div class="dk-g dk-pin" role="group" aria-label="Overview"><button type="button" class="dk dk-over" style="--accent:var(--a2);--accent-ink:var(--a2-ink, var(--a2))" aria-label="Overview (O)" aria-pressed="false"><span class="dk-ic">${OVERVIEW_ICON}</span><span class="dk-l">Overview</span><span class="dk-tip">Overview <kbd>O</kbd></span><span class="dk-run"></span></button></div>`);
 const dkOver = document.querySelector(".dk-over");

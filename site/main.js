@@ -71,7 +71,7 @@ pills.addEventListener("wheel", (e) => { e.preventDefault(); pAcc += Math.abs(e.
 document.getElementById("b-launch").onclick = () => wm.launcher(true);
 const bOver = document.getElementById("b-over");
 bOver.onclick = () => wm.overview();
-wm.onChange(() => { bOver.classList.toggle("on", wm.S.overview); bOver.setAttribute("aria-label", wm.S.overview ? "Zoom in" : "Zoom out"); });
+wm.onChange(() => { bOver.classList.toggle("on", wm.S.overview); bOver.setAttribute("aria-pressed", wm.S.overview); });
 document.getElementById("b-keys").onclick = () => wm.hotkeys(true);
 
 const clock = document.getElementById("clock");

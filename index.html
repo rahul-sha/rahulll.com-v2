@@ -61,7 +61,7 @@ body { font: 15px/1.55 var(--ui); background: var(--bg); }
 .ib { display: inline-grid; place-items: center; width: var(--bh, 34px); height: var(--bh, 34px); border-radius: var(--br, calc(var(--r) * .6)); border: 0; background: transparent; color: var(--fg); cursor: pointer; }
 .ib:hover { background: var(--surf2); }
 .ib svg { width: 18px; height: 18px; }
-/* Zoom out: the three columns fold into a grid of tiles on hover, and stay that way in the overview */
+/* Overview: the three columns fold into a grid of tiles on hover, and stay that way in the overview */
 .zoomb { display: inline-flex; align-items: center; gap: 8px; height: var(--bh); padding: 0 12px 0 10px; border: 0; border-radius: var(--br); background: var(--surf2); color: var(--fg); font: 700 13px var(--ui); cursor: pointer; transition: background .2s, color .2s; }
 .zoomb:hover, .zoomb:focus-visible { background: color-mix(in srgb, var(--a2) 22%, var(--surf2)); }
 .zoomb.on { background: var(--a2); color: var(--on-a); }
@@ -73,13 +73,9 @@ body { font: 15px/1.55 var(--ui); background: var(--bg); }
 .zoomb:is(:hover, :focus-visible, .on) .z3 { x: 2px; y: 9px; width: 5px; height: 5px; }
 .zoomb:is(:hover, :focus-visible, .on) .z4 { opacity: 1; }
 .zoomb .zl { display: inline-grid; white-space: nowrap; }
-.zoomb .zl span { grid-area: 1 / 1; transition: opacity .25s, translate .3s var(--ease); }
-.zoomb .zl span + span, .zoomb.on .zl span:first-child { opacity: 0; translate: 0 -8px; }
-.zoomb .zl span + span { translate: 0 8px; }
-.zoomb.on .zl span + span { opacity: 1; translate: 0 0; }
 /* narrower screens keep the icon only, so the workspace names and clock still fit */
 @media (max-width: 1180px) { .zoomb { padding: 0 9px; } .zoomb .zl { display: none; } }
-@media (prefers-reduced-motion: reduce) { .zoomb rect, .zoomb .zl span { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .zoomb rect { transition: none; } }
 .logo { background: var(--a1); color: var(--on-a); }
 .logo:hover { background: var(--a1); filter: brightness(1.05); }
 .pills { display: flex; gap: 3px; align-items: center; height: var(--bh); box-sizing: border-box; padding: 2px; border-radius: var(--br); background: color-mix(in srgb, var(--surf2) 70%, transparent); }
@@ -442,7 +438,7 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
   <header class="bar">
     <div class="b-sec b-left">
       <button type="button" class="ib logo" id="b-launch" aria-label="Open launcher (D)" title="Launcher (D)">${ICON.search}</button>
-      <button type="button" class="zoomb hide-phone" id="b-over" aria-label="Zoom out" title="See every workspace at once (O)"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect class="z1" x="1" y="2" width="3.5" height="12" rx="1.2"/><rect class="z2" x="6.25" y="2" width="3.5" height="12" rx="1.2"/><rect class="z3" x="11.5" y="2" width="3.5" height="12" rx="1.2"/><rect class="z4" x="9" y="9" width="5" height="5" rx="1.2"/></svg><span class="zl"><span>Zoom out</span><span>Zoom in</span></span></button>
+      <button type="button" class="zoomb hide-phone" id="b-over" aria-label="Overview" aria-pressed="false" title="See every workspace at once (O)"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect class="z1" x="1" y="2" width="3.5" height="12" rx="1.2"/><rect class="z2" x="6.25" y="2" width="3.5" height="12" rx="1.2"/><rect class="z3" x="11.5" y="2" width="3.5" height="12" rx="1.2"/><rect class="z4" x="9" y="9" width="5" height="5" rx="1.2"/></svg><span class="zl"><span>Overview</span></span></button>
       <div class="pills" id="pills" role="tablist" aria-label="Workspaces"></div>
     </div>
     <div class="b-sec"><button type="button" class="clock" id="clock" title="Control centre (N)"></button></div>

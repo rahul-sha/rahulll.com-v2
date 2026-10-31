@@ -302,3 +302,11 @@
 .pr-more svg { width: 12px; height: 12px; }
 .project figure img { height: auto; }
 .print figure img { height: auto; max-height: 380px; width: 100%; object-fit: contain; background: #fff; }
+
+/* pinned Overview: first in the dock with a divider after it; hidden on phones, where a swipe moves between workspaces */
+.dk-pin { position: relative; margin-right: 6px; padding-right: 10px; }
+.dk-pin::after { content: ""; position: absolute; right: 0; top: 12px; bottom: 12px; width: 1px; background: var(--line); }
+.dk-pin + .dk-g::before { opacity: 0; }
+.dk-over.on { background: color-mix(in srgb, var(--a2) 30%, var(--surf2)); }
+.dk-over.on .dk-run { width: 20px; }
+.phone .dk-pin { display: none; }

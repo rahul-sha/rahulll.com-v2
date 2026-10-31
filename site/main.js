@@ -13,7 +13,9 @@ const apps = {
   prints: { title: "3D prints", icon: ICON.work, accent: "a1", width: 1, dockLabel: "3D prints", render: renderPrints },
   gaming: { title: "Gaming", icon: ICON.play, accent: "a4", width: 0, dockLabel: "Gaming", render: renderGaming },
   contact: { title: "Contact", icon: ICON.mail, accent: "a1", width: 0, dockLabel: "Contact", render: renderContact },
-  settings: { title: "Appearance", icon: ICON.sliders, accent: "a4", width: 0, hotkey: "S", dockLabel: "Style", render: (b) => renderSettings(b) },
+  /* Appearance floats as a full-height side panel on the right, pinned to every workspace, so changes show on the windows beside it */
+  settings: { title: "Appearance", icon: ICON.sliders, accent: "a4", width: 0, hotkey: "S", dockLabel: "Style", floating: true, render: (b) => renderSettings(b),
+    get float() { const S = wm.S; return { w: S.phone ? S.W - 16 : Math.min(400, S.W - 16), h: S.H - 16, x: "right", y: "top", sticky: true }; } },
   terminal: { title: "Terminal", icon: ICON.term, accent: "a2", width: 1, hotkey: "T", hidden: true,
     render: (b, api) => Term(b, api, baseCommands(), { ps: "rahul@portfolio ~ $", banner: ["Welcome to the shell. Type <b>help</b>, or try <b>neofetch</b>."] }) },
 };

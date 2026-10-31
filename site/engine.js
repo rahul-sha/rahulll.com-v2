@@ -267,7 +267,7 @@ function Niri(opts) {
     const w = rect ? rect.width : o.w || 340, h = rect ? rect.height : o.h || 220;
     c.float = { w, h, sticky: !!o.sticky, ws: S.cur,
       x: rect ? rect.left : o.x === "left" ? 16 : o.x === "centre" ? (S.W - w) / 2 : S.W - w - 16,
-      y: rect ? rect.top : o.y === "top" ? 16 : S.H - h - 16 };
+      y: rect ? rect.top : o.y === "top" ? 16 : o.y === "centre" ? (S.H - h) / 2 : S.H - h - 16 };
     c.el.classList.add("floating");
     S.floats.push(c);
     front(c);
@@ -548,7 +548,7 @@ function Niri(opts) {
   });
   /* mouse: press and drag on the desktop or a tiled title bar to slide the strip, like a swipe.
      Inside a window, press and hold still for a moment first, so selecting text and clicking keep working. */
-  /* resting the mouse near the left or right edge brings the next window that way into focus, and keeps stepping while it stays there */
+  /* resting the mouse in the outer 5 percent at the left or right brings the next window that way into focus, and keeps stepping while it stays there */
   let hoverT = 0, hoverSide = 0;
   const glows = [-1, 1].map((d) => { const g = document.createElement("div"); g.className = "edge-glow " + (d < 0 ? "l" : "r"); g.setAttribute("aria-hidden", "true"); vp.append(g); return g; });
   const glow = (side, ms) => glows.forEach((g, j) => {
@@ -560,7 +560,7 @@ function Niri(opts) {
   vp.addEventListener("pointermove", (e) => {
     if (e.pointerType !== "mouse" || e.buttons || S.overview || S.phone || grab) { if (hoverSide) hoverOff(); return; }
     const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
-    const side = e.target.closest(".float-layer") ? 0 : x < 0.1 ? -1 : x > 0.9 ? 1 : 0;
+    const side = e.target.closest(".float-layer") ? 0 : x < 0.05 ? -1 : x > 0.95 ? 1 : 0;
     if (side === hoverSide) return;
     clearTimeout(hoverT); hoverSide = side;
     const wait = (ms) => { if (atEdge(side)) return glow(0); glow(side, ms); hoverT = setTimeout(tick, ms); };
@@ -695,6 +695,7 @@ const ICON = {
   fwd: `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>`,
   reload: `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.5-3.6M13 3v3h-3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>`,
   ext: `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 3h4v4M13 3L7 9M11 9.5V13H3V5h3.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`,
+  image: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10" r="1.8" fill="currentColor"/><path d="M4.5 17.5l5-5 3.5 3.5 3-3 3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
   close: `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>`,
   resume: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 11h6M9 15h6M9 7h3" stroke="currentColor" stroke-width="1.8"/></svg>`,
   work: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 4v4M12 16v4M4 12h4M16 12h4" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>`,

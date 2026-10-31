@@ -1,5 +1,6 @@
 ---
 title: Modular phone and watch stand
+short: Phone
 image: render.png
 printer: Bambu Lab A1
 material: "[PLA]"

@@ -1,5 +1,6 @@
 ---
 title: Belkin charging stand tray
+short: Belkin
 image: render.png
 printer: Bambu Lab A1
 material: "[PLA]"

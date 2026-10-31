@@ -279,7 +279,14 @@
 /* project: extra views (sections, animations) shown as labelled slots until the files arrive */
 .p-media { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
 .p-media li.has-file { grid-template-rows: minmax(0, 1fr) auto; align-content: stretch; gap: 0; padding: 0; overflow: hidden; border-style: solid; background: var(--surf2); }
-.p-media li.has-file a { display: block; min-height: 0; height: 100%; }
+.p-media li.has-file .pm-open { display: block; min-height: 0; height: 100%; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; font: inherit; }
+/* viewer window: the picture fills the body, caption and full-size link in a strip below */
+.win[data-kind="viewer"] .wb, .phone .float-layer .win[data-kind="viewer"] .wb { padding: 0; overflow: hidden; }
+.viewer { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; margin: 0; }
+.viewer img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; background: var(--surf2); }
+.viewer figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 14px; font-size: 12px; font-weight: 600; }
+.viewer figcaption a { display: inline-flex; align-items: center; gap: 4px; color: var(--accent-ink); text-decoration: none; white-space: nowrap; font-weight: 700; }
+.viewer figcaption a svg { width: 12px; height: 12px; }
 .p-media li.has-file img, .p-media li.has-file video { display: block; width: 100%; height: 100%; min-height: 0; object-fit: cover; background: #fff; }
 .p-media li.has-file video { object-fit: contain; background: #000; }
 .p-media li.has-file .pm-cap { padding: 6px 10px; font-size: 11.5px; line-height: 1.3; }

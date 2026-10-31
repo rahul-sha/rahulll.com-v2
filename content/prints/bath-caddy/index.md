@@ -1,5 +1,6 @@
 ---
 title: Bathroom caddy
+short: Caddy
 image: render.png
 printer: Bambu Lab A1
 material: "[PLA]"

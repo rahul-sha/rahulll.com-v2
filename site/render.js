@@ -61,10 +61,24 @@ function renderProjects2(b, api) {
 /* One anatomy for every project window */
 /* a media slot: the file when the content folder has it, a labelled placeholder until then */
 function mediaSlot(m) {
-  /* a filled slot shows the picture or clip; clips play like GIFs, silent and on a loop, unless the visitor prefers less motion; a click on a picture opens it full size in a new tab */
-  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video src="${m.file}" muted loop playsinline preload="metadata"${matchMedia("(prefers-reduced-motion: reduce)").matches ? " controls" : " autoplay"} aria-label="${esc(m.label)}"></video>` : `<a href="${m.file}" target="_blank" rel="noopener" title="Open full size in a new tab"><img src="${m.file}" alt="${esc(m.label)}" loading="lazy" decoding="async"></a>`}<span class="pm-cap">${esc(m.label)}</span></li>`;
+  /* a filled slot shows the picture or clip; clips play like GIFs, silent and on a loop, unless the visitor prefers less motion; a click on a picture opens it in a floating viewer window */
+  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video src="${m.file}" muted loop playsinline preload="metadata"${matchMedia("(prefers-reduced-motion: reduce)").matches ? " controls" : " autoplay"} aria-label="${esc(m.label)}"></video>` : `<button type="button" class="pm-open" data-view="${m.file}" title="Open in a viewer window"><img src="${m.file}" alt="${esc(m.label)}" loading="lazy" decoding="async"></button>`}<span class="pm-cap">${esc(m.label)}</span></li>`;
   return `<li class="pm-${m.kind}"><span class="pm-ic">${m.kind === "video" ? ICON.play : ICON.max}</span><span>${esc(m.label)}</span><small>[${m.kind === "video" ? "video" : "image"} to come]</small></li>`;
 }
+/* the viewer: a floating window in the site's own chrome, sized to the picture and centred, with the caption and a full-size link underneath */
+const CHROME = { tb: 40, cap: 34 };
+function openViewer(api, t, accent) {
+  const img = t.querySelector("img"), file = t.dataset.view, label = img.alt;
+  const nw = img.naturalWidth || 1200, nh = img.naturalHeight || 800, S = api.S;
+  /* on a phone the window keeps clear of the right-hand rail, like the guide does */
+  const maxW = S.phone ? S.W - 86 : S.W - 96, maxH = S.H - (S.phone ? 16 : 96) - CHROME.tb - CHROME.cap, k = Math.min(maxW / nw, maxH / nh, 1);
+  const w = Math.max(240, Math.round(nw * k)), h = Math.round(nh * k) + CHROME.tb + CHROME.cap;
+  const c = api.open({ key: "view-" + file, title: label, icon: ICON.image, accent, kind: "viewer", floating: true, float: { w, h, x: S.phone ? "left" : "centre", y: "centre" },
+    render: (b) => { b.innerHTML = `<figure class="viewer"><img src="${file}" alt="${esc(label)}" decoding="async"><figcaption><span>${esc(label)}</span><a href="${file}" target="_blank" rel="noopener">${ICON.ext} Full size</a></figcaption></figure>`; } });
+  /* once the chrome has a real height, trim the window to the picture plus title bar and caption, and re-centre it */
+  requestAnimationFrame(() => { if (!c.float) return; const extra = c.el.querySelector(".tb").offsetHeight + c.el.querySelector("figcaption").offsetHeight; c.float.h = Math.round(nh * k) + extra; c.float.y = (S.H - c.float.h) / 2; api.update(); });
+}
+const viewClick = (api, accent) => (e) => { const t = e.target.closest("[data-view]"); if (t) openViewer(api, t, accent); };
 function renderProject2(b, api, p) {
   /* a field left empty in content/projects/<id>/index.md prints nothing, so a short project reads as brief rather than unfinished */
   const c = CATS[p.cat], related = PROJECTS.filter((x) => x.cat === p.cat && x.id !== p.id).slice(0, 2);
@@ -80,8 +94,11 @@ function renderProject2(b, api, p) {
     <h3>Related</h3><p class="rel"><span>Proves</span>${skills.map((s) => `<i>${esc(s)}</i>`).join("")}</p>
     ${related.length ? `<p class="rel"><span>See also</span>${related.map((r) => `<button type="button" data-p="${r.id}">${r.title}</button>`).join("")}</p>` : ""}</div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-p]"); if (t) api.open(projSpec(projById(t.dataset.p))); });
+  b.addEventListener("click", viewClick(api, c.hue));
 }
-projSpec = (p) => ({ key: "proj-" + p.id, title: p.title, icon: ICON.work, accent: CATS[p.cat].hue, width: 0, kind: "project", render: renderProject2, arg: p });
+/* the dock shows one word per window: `short` from the Markdown, or the first word of the title */
+const dockWord = (p) => p.short || p.title.split(/[\s,:]+/)[0];
+projSpec = (p) => ({ key: "proj-" + p.id, title: p.title, icon: ICON.work, accent: CATS[p.cat].hue, width: 0, kind: "project", dockLabel: dockWord(p), render: renderProject2, arg: p });
 
 /* Resume: one outcome line per job, and a download button in place of skill bars */
 function renderResume2(b) {
@@ -139,8 +156,9 @@ function renderPrint(b, api, p) {
     ${p.url ? `<p class="r-dl"><a class="btn" href="${p.url}" target="_blank" rel="noopener">${ICON.ext} Open on MakerWorld</a><span>Download the model there</span></p>` : ""}
     <h3>Related</h3><p class="rel"><span>More prints</span>${others.map((o) => `<button type="button" data-print="${o.id}">${esc(o.title)}</button>`).join("")}</p></div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-print]"); if (t) api.open(printSpec(PRINTS.find((x) => x.id === t.dataset.print))); });
+  b.addEventListener("click", viewClick(api, p.hue));
 }
-const printSpec = (p) => ({ key: "print-" + p.id, title: p.title, icon: ICON.work, accent: p.hue, width: 1, kind: "print", dockLabel: p.short || p.title, render: renderPrint, arg: p });
+const printSpec = (p) => ({ key: "print-" + p.id, title: p.title, icon: ICON.work, accent: p.hue, width: 1, kind: "print", dockLabel: dockWord(p), render: renderPrint, arg: p });
 function renderGaming(b) {
   b.innerHTML = `<div class="gaming"><p class="kicker">Gaming</p><h2>Off the clock, controller in hand</h2>
     ${/^https:\/\//.test(GAMES.steam) ? `<p class="gm-steam"><a class="btn" href="${esc(GAMES.steam)}" target="_blank" rel="noopener">${ICON.ext} My Steam profile</a></p>` : ""}

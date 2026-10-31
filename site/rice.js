@@ -90,8 +90,10 @@ function apply() {
   K.forEach((k) => de.style.setProperty("--" + k, C[k]));
   de.style.setProperty("--ring", `var(--${R.ring})`);
   de.style.setProperty("--blur", R.blur + "px");
-  de.style.setProperty("--win-op", R.winOp + "%");
-  de.style.setProperty("--bar-op", R.barOp + "%");
+  /* light surfaces are near white, so the same opacity hides more of the wallpaper than it does in dark; light mode runs the glass a little clearer to match */
+  const glass = mode() === "light" ? .86 : 1;
+  de.style.setProperty("--win-op", Math.round(R.winOp * glass) + "%");
+  de.style.setProperty("--bar-op", Math.round(R.barOp * glass) + "%");
   de.style.setProperty("--r", R.radius + "px");
   de.style.setProperty("--ring-w", R.ringW + "px");
   de.style.setProperty("--dur", MOTION[R.motion][1]);
@@ -124,14 +126,14 @@ const GEN = {
   aurora(x, w, h, C, t) {
     const g0 = x.createLinearGradient(0, 0, 0, h); g0.addColorStop(0, C.bg); g0.addColorStop(1, C.surf); x.fillStyle = g0; x.fillRect(0, 0, w, h);
     ["a2", "a3", "a4", "a1"].forEach((k, i) => {
-      const g = x.createLinearGradient(0, 0, w, 0); g.addColorStop(0, rgba(C[k], 0)); g.addColorStop(.5, rgba(C[k], .42)); g.addColorStop(1, rgba(C[k], 0));
+      const g = x.createLinearGradient(0, 0, w, 0); g.addColorStop(0, rgba(C[k], 0)); g.addColorStop(.5, rgba(C[k], C.light ? .62 : .42)); g.addColorStop(1, rgba(C[k], 0));
       x.fillStyle = g; x.beginPath();
       const base = h * (.25 + i * .14), amp = h * .08;
       for (let px = 0; px <= w; px += w / 60) x.lineTo(px, base + Math.sin(px / w * 5 + t * (.4 + i * .15) + i * 1.7) * amp);
       for (let px = w; px >= 0; px -= w / 60) x.lineTo(px, base + h * .12 + Math.sin(px / w * 4 + t * (.3 + i * .1) + i) * amp * 1.4);
       x.fill();
     });
-    x.fillStyle = rgba(C.bg, .25); x.fillRect(0, 0, w, h);
+    x.fillStyle = rgba(C.bg, C.light ? .08 : .25); x.fillRect(0, 0, w, h);
   },
   waterline(x, w, h, C, t) {
     x.fillStyle = C.bg; x.fillRect(0, 0, w, h);
@@ -176,6 +178,12 @@ const GEN = {
     x.drawImage(customImg, (w - iw) / 2, (h - ih) / 2, iw, ih);
   },
 };
+/* in light mode the pale accents vanish behind a near-white window, so wallpapers are drawn with the deeper ink accents and less of their wash; the glass then shows as much colour as it does in dark */
+function wallColours() {
+  const C = { ...colours() };
+  if (mode() === "light") { C.light = true; ["a1", "a2", "a3", "a4"].forEach((k) => (C[k] = C[k + "-ink"])); }
+  return C;
+}
 const cv = document.getElementById("wall"), cx = cv.getContext("2d");
 let wallT = 0, wallRaf = 0, lastFrame = 0;
 const moving = () => R.anim && R.motion !== "off" && R.wall !== "custom" && R.wall !== "solid" && !matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -185,7 +193,7 @@ function paintWall(time) {
   cx.setTransform(r, 0, 0, r, 0, 0);
   if (live) wallT += Math.min(50, time - (lastFrame || time)) / 1000;
   lastFrame = time;
-  GEN[R.wall](cx, w, h, colours(), wallT);
+  GEN[R.wall](cx, w, h, wallColours(), wallT);
 }
 function drawWall() {
   cancelAnimationFrame(wallRaf);
@@ -251,7 +259,7 @@ function renderSettings(b) {
     <div class="row foot"><button type="button" class="btn" id="rice-reset">Reset to default</button><button type="button" class="btn ghost" id="rice-copy">Copy settings</button></div>
   </div>`;
   b.scrollTop = scrollTop;
-  b.querySelectorAll(".wp canvas").forEach((c) => { const k = c.parentElement.dataset.wall, x = c.getContext("2d"); GEN[k](x, c.width, c.height, colours(), 1.5); });
+  b.querySelectorAll(".wp canvas").forEach((c) => { const k = c.parentElement.dataset.wall, x = c.getContext("2d"); GEN[k](x, c.width, c.height, wallColours(), 1.5); });
   b.querySelectorAll("input[type=range]").forEach((r) => r.addEventListener("input", () => { r.nextElementSibling.textContent = r.value + r.nextElementSibling.textContent.replace(/[\d.]+/, ""); set({ [r.dataset.k]: +r.value }, true); }));
   b.querySelector("#rice-anim").addEventListener("change", (e) => set({ anim: e.target.checked }));
   b.querySelector("#rice-file").addEventListener("change", (e) => loadWall(e.target.files[0]));

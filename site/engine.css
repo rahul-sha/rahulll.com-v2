@@ -16,7 +16,7 @@ body { margin: 0; overflow: hidden; background: var(--bg); color: var(--fg); -we
 @media (prefers-reduced-motion: reduce) { .edge-glow.fill::after { animation: none; scale: 1 1; } }
 @supports (overflow-clip-margin: 48px) { .viewport { overflow: clip; overflow-clip-margin: 48px; } }
 .wsstack { position: absolute; inset: 0; transform-origin: 0 0; transition: transform calc(var(--dur, .45s) * 1.2) var(--ease); }
-.ws { position: absolute; left: 0; right: 0; transition: background .3s, border-radius .3s, scale .4s var(--ease); }
+.ws { position: absolute; left: 0; right: 0; transition: background .3s, border-radius .3s, scale .4s var(--ease), translate .4s var(--ease); }
 .strip { position: absolute; inset: 0; transition: transform var(--dur, .45s) var(--ease); }
 .ws-label { display: none; }
 .ws-empty { display: none; position: absolute; inset: 0; place-content: center; text-align: center; padding: 24px; color: var(--mute); }
@@ -37,7 +37,7 @@ body { margin: 0; overflow: hidden; background: var(--bg); color: var(--fg); -we
 .wb { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
 .overview .wb, .overview .tb-b { pointer-events: none; }
 .overview .win { cursor: pointer; }
-.overview .ws-label { display: block; position: absolute; left: 16px; top: -56px; font-size: 40px; }
+.overview .ws-label { display: block; position: absolute; left: 16px; top: -44px; font-size: 34px; line-height: 1.1; }
 .launcher, .hotkeys { position: absolute; inset: 0; z-index: 50; display: grid; place-items: start center; padding: 12vh 16px 16px; }
 .ln-box, .hk-box { width: min(560px, 100%); max-height: 76vh; overflow: auto; }
 .ln-box input { width: 100%; box-sizing: border-box; font: inherit; }

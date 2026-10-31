@@ -317,7 +317,10 @@
 /* ---------- Off the clock hub: a bento board whose tiles open their windows ---------- */
 .hb .lede { margin: 0 0 14px; color: var(--mute); max-width: 64ch; }
 .hb-pill { position: absolute; top: 10px; left: 10px; display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 999px; font: 800 10px var(--ui); letter-spacing: .07em; text-transform: uppercase; background: var(--accent); color: var(--on-a); }
+.hb { container-type: inline-size; }
 .bn { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 140px; grid-auto-flow: dense; gap: 10px; }
+/* in a third-wide window the board drops to two columns, as it does on a phone */
+@container (max-width: 620px) { .bn { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 132px; } .bt.gm1 > b, .bt.gm1 > .s2 { max-width: 116px; } .deck { left: 134px; grid-template-columns: 22px 1fr 22px; } .deck .stick { width: 20px; height: 20px; } }
 .bt { position: relative; overflow: hidden; display: grid; align-content: end; gap: 2px; padding: 10px; margin: 0; text-align: left; font: inherit; color: var(--fg); cursor: pointer; border-radius: var(--r); border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); background: color-mix(in srgb, var(--accent) 10%, var(--surf2)); transition: translate .25s, box-shadow .25s, border-color .25s; }
 .bt:hover, .bt:focus-visible { translate: 0 -3px; border-color: var(--accent); box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--accent) 70%, transparent); }
 .bt:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }

@@ -61,8 +61,8 @@ function renderProjects2(b, api) {
 /* One anatomy for every project window */
 /* a media slot: the file when the content folder has it, a labelled placeholder until then */
 function mediaSlot(m) {
-  /* a filled slot shows the picture or clip; a click on a picture opens it full size in a new tab */
-  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video src="${m.file}" controls muted loop preload="metadata" playsinline aria-label="${esc(m.label)}"></video>` : `<a href="${m.file}" target="_blank" rel="noopener" title="Open full size in a new tab"><img src="${m.file}" alt="${esc(m.label)}" loading="lazy" decoding="async"></a>`}<span class="pm-cap">${esc(m.label)}</span></li>`;
+  /* a filled slot shows the picture or clip; clips play like GIFs, silent and on a loop, unless the visitor prefers less motion; a click on a picture opens it full size in a new tab */
+  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video src="${m.file}" muted loop playsinline preload="metadata"${matchMedia("(prefers-reduced-motion: reduce)").matches ? " controls" : " autoplay"} aria-label="${esc(m.label)}"></video>` : `<a href="${m.file}" target="_blank" rel="noopener" title="Open full size in a new tab"><img src="${m.file}" alt="${esc(m.label)}" loading="lazy" decoding="async"></a>`}<span class="pm-cap">${esc(m.label)}</span></li>`;
   return `<li class="pm-${m.kind}"><span class="pm-ic">${m.kind === "video" ? ICON.play : ICON.max}</span><span>${esc(m.label)}</span><small>[${m.kind === "video" ? "video" : "image"} to come]</small></li>`;
 }
 function renderProject2(b, api, p) {
@@ -79,7 +79,7 @@ function renderProject2(b, api, p) {
     ${related.length ? `<p class="rel"><span>See also</span>${related.map((r) => `<button type="button" data-p="${r.id}">${r.title}</button>`).join("")}</p>` : ""}</div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-p]"); if (t) api.open(projSpec(projById(t.dataset.p))); });
 }
-projSpec = (p) => ({ key: "proj-" + p.id, title: p.title, icon: ICON.work, accent: CATS[p.cat].hue, width: 1, kind: "project", render: renderProject2, arg: p });
+projSpec = (p) => ({ key: "proj-" + p.id, title: p.title, icon: ICON.work, accent: CATS[p.cat].hue, width: 0, kind: "project", render: renderProject2, arg: p });
 
 /* Resume: one outcome line per job, and a download button in place of skill bars */
 function renderResume2(b) {

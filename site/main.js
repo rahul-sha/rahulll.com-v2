@@ -4,10 +4,10 @@ document.querySelectorAll(".bar button, .ss-box button").forEach((b) => (b.inner
 
 const apps = {
   about: { title: "About", icon: ICON.about, accent: "a1", width: 0, dockLabel: "About", render: renderAbout2 },
-  skills: { title: "Skills", icon: ICON.lab, accent: "a3", width: 1, dockLabel: "Skills", render: renderSkills },
-  resume: { title: "Resume", icon: ICON.resume, accent: "a2", width: 1, dockLabel: "Resume", render: renderResume2 },
-  projects: { title: "Projects", icon: ICON.work, accent: "a1", width: 2, dockLabel: "Projects", render: renderProjects2 },
-  sites: { title: "Off the clock", icon: ICON.globe, accent: "a4", width: 2, dockLabel: "Off the clock", render: renderHub },
+  skills: { title: "Skills", icon: ICON.lab, accent: "a3", width: 0, dockLabel: "Skills", render: renderSkills },
+  resume: { title: "Resume", icon: ICON.resume, accent: "a2", width: 0, dockLabel: "Resume", render: renderResume2 },
+  projects: { title: "Projects", icon: ICON.work, accent: "a1", width: 0, dockLabel: "Projects", render: renderProjects2 },
+  sites: { title: "Off the clock", icon: ICON.globe, accent: "a4", width: 0, dockLabel: "Off the clock", render: renderHub },
   home: { title: "Smart home", icon: ICON.home, accent: "a3", width: 1, dockLabel: "Smart home", render: renderSmartHome },
   homelab: { title: "Homelab", icon: ICON.lab, accent: "a2", width: 0, dockLabel: "Homelab", render: renderHomelab },
   prints: { title: "3D prints", icon: ICON.work, accent: "a1", width: 1, dockLabel: "3D prints", render: renderPrints },
@@ -31,8 +31,8 @@ const wm = Niri({
   ],
   workspaces: [
     { name: "Hello", open: ["about", "skills", "resume"] },
-    /* for now, Engineering opens on the Cirrus Vision Jet alone; Projects is one click away in the dock */
-    { name: "Engineering", open: [projSpec(PROJECTS.find((p) => p.id === "cirrus-jet"))] },
+    /* the index windows are a third wide, so the first project and the hub tiles sit beside them */
+    { name: "Engineering", open: ["projects", projSpec(PROJECTS.find((p) => p.id === "cirrus-jet"))] },
     /* the hub, the first site, 3D prints, and Gaming; the other tiles open their windows from the hub */
     { name: "Off the clock", open: ["sites", "site-" + SITES[0].id, "prints", "gaming"] },
   ],

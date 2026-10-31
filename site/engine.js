@@ -189,12 +189,15 @@ function Niri(opts) {
     if (S.overview) {
       /* sized so two and a half workspaces fit; the camera follows the current one and stops at the ends */
       const padF = 0.08, s = (1 - 2 * padF) / 2.5, n = S.ws.length, pad = S.H * padF;
-      const tot = s * (n * st - 64);
-      let y = S.H / 2 - s * (S.cur * st + S.H / 2);
+      /* in the overview the workspaces pull closer together than their scrolling stride */
+      const pull = 28, sto = st - pull;
+      S.ws.forEach((ws, i) => (ws.el.style.translate = `0 ${-i * pull}px`));
+      const tot = s * (n * sto - 64 + pull);
+      let y = S.H / 2 - s * (S.cur * sto + S.H / 2);
       if (tot + 2 * pad <= S.H) y = (S.H - tot) / 2;
       else y = Math.max(S.H - tot - pad, Math.min(pad, y));
       stack.style.transform = `translate(${S.W / 2 - (s * S.W) / 2}px, ${y}px) scale(${s})`;
-    } else stack.style.transform = `translateY(${-S.cur * st}px)`;
+    } else { stack.style.transform = `translateY(${-S.cur * st}px)`; S.ws.forEach((ws) => (ws.el.style.translate = "")); }
     root.classList.toggle("overview", S.overview);
     root.classList.toggle("phone", S.phone);
   }

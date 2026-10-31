@@ -23,7 +23,7 @@ Rahul's portfolio as a Noctalia-style desktop on a niri-like scrolling window ma
 
 - Colourful, dynamic, fun, still professional. No grid backgrounds, ransom-note lettering, stickers, or the generic AI-portfolio look.
 - Four accents, one per engineering stage: a1 Make, a2 Design, a3 Simulate, a4 Test. A window takes the accent of its content.
-- Three workspaces only: Hello, Built (engineering projects and the shipped sites), Off the clock. Contact and Style float on every workspace.
+- Three workspaces only: Hello, Engineering, Off the clock (the Shipped sites first, then Smart home, Homelab, 3D prints, Gaming). Contact and Style float on every workspace.
 - Live sites in Shipped are framed only after the visitor clicks; show the stand-in until then.
 - Desktop zooms to 85 percent through CSS `zoom` on `#desk`; phones stay at 100.
 - Placeholders are written in square brackets so they are easy to find: `[photo in use]`.

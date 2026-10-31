@@ -22,19 +22,17 @@ const apps = {
 /* each live site is also a dock item in the Live group */
 const SHORT = { aperture: "Aperture", gridwalk: "Grid Walk", aanchal: "aanchalll", chopshop: "Chop Shop" };
 SITES.forEach((s) => (apps["site-" + s.id] = { ...siteSpec(s), hidden: true, dockLabel: SHORT[s.id] }));
-/* engineering projects and the shipped sites share one workspace */
-const WS2 = "Built";
 const wm = Niri({
   apps, dock: [
     { name: "Hello", ws: 0, items: ["about", "skills", "resume"] },
-    { name: WS2, ws: 1, items: ["projects", "sites"].concat(SITES.map((s) => "site-" + s.id)) },
-    { name: "Off the clock", ws: 2, items: ["home", "homelab", "prints", "gaming"] },
+    { name: "Engineering", ws: 1, items: ["projects"] },
+    { name: "Off the clock", ws: 2, items: ["sites"].concat(SITES.map((s) => "site-" + s.id), ["home", "homelab", "prints", "gaming"]) },
     { name: "Anywhere", items: ["contact", "settings"] },
   ],
   workspaces: [
     { name: "Hello", open: ["about", "skills", "resume"] },
-    { name: WS2, open: ["projects", projSpec(PROJECTS.find((p) => p.id === "cad-machine")), "sites"].concat(SITES.map((s) => "site-" + s.id)) },
-    { name: "Off the clock", open: ["home", "homelab", "prints", "gaming"] },
+    { name: "Engineering", open: ["projects", projSpec(PROJECTS.find((p) => p.id === "cad-machine"))] },
+    { name: "Off the clock", open: ["sites"].concat(SITES.map((s) => "site-" + s.id), ["home", "homelab", "prints", "gaming"]) },
   ],
   launcherExtras: (api) => deskExtras().concat(siteExtras(api), projectExtras(api), riceExtras()),
   extraKeys: [["E", "Session menu"], ["S", "Appearance settings"], ["W", "Next wallpaper"], ["P", "Next preset"], ["G", "Show or hide the guide"], ["M", "Play or pause music"], ["Shift + M", "Next track"], ["N", "Control centre"]],

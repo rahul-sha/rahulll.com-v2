@@ -134,6 +134,7 @@
 
 /* phones: the bar is a rail at the bottom right, so the control centre opens beside it */
 .phone .cc, .phone.bar-attached .cc { top: auto; right: 64px; bottom: calc(max(8px, env(safe-area-inset-bottom)) + 76px); width: calc(100% - 72px); max-height: calc(100% - 100px); transform-origin: bottom right; }
+.phone.rail-away .cc { right: 8px; width: calc(100% - 16px); }
 .phone .cc-row { grid-template-columns: minmax(0, 1fr); }
 .phone .cc-sen { display: none; }
 @media (prefers-reduced-motion: reduce) { .night { transition: none; } }

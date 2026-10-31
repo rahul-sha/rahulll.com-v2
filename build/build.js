@@ -82,7 +82,7 @@ function projects() {
     out.push({
       id, cat: STAGE[fm.stage] || "design", title: fm.title || id, img: image("projects", id, fm.image, where), thumb: "", sum: html(body) || "",
       steps: fm.steps || [], outcome: fm.outcome || "", caption: fm.caption || "", year: String(fm.year || ""), role: fm.role || "", team: fm.team || "", result: fm.result || "",
-      flagship: !!fm.flagship, order: fm.order || 99,
+      flagship: !!fm.flagship, order: fm.order || 99, tools: fm.tools || [],
       media: (fm.media || []).map((m) => ({ kind: m.kind === "video" ? "video" : "section", label: m.label || "", file: image("projects", id, m.file, where) })),
     });
   }
@@ -96,7 +96,7 @@ function prints() {
     const { fm, body } = readMd(file);
     need(fm, ["title", "printer", "material", "why"], where);
     out.push({
-      id, title: fm.title || id, short: fm.short || "", img: image("prints", id, fm.image, where), thumb: "", printer: fm.printer || "", material: fm.material || "",
+      id, title: fm.title || id, short: fm.short || "", img: image("prints", id, fm.image, where), thumb: "", caption: fm.caption || "", printer: fm.printer || "", material: fm.material || "",
       why: inline(fm.why), hue: fm.accent || "a1", url: fm.makerworld || "", private: !fm.makerworld, story: html(body), notes: fm.notes || [],
       settings: { layer: fm.layer || "", infill: fm.infill || "", supports: fm.supports || "", time: fm.time || "" },
       photos: (fm.photos || []).map((f) => image("prints", id, f, where)).filter(Boolean), order: fm.order || 99,

@@ -4,6 +4,11 @@ stage: design
 image: hero.png
 caption: Final render in real-world lighting, from Fusion 360
 flagship: true
+order: 1
+tools:
+  - Fusion 360 CAD
+  - T-spline form modelling
+  - Fusion 360 Simulation
 year: "2021"
 role: Surface modelling, mechanism design, and FEA
 team: Solo

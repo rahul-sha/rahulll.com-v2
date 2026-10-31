@@ -7,9 +7,10 @@ stages:
       - Product housings
       - Design for manufacture
     proof:
-      - volute
+      - cirrus-jet
+      - hvac
       - thermometer
-      - concept
+      - desk-mount
   simulate:
     tools:
       - Fusion 360 Simulation
@@ -18,8 +19,7 @@ stages:
       - CFD
       - FEA
     proof:
-      - draft
-      - assembly
+      - hvac
   make:
     tools:
       - Fusion 360 CAM
@@ -34,7 +34,7 @@ stages:
       - Acoustic analysis
       - Prototype validation
     proof:
-      - diagnostics
+      - hvac
 beyond:
   - name: Web building
     line: Four sites shipped with Claude Code, one pull request at a time

@@ -10,7 +10,7 @@ const apps = {
   sites: { title: "Off the clock", icon: ICON.globe, accent: "a4", width: 0, dockLabel: "Off the clock", render: renderHub },
   home: { title: "Smart home", icon: ICON.home, accent: "a3", width: 1, dockLabel: "Smart home", render: renderSmartHome },
   homelab: { title: "Homelab", icon: ICON.lab, accent: "a2", width: 0, dockLabel: "Homelab", render: renderHomelab },
-  prints: { title: "3D prints", icon: ICON.work, accent: "a1", width: 1, dockLabel: "3D prints", render: renderPrints },
+  prints: { title: "3D prints", icon: ICON.work, accent: "a1", width: 0, dockLabel: "3D prints", render: renderPrints },
   gaming: { title: "Gaming", icon: ICON.play, accent: "a4", width: 0, dockLabel: "Gaming", render: renderGaming },
   contact: { title: "Contact", icon: ICON.mail, accent: "a1", width: 0, dockLabel: "Contact", render: renderContact },
   /* Appearance floats as a full-height side panel on the right, pinned to every workspace, so changes show on the windows beside it */

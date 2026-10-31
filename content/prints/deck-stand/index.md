@@ -1,6 +1,7 @@
 ---
 title: Steam Deck stand for a case with a JSAUX connector
-image: ""
+image: stand.webp
+caption: The printed stand, photographed on the desk
 printer: Bambu Lab A1
 material: "[PLA]"
 layer: "[0.2 mm]"
@@ -14,7 +15,9 @@ notes:
   - "[Design note: how the angle and the cable path were chosen]"
   - "[Design note: tolerances for the case and connector]"
   - "[Iteration: what changed between prints]"
-photos: []
+photos:
+  - deck-on-stand.webp
+  - controller.webp
 ---
 
 [The problem this solves: the case, the JSAUX connector, and why nothing off the shelf fitted.]

@@ -66,16 +66,18 @@ function mediaSlot(m) {
   return `<li class="pm-${m.kind}"><span class="pm-ic">${m.kind === "video" ? ICON.play : ICON.max}</span><span>${esc(m.label)}</span><small>[${m.kind === "video" ? "video" : "image"} to come]</small></li>`;
 }
 function renderProject2(b, api, p) {
+  /* a field left empty in content/projects/<id>/index.md prints nothing, so a short project reads as brief rather than unfinished */
   const c = CATS[p.cat], related = PROJECTS.filter((x) => x.cat === p.cat && x.id !== p.id).slice(0, 2);
-  const skills = SKILLS[p.cat].tools.slice(0, 3);
-  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async"><figcaption>${esc(p.caption || "[Caption for this image]")}</figcaption></figure>
-    <p class="kicker" style="color:var(--accent-ink)">${c.verb}${FLAGSHIPS.includes(p.id) ? " · Flagship" : ""}</p><h2>${p.title}</h2><p class="lede">${p.outcome || "[One-line outcome, such as: one 5-axis setup instead of three]"}</p>
-    <dl class="facts"><div><dt>Year</dt><dd>${p.year || "[year]"}</dd></div><div><dt>Role</dt><dd>${p.role || "[role]"}</dd></div><div><dt>Team</dt><dd>${p.team || "[size]"}</dd></div><div><dt>Tools</dt><dd>${skills.join(", ")}</dd></div></dl>
+  const skills = p.tools && p.tools.length ? p.tools : SKILLS[p.cat].tools.slice(0, 3);
+  const facts = [["Year", p.year], ["Role", p.role], ["Team", p.team], ["Tools", skills.join(", ")]].filter(([, v]) => v);
+  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async">${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ""}</figure>
+    <p class="kicker" style="color:var(--accent-ink)">${c.verb}${FLAGSHIPS.includes(p.id) ? " · Flagship" : ""}</p><h2>${p.title}</h2>${p.outcome ? `<p class="lede">${p.outcome}</p>` : ""}
+    <dl class="facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
     <h3>The problem</h3>${p.sum}
-    <h3>What I did</h3>${p.steps ? `<ol class="steps">${p.steps.map((s) => `<li>${s}</li>`).join("")}</ol>` : `<ol class="steps"><li>[Step one]</li><li>[Step two]</li><li>[Step three]</li></ol>`}
+    ${p.steps && p.steps.length ? `<h3>What I did</h3><ol class="steps">${p.steps.map((s) => `<li>${s}</li>`).join("")}</ol>` : ""}
     ${p.media && p.media.length ? `<h3>More views</h3><ul class="p-media">${p.media.map((m) => mediaSlot(m)).join("")}</ul>` : ""}
-    <h3>Result</h3><p>${p.result || "[The result, with a number: time saved, tolerance held, or the difference found]"}</p>
-    <h3>Related</h3><p class="rel"><span>Proves</span>${skills.map((s) => `<i>${s}</i>`).join("")}</p>
+    ${p.result ? `<h3>Result</h3><p>${p.result}</p>` : ""}
+    <h3>Related</h3><p class="rel"><span>Proves</span>${skills.map((s) => `<i>${esc(s)}</i>`).join("")}</p>
     ${related.length ? `<p class="rel"><span>See also</span>${related.map((r) => `<button type="button" data-p="${r.id}">${r.title}</button>`).join("")}</p>` : ""}</div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-p]"); if (t) api.open(projSpec(projById(t.dataset.p))); });
 }
@@ -128,7 +130,7 @@ function renderPrints(b, api) {
 /* one print in detail: render, the story, design notes, print settings, and slots for photos in use */
 function renderPrint(b, api, p) {
   const others = PRINTS.filter((x) => x.id !== p.id).slice(0, 3);
-  b.innerHTML = `<div class="project print" style="${hueStyle(p.hue)}"><figure>${p.img ? `<img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async">` : `<span class="pr-img"><span>[render]</span></span>`}<figcaption>${p.img ? "Render from Fusion 360" : "[Render to come]"}</figcaption></figure>
+  b.innerHTML = `<div class="project print" style="${hueStyle(p.hue)}"><figure>${p.img ? `<img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async">` : `<span class="pr-img"><span>[render]</span></span>`}<figcaption>${p.img ? esc(p.caption || "Render from Fusion 360") : "[Render to come]"}</figcaption></figure>
     <p class="kicker" style="color:var(--accent-ink)">3D print${p.private ? " · Private design" : " · On MakerWorld"}</p><h2>${esc(p.title)}</h2><p class="lede">${p.why}</p>
     <dl class="facts"><div><dt>Printer</dt><dd>${esc(p.printer)}</dd></div><div><dt>Material</dt><dd>${esc(p.material)}</dd></div><div><dt>Layer</dt><dd>${esc(p.settings.layer)}</dd></div><div><dt>Infill</dt><dd>${esc(p.settings.infill)}</dd></div><div><dt>Supports</dt><dd>${esc(p.settings.supports)}</dd></div><div><dt>Print time</dt><dd>${esc(p.settings.time)}</dd></div></dl>
     <h3>Why it exists</h3>${p.story}

@@ -19,7 +19,7 @@ jobs:
   - dates: 2017 to 2018
     title: Research Intern
     place: Aquifer Labs, Singapore
-    line: "[One line on the internship]"
+    line: Research and development of experimental compressors, where the HVAC work began.
 study:
   - dates: 2015 to 2018
     title: MSc Aerospace Engineering
@@ -34,10 +34,8 @@ tools:
   - Coda.io
   - Fusion 360 CAM
   - Fusion 360 Simulation
-  - Photography
   - SolidWorks
   - Ansys / COMSOL
-  - Lightroom
   - HTML / CSS
 ---
 

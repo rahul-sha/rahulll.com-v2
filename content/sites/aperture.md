@@ -9,6 +9,7 @@ private: false
 shot: screenshot.png
 video: walkthrough.mp4
 order: 1
+width: 1/3
 ---
 
 My photo portfolio. Scrolling walks you through every photo in 3D.

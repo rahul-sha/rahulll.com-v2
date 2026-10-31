@@ -26,7 +26,7 @@ const WALLS = { volute: "Volute", aurora: "Aurora", waterline: "Waterline", dune
 const MOTION = { snappy: ["Snappy", ".22s", "cubic-bezier(.2, .8, .2, 1)"], smooth: ["Smooth", ".45s", "cubic-bezier(.22, 1, .36, 1)"], springy: ["Springy", ".65s", "cubic-bezier(.34, 1.56, .64, 1)"], slow: ["Slow", "1.1s", "cubic-bezier(.22, 1, .36, 1)"], off: ["Off", ".001s", "linear"] };
 const OPENS = { zoom: ["Zoom", "win-in"], slide: ["Slide up", "win-slide"], drop: ["Drop in", "win-drop"], unfold: ["Unfold", "win-unfold"], none: ["None", "win-none"] };
 /* Layout defaults every preset shares */
-const LAYOUT = { bar: "floating", dock: "always", labels: "shown", intro: "on", dockWs: "current", scale: 85 };
+const LAYOUT = { bar: "floating", dock: "always", labels: "shown", intro: "on", dockWs: "current", scale: 85, clock: "12" };
 /* Rahul's own rice, the default for every visitor (30 Oct 2026) */
 const BASE = { scheme: "everforest", mode: "dark", wall: "aurora", anim: true, blur: 25, winOp: 59, barOp: 46, radius: 8, gap: 10, ring: "a2", ringW: 1, motion: "smooth", open: "unfold", ...LAYOUT };
 const NOCTALIA = { scheme: "noctalia", mode: "system", wall: "volute", anim: false, blur: 14, winOp: 100, barOp: 78, radius: 18, gap: 16, ring: "a2", ringW: 2, motion: "smooth", open: "zoom", ...LAYOUT };
@@ -103,8 +103,10 @@ function apply() {
   wm.root.classList.toggle("dock-labels", R.labels === "shown");
   wm.root.classList.toggle("dock-current", R.dockWs === "current");
   de.style.setProperty("--zoom", R.scale / 100);
+  de.dataset.clock = R.clock; if (window.tickClock) tickClock();
   wm.setGap(R.gap);
   drawWall();
+  if (typeof player !== "undefined") player.redraw();
   save();
 }
 
@@ -204,7 +206,7 @@ function set(patch, quiet) {
   apply();
   if (!quiet) refreshSettings();
 }
-function usePreset(k) { const { name, ...p } = PRESETS[k]; set({ ...p, mode: R.mode, labels: R.labels, intro: R.intro, dockWs: R.dockWs, scale: R.scale, preset: k }); wm.toast("Preset: " + name, "Press P for the next one, or S to tweak it.", 2400); }
+function usePreset(k) { const { name, ...p } = PRESETS[k]; set({ ...p, mode: R.mode, labels: R.labels, intro: R.intro, dockWs: R.dockWs, scale: R.scale, clock: R.clock, preset: k }); wm.toast("Preset: " + name, "Press P for the next one, or S to tweak it.", 2400); }
 function nextPreset() { const ks = Object.keys(PRESETS); usePreset(ks[(ks.indexOf(R.preset) + 1) % ks.length]); }
 function nextWall() { const ks = Object.keys(WALLS).filter((k) => k !== "custom" || customImg); set({ wall: ks[(ks.indexOf(R.wall) + 1) % ks.length] }); wm.toast("Wallpaper", WALLS[R.wall], 1600); }
 function riceExtras() { return Object.entries(PRESETS).map(([k, p]) => ({ label: p.name, hint: "Theme preset", icon: ICON.sliders, run: () => usePreset(k) })).concat([{ label: "Appearance settings", hint: "Settings", icon: ICON.sliders, run: () => wm.open("settings") }]); }
@@ -244,6 +246,7 @@ function renderSettings(b) {
     <p class="lbl">Dock shows</p>${seg("dockWs", { current: "This workspace", all: "Every workspace" })}
     <p class="lbl">Interface scale</p>${seg("scale", { 75: "Small", 85: "Compact", 100: "Cosy" })}
     <p class="lbl">Dock labels</p>${seg("labels", { shown: "Shown", icons: "Icons only" })}
+    <p class="lbl">Clock</p>${seg("clock", { 12: "12-hour, AM and PM", 24: "24-hour" })}
     <p class="lbl">Intro when the page loads</p>${seg("intro", { on: "Overview, then zoom in", off: "Off" })}
     <div class="row foot"><button type="button" class="btn" id="rice-reset">Reset to default</button><button type="button" class="btn ghost" id="rice-copy">Copy settings</button></div>
   </div>`;

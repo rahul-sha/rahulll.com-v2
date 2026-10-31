@@ -88,12 +88,12 @@ const LEN = 96;
 const player = (() => {
   let ctx, master, an, bus, noise, timer, step = 0, next = 0, start = 0, playing = false, ti = 0;
   const subs = [];
-  const emit = () => subs.forEach((f) => f());
+  const emit = () => { subs.forEach((f) => f()); if (!playing) draw(); };
   function init() {
     ctx = new (window.AudioContext || window.webkitAudioContext)();
     master = ctx.createGain(); master.gain.value = D.vol / 100 * .8;
     const comp = ctx.createDynamicsCompressor();
-    an = ctx.createAnalyser(); an.fftSize = 256; an.smoothingTimeConstant = .78;
+    an = ctx.createAnalyser(); an.fftSize = 2048; an.smoothingTimeConstant = .72;
     master.connect(comp); comp.connect(an); an.connect(ctx.destination);
     noise = ctx.createBuffer(1, ctx.sampleRate * .2, ctx.sampleRate);
     const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
@@ -149,21 +149,38 @@ const player = (() => {
     emit(); loop();
   }
   function pause() { if (!ctx) return; ctx.suspend(); playing = false; clearInterval(timer); emit(); }
-  /* visualiser: cava-style bars on every registered canvas */
+  /* visualiser: cava-style bars on every registered canvas. Bars are spread on a log scale from bass to hi-hat,
+     drawn at the screen's pixel density, and rest in a low wave when paused, so they never look like a dashed line */
   const cans = new Set();
-  const buf = new Uint8Array(128);
+  const buf = new Uint8Array(1024);
+  const LO = 45, HI = 9000;
   let raf = 0;
+  function level(i, n) {
+    const ny = (ctx ? ctx.sampleRate : 48000) / 2, bins = buf.length;
+    const f0 = LO * (HI / LO) ** (i / n), f1 = LO * (HI / LO) ** ((i + 1) / n);
+    const b0 = Math.max(1, Math.floor(f0 / ny * bins)), b1 = Math.max(b0 + 1, Math.ceil(f1 / ny * bins));
+    let m = 0; for (let b = b0; b < b1 && b < bins; b++) m = Math.max(m, buf[b]);
+    return Math.min(1, (m / 255) * (1 + i / n * .9));
+  }
   function draw() {
-    if (an && playing) an.getByteFrequencyData(buf); else buf.fill(0);
-    const cs = getComputedStyle(document.documentElement);
+    const live = an && playing;
+    if (live) an.getByteFrequencyData(buf);
+    const cs = getComputedStyle(document.documentElement), dpr = Math.min(3, devicePixelRatio || 1);
     cans.forEach((c) => {
-      if (!c.isConnected) return cans.delete(c);
-      const x = c.getContext("2d"), n = +c.dataset.bars || 24, w = c.width, h = c.height, gap = Math.max(1, w / n * .28), bw = w / n - gap;
+      /* a canvas may be registered before its window is on the page; forget it only once it has been shown and removed */
+      if (!c.isConnected) { if (c.dataset.seen) cans.delete(c); return; }
+      c.dataset.seen = 1;
+      const cw = c.clientWidth, ch = c.clientHeight;
+      if (!cw || !ch) return;
+      if (c.width !== Math.round(cw * dpr) || c.height !== Math.round(ch * dpr)) { c.width = Math.round(cw * dpr); c.height = Math.round(ch * dpr); }
+      const x = c.getContext("2d"), n = +c.dataset.bars || 24, w = c.width, h = c.height, gap = Math.max(dpr, w / n * .3), bw = (w - gap * (n - 1)) / n, r = Math.min(bw / 2, 3 * dpr);
       x.clearRect(0, 0, w, h);
       x.fillStyle = cs.getPropertyValue("--" + (c.dataset.ac || TRACKS[ti].ac)).trim() || "#fff";
+      x.globalAlpha = live ? 1 : .55;
       for (let i = 0; i < n; i++) {
-        const v = buf[Math.floor(2 + i * (70 / n))] / 255, bh = Math.max(h * .08, v * v * h);
-        x.beginPath(); x.roundRect ? x.roundRect(i * (bw + gap), h - bh, bw, bh, Math.min(bw / 2, 3)) : x.rect(i * (bw + gap), h - bh, bw, bh); x.fill();
+        const v = live ? level(i, n) ** 1.4 : .22 + .3 * Math.sin((i / Math.max(1, n - 1)) * Math.PI) + .08 * Math.sin(i * 1.7);
+        const bh = Math.max(Math.min(bw, h * .15), Math.min(1, v) * h), y = live ? h - bh : (h - bh) / 2;
+        x.beginPath(); x.roundRect ? x.roundRect(i * (bw + gap), y, bw, bh, r) : x.rect(i * (bw + gap), y, bw, bh); x.fill();
       }
     });
   }
@@ -175,7 +192,8 @@ const player = (() => {
     next: () => { load(ti + 1); if (!playing) play(); }, prev: () => { load(ti - 1); if (!playing) play(); },
     pick: (i) => { load(i); if (!playing) play(); },
     vol: (v) => { D.vol = v; saveD(); if (master) master.gain.setTargetAtTime(v / 100 * .8, ctx.currentTime, .05); },
-    canvas: (c) => { cans.add(c); draw(); },
+    canvas: (c) => { if (!c) return; cans.add(c); if (window.ResizeObserver) new ResizeObserver(() => { if (!playing) draw(); }).observe(c); draw(); },
+    redraw: () => { if (!playing) draw(); },
     on: (f) => subs.push(f),
   };
 })();
@@ -183,7 +201,7 @@ const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(
 function renderMusic(b) {
   b.innerHTML = `<div class="mu">
     <div class="mu-top"><span class="mu-disc"><i></i></span><div class="mu-meta"><p class="kicker">Now playing</p><b class="mu-t"></b><span class="mu-a">Made live in your browser</span></div></div>
-    <canvas class="mu-viz" width="520" height="110" data-bars="28" aria-hidden="true"></canvas>
+    <canvas class="mu-viz" data-bars="32" aria-hidden="true"></canvas>
     <div class="mu-prog"><i></i></div><div class="mu-time"><span class="mu-p">0:00</span><span>${fmt(LEN)}</span></div>
     <div class="mu-ctl"><button type="button" class="mu-b" data-m="prev" aria-label="Previous track">${ICON.prev}</button><button type="button" class="mu-b mu-play" data-m="toggle" aria-label="Play or pause (M)"></button><button type="button" class="mu-b" data-m="next" aria-label="Next track (Shift M)">${ICON.next}</button>
       <label class="mu-vol"><span class="sr">Volume</span><input type="range" min="0" max="100" value="${D.vol}" aria-label="Volume"></label></div>
@@ -219,7 +237,6 @@ setInterval(() => {
   document.querySelectorAll(".mu-p").forEach((p) => (p.textContent = fmt(s)));
 }, 500);
 player.canvas(document.querySelector("#media canvas"));
-document.querySelector("#media canvas").dataset.bars = 6;
 document.getElementById("m-pp").onclick = () => player.toggle();
 document.getElementById("m-open").onclick = () => toggleMusic(true);
 syncMusic();
@@ -229,6 +246,35 @@ function setNight(v) { D.night = v; saveD(); desk.classList.toggle("night-on", v
 function setDnd(v) { D.dnd = v; saveD(); desk.classList.toggle("dnd", v); syncCC(); wm.toast(v ? "Do not disturb is on" : "Do not disturb is off", v ? "Pop-up notes stay quiet until you turn this off." : "Pop-up notes are back.", 2200, true); }
 desk.classList.toggle("night-on", D.night);
 desk.classList.toggle("dnd", D.dnd);
+
+/* ---------- Weather where the visitor is: /api/weather reads their approximate place on Vercel, so there is no permission pop-up ---------- */
+let WX = null;
+const wxTemp = (w) => `${Math.round(w.temp)}${w.unit}`;
+function weatherCard() {
+  if (!WX) return `<div class="cc-sen"><span>Weather</span><b>--</b><small>${WX === false ? "Not available right now" : "Checking the sky"}</small></div>`;
+  const n = WX.next.length ? WX.next : [WX.temp], lo = Math.min(...n), hi = Math.max(...n), span = hi - lo || 1;
+  const pts = n.map((t, i) => `${(i / Math.max(1, n.length - 1) * 100).toFixed(1)},${(30 - (t - lo) / span * 26).toFixed(1)}`).join(" ");
+  return `<div class="cc-sen"><span>${esc(WX.city || "Where you are")}</span><b>${wxTemp(WX)}</b><svg viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg><small>${esc(WX.sky)}, next 12 hours</small></div>`;
+}
+function syncWeather() {
+  const chip = document.getElementById("wx");
+  if (chip) {
+    chip.querySelector(".wx-c").textContent = WX ? WX.city || WX.sky : "Weather";
+    chip.querySelector("b").textContent = WX ? wxTemp(WX) : "--";
+    chip.title = WX ? `${WX.sky} in ${WX.city || "your area"}` : "Weather is not available right now";
+  }
+  const sen = CC && !CC.hidden && CC.querySelector(".cc-sen");
+  if (sen) sen.outerHTML = weatherCard();
+}
+async function loadWeather() {
+  try {
+    const r = await fetch("/api/weather", { headers: { accept: "application/json" } });
+    const d = r.status === 200 ? await r.json() : null;
+    WX = d && Number.isFinite(d.temp) ? d : false;
+  } catch (_) { WX = false; }
+  syncWeather();
+}
+loadWeather(); setInterval(loadWeather, 20 * 60000);
 
 /* ---------- Control centre: quick toggles, media, calendar, and a sensor, in the spirit of Noctalia and DankMaterialShell ---------- */
 const CC = document.getElementById("cc"), ccBtn = document.getElementById("b-cc"), t0 = Date.now();
@@ -248,12 +294,12 @@ const TOG = [
 ];
 function renderCC() {
   const up = Math.max(1, Math.round((Date.now() - t0) / 60000));
-  CC.innerHTML = `<div class="cc-head"><img src="${IMG.ME || ""}" alt=""><div><b>rahul@niri</b><span>Up ${up} min · four workspaces</span></div>
+  CC.innerHTML = `<div class="cc-head"><img src="${IMG.ME || ""}" alt=""><div><b>rahul@portfolio</b><span>Up ${up} min · four workspaces</span></div>
       <button type="button" class="ib" data-cc="rice" aria-label="Appearance" title="Appearance">${ICON.sliders}</button><button type="button" class="ib" data-cc="power" aria-label="Session menu" title="Session menu (E)">${ICON.power}</button></div>
     <div class="cc-tg">${TOG.map(([k, ic, n, s, on]) => `<button type="button" data-t="${k}" class="${on() ? "on" : ""}" aria-pressed="${on()}">${ic}<b>${n}</b><span>${s}</span></button>`).join("")}</div>
-    <div class="cc-media"><canvas width="96" height="40" data-bars="10" aria-hidden="true"></canvas><div class="ccm-m"><b class="ccm-t"></b><span>Made live in your browser</span><div class="ccm-prog"><i></i></div></div>
+    <div class="cc-media"><canvas data-bars="12" aria-hidden="true"></canvas><div class="ccm-m"><b class="ccm-t"></b><span>Made live in your browser</span><div class="ccm-prog"><i></i></div></div>
       <button type="button" class="ib ccm-pp" data-cc="pp"></button><button type="button" class="ib" data-cc="next" aria-label="Next track">${ICON.next}</button></div>
-    <div class="cc-row">${calendar()}<div class="cc-sen"><span>Workshop</span><b>27.4°C</b><svg viewBox="0 0 100 34" aria-hidden="true"><path d="M0 26 C12 20 18 24 28 18 S46 8 56 14 74 22 84 12 96 8 100 10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><small>Sample reading</small></div></div>`;
+    <div class="cc-row">${calendar()}${weatherCard()}</div>`;
   player.canvas(CC.querySelector("canvas"));
   syncMusic();
 }

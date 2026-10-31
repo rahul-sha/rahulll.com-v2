@@ -15,7 +15,7 @@ const apps = {
   contact: { title: "Contact", icon: ICON.mail, accent: "a1", width: 0, dockLabel: "Contact", render: renderContact },
   settings: { title: "Appearance", icon: ICON.sliders, accent: "a4", width: 0, hotkey: "S", dockLabel: "Style", render: (b) => renderSettings(b) },
   terminal: { title: "Terminal", icon: ICON.term, accent: "a2", width: 1, hotkey: "T", hidden: true,
-    render: (b, api) => Term(b, api, baseCommands(), { ps: "rahul@niri ~ $", banner: ["Welcome to the shell. Type <b>help</b>, or try <b>neofetch</b>."] }) },
+    render: (b, api) => Term(b, api, baseCommands(), { ps: "rahul@portfolio ~ $", banner: ["Welcome to the shell. Type <b>help</b>, or try <b>neofetch</b>."] }) },
 };
 /* each live site is also a dock item in the Live group */
 const SHORT = { aperture: "Aperture", gridwalk: "Grid Walk", aanchal: "aanchalll", chopshop: "Chop Shop" };
@@ -73,7 +73,13 @@ wm.onChange(() => { bOver.classList.toggle("on", wm.S.overview); bOver.setAttrib
 document.getElementById("b-keys").onclick = () => wm.hotkeys(true);
 
 const clock = document.getElementById("clock");
-const tick = () => { const d = new Date(); clock.innerHTML = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) + `<span>${d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" })}</span>`; };
+/* browsers cannot see the computer's 12 or 24-hour setting, only its language, so the clock defaults to AM and PM and Appearance can switch it */
+const tick = () => {
+  const d = new Date(), h24 = document.documentElement.dataset.clock === "24";
+  const t = d.toLocaleTimeString(h24 ? "en-GB" : "en-US", { hour: h24 ? "2-digit" : "numeric", minute: "2-digit", hourCycle: h24 ? "h23" : "h12" });
+  clock.innerHTML = t + `<span>${d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" })}</span>`;
+};
+window.tickClock = tick;
 tick(); setInterval(tick, 15000);
 let taps = 0, tapT;
 clock.onclick = () => { taps++; if (taps === 1) cc(); clearTimeout(tapT); tapT = setTimeout(() => (taps = 0), 1200); if (taps === 5) { taps = 0; wm.toast("Cycle time", "Five taps in under a second. You would make a fine CNC operator."); } };

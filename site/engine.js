@@ -639,7 +639,7 @@ try { const t = localStorage.getItem("theme"); if (t) document.documentElement.d
 
 /* A small shell for the Terminal window. */
 function Term(body, api, cmds, o = {}) {
-  body.innerHTML = `<div class="term"><div class="t-out" role="log"></div><form class="t-row"><label for="${o.id || "t-in"}" class="t-ps">${o.ps || "rahul@niri ~ $"}</label><input id="${o.id || "t-in"}" autocomplete="off" spellcheck="false" autocapitalize="off" aria-label="Terminal input"></form></div>`;
+  body.innerHTML = `<div class="term"><div class="t-out" role="log"></div><form class="t-row"><label for="${o.id || "t-in"}" class="t-ps">${o.ps || "rahul@portfolio ~ $"}</label><input id="${o.id || "t-in"}" autocomplete="off" spellcheck="false" autocapitalize="off" aria-label="Terminal input"></form></div>`;
   const out = body.querySelector(".t-out"), inp = body.querySelector("input"), hist = [];
   let hi = 0;
   const print = (h, cls = "") => { const d = document.createElement("div"); d.className = "t-line " + cls; d.innerHTML = h; out.appendChild(d); body.scrollTop = body.scrollHeight; };
@@ -662,7 +662,7 @@ function Term(body, api, cmds, o = {}) {
     e.preventDefault();
     const line = inp.value.trim();
     inp.value = "";
-    print(`<span class="t-ps">${o.ps || "rahul@niri ~ $"}</span> ${esc(line)}`);
+    print(`<span class="t-ps">${o.ps || "rahul@portfolio ~ $"}</span> ${esc(line)}`);
     if (!line) return;
     hist.push(line); hi = hist.length;
     const [c, ...a] = line.split(/\s+/);

@@ -1,5 +1,6 @@
 ---
 title: From CAD to the machine
+short: Machining
 stage: make
 image: hero.webp
 caption: The part as modelled, before the toolpaths are programmed

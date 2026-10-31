@@ -1,4 +1,5 @@
 ---
+short: Oneword
 title: Print title
 image: render.png
 printer: Bambu Lab A1

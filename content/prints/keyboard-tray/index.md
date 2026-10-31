@@ -1,5 +1,6 @@
 ---
 title: Apple keyboard and trackpad tray
+short: Keyboard
 image: render.png
 printer: Bambu Lab A1
 material: "[PLA]"

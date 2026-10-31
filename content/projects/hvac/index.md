@@ -1,5 +1,6 @@
 ---
 title: Compact HVAC unit, from concept to test room
+short: HVAC
 stage: simulate
 image: hero.webp
 caption: Air draft across the test room, with a person standing in it, from CFD

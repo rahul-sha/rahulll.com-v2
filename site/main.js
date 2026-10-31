@@ -31,8 +31,8 @@ const wm = Niri({
   ],
   workspaces: [
     { name: "Hello", open: ["about", "skills", "resume"] },
-    /* the index windows are a third wide, so the first project and the hub tiles sit beside them */
-    { name: "Engineering", open: ["projects", projSpec(PROJECTS.find((p) => p.id === "cirrus-jet"))] },
+    /* the index windows are a third wide, so the first project and the hub tiles sit beside them; Engineering opens Cirrus Vision first, then the HVAC flagship */
+    { name: "Engineering", open: ["projects", ...["cirrus-jet", "hvac"].map((id) => projSpec(PROJECTS.find((p) => p.id === id)))] },
     /* the hub, the first site, 3D prints, and Gaming; the other tiles open their windows from the hub */
     { name: "Off the clock", open: ["sites", "site-" + SITES[0].id, "prints", "gaming"] },
   ],

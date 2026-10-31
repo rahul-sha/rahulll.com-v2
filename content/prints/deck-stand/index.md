@@ -1,5 +1,6 @@
 ---
 title: Steam Deck stand for a case with a JSAUX connector
+short: Deck
 image: stand.webp
 caption: The printed stand, photographed on the desk
 printer: Bambu Lab A1

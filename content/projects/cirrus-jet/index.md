@@ -1,5 +1,6 @@
 ---
 title: Cirrus Vision Jet, to scale
+short: Cirrus
 stage: design
 image: hero.png
 caption: Final render in real-world lighting, from Fusion 360

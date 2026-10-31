@@ -1,5 +1,6 @@
 ---
 title: Swivelling desk mount for a client
+short: Mount
 stage: design
 image: hero.webp
 caption: The revised mount, rendered in Fusion 360

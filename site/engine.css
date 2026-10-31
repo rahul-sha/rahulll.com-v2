@@ -5,7 +5,7 @@ body { margin: 0; overflow: hidden; background: var(--bg); color: var(--fg); -we
 .viewport { position: relative; overflow: hidden; min-height: 0; touch-action: pan-y; }
 /* let window shadows fall past the bottom edge, under the dock; overflow: clip (unlike clip-path) keeps floating windows' backdrop blur working */
 /* edge scroll hint: a soft accent wash on the side the mouse rests at, with a bar that fills until the next step */
-.edge-glow { position: absolute; top: 0; bottom: 0; width: 10%; z-index: 15; pointer-events: none; opacity: 0; transition: opacity .25s; }
+.edge-glow { position: absolute; top: 0; bottom: 0; width: 5%; z-index: 15; pointer-events: none; opacity: 0; transition: opacity .25s; }
 .edge-glow.l { left: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--a2) 30%, transparent), transparent); }
 .edge-glow.r { right: 0; background: linear-gradient(-90deg, color-mix(in srgb, var(--a2) 30%, transparent), transparent); }
 .edge-glow::after { content: ""; position: absolute; top: 0; width: 3px; height: 100%; border-radius: 2px; background: var(--a2); transform-origin: top; scale: 1 0; }

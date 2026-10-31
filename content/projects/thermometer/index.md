@@ -1,5 +1,6 @@
 ---
 title: Mini-IR handheld thermometer
+short: Thermometer
 stage: design
 image: hero.webp
 caption: The Mini-IR docked on a phone, with its sensor and board beside it

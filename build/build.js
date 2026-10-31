@@ -82,7 +82,7 @@ function projects() {
     out.push({
       id, cat: STAGE[fm.stage] || "design", title: fm.title || id, img: image("projects", id, fm.image, where), thumb: "", sum: html(body) || "",
       steps: fm.steps || [], outcome: fm.outcome || "", caption: fm.caption || "", year: String(fm.year || ""), role: fm.role || "", team: fm.team || "", result: fm.result || "",
-      flagship: !!fm.flagship, order: fm.order || 99, tools: fm.tools || [],
+      flagship: !!fm.flagship, order: fm.order || 99, tools: fm.tools || [], short: fm.short || "",
       media: (fm.media || []).map((m) => ({ kind: m.kind === "video" ? "video" : "section", label: m.label || "", file: image("projects", id, m.file, where) })),
     });
   }

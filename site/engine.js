@@ -548,7 +548,7 @@ function Niri(opts) {
   });
   /* mouse: press and drag on the desktop or a tiled title bar to slide the strip, like a swipe.
      Inside a window, press and hold still for a moment first, so selecting text and clicking keep working. */
-  /* resting the mouse in the outer 5 percent at the left or right brings the next window that way into focus, and keeps stepping while it stays there */
+  /* resting the mouse in the outer 5 percent at the left or right, within the middle three fifths of the height, brings the next window that way into focus, and keeps stepping while it stays there */
   let hoverT = 0, hoverSide = 0;
   const glows = [-1, 1].map((d) => { const g = document.createElement("div"); g.className = "edge-glow " + (d < 0 ? "l" : "r"); g.setAttribute("aria-hidden", "true"); vp.append(g); return g; });
   const glow = (side, ms) => glows.forEach((g, j) => {
@@ -559,8 +559,9 @@ function Niri(opts) {
   const hoverOff = () => { clearTimeout(hoverT); hoverSide = 0; glow(0); };
   vp.addEventListener("pointermove", (e) => {
     if (e.pointerType !== "mouse" || e.buttons || S.overview || S.phone || grab) { if (hoverSide) hoverOff(); return; }
-    const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
-    const side = e.target.closest(".float-layer") ? 0 : x < 0.05 ? -1 : x > 0.95 ? 1 : 0;
+    const r = vp.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    /* only the middle three fifths of the screen height counts, and never a title bar, so reaching for a close button does not scroll the desk */
+    const side = e.target.closest(".float-layer, .tb") || y < 0.2 || y > 0.8 ? 0 : x < 0.05 ? -1 : x > 0.95 ? 1 : 0;
     if (side === hoverSide) return;
     clearTimeout(hoverT); hoverSide = side;
     const wait = (ms) => { if (atEdge(side)) return glow(0); glow(side, ms); hoverT = setTimeout(tick, ms); };

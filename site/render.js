@@ -61,13 +61,14 @@ function renderProjects2(b, api) {
 /* One anatomy for every project window */
 /* a media slot: the file when the content folder has it, a labelled placeholder until then */
 function mediaSlot(m) {
-  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video src="${m.file}" controls preload="metadata" playsinline></video>` : `<img src="${m.file}" alt="${esc(m.label)}" loading="lazy">`}<span class="pm-cap">${esc(m.label)}</span></li>`;
+  /* a filled slot shows the picture or clip; a click on a picture opens it full size in a new tab */
+  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video src="${m.file}" controls muted loop preload="metadata" playsinline aria-label="${esc(m.label)}"></video>` : `<a href="${m.file}" target="_blank" rel="noopener" title="Open full size in a new tab"><img src="${m.file}" alt="${esc(m.label)}" loading="lazy" decoding="async"></a>`}<span class="pm-cap">${esc(m.label)}</span></li>`;
   return `<li class="pm-${m.kind}"><span class="pm-ic">${m.kind === "video" ? ICON.play : ICON.max}</span><span>${esc(m.label)}</span><small>[${m.kind === "video" ? "video" : "image"} to come]</small></li>`;
 }
 function renderProject2(b, api, p) {
   const c = CATS[p.cat], related = PROJECTS.filter((x) => x.cat === p.cat && x.id !== p.id).slice(0, 2);
   const skills = SKILLS[p.cat].tools.slice(0, 3);
-  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async"><figcaption>[Caption for this image]</figcaption></figure>
+  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async"><figcaption>${esc(p.caption || "[Caption for this image]")}</figcaption></figure>
     <p class="kicker" style="color:var(--accent-ink)">${c.verb}${FLAGSHIPS.includes(p.id) ? " · Flagship" : ""}</p><h2>${p.title}</h2><p class="lede">${p.outcome || "[One-line outcome, such as: one 5-axis setup instead of three]"}</p>
     <dl class="facts"><div><dt>Year</dt><dd>${p.year || "[year]"}</dd></div><div><dt>Role</dt><dd>${p.role || "[role]"}</dd></div><div><dt>Team</dt><dd>${p.team || "[size]"}</dd></div><div><dt>Tools</dt><dd>${skills.join(", ")}</dd></div></dl>
     <h3>The problem</h3>${p.sum}

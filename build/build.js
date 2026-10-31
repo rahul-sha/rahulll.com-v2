@@ -81,7 +81,7 @@ function projects() {
     if (fm.stage && !STAGE[fm.stage]) fail(where, `stage must be design, simulate, make, or test (got "${fm.stage}")`);
     out.push({
       id, cat: STAGE[fm.stage] || "design", title: fm.title || id, img: image("projects", id, fm.image, where), thumb: "", sum: html(body) || "",
-      steps: fm.steps || [], outcome: fm.outcome || "", year: String(fm.year || ""), role: fm.role || "", team: fm.team || "", result: fm.result || "",
+      steps: fm.steps || [], outcome: fm.outcome || "", caption: fm.caption || "", year: String(fm.year || ""), role: fm.role || "", team: fm.team || "", result: fm.result || "",
       flagship: !!fm.flagship, order: fm.order || 99,
       media: (fm.media || []).map((m) => ({ kind: m.kind === "video" ? "video" : "section", label: m.label || "", file: image("projects", id, m.file, where) })),
     });

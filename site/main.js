@@ -31,7 +31,8 @@ const wm = Niri({
   ],
   workspaces: [
     { name: "Hello", open: ["about", "skills", "resume"] },
-    { name: "Engineering", open: ["projects", projSpec(PROJECTS.find((p) => p.id === "cad-machine"))] },
+    /* for now, Engineering opens on the Cirrus Vision Jet alone; Projects is one click away in the dock */
+    { name: "Engineering", open: [projSpec(PROJECTS.find((p) => p.id === "cirrus-jet"))] },
     /* the hub, the first site, 3D prints, and Gaming; the other tiles open their windows from the hub */
     { name: "Off the clock", open: ["sites", "site-" + SITES[0].id, "prints", "gaming"] },
   ],

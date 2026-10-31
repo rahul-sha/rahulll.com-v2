@@ -308,3 +308,59 @@
 .dk-over.on { background: color-mix(in srgb, var(--a2) 30%, var(--surf2)); }
 .dk-over.on .dk-run { width: 20px; }
 .phone .dk-pin { display: none; }
+
+/* ---------- Off the clock hub: a bento board whose tiles open their windows ---------- */
+.hb .lede { margin: 0 0 14px; color: var(--mute); max-width: 64ch; }
+.hb-pill { position: absolute; top: 10px; left: 10px; display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 999px; font: 800 10px var(--ui); letter-spacing: .07em; text-transform: uppercase; background: var(--accent); color: var(--on-a); }
+.bn { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 140px; grid-auto-flow: dense; gap: 10px; }
+.bt { position: relative; overflow: hidden; display: grid; align-content: end; gap: 2px; padding: 10px; margin: 0; text-align: left; font: inherit; color: var(--fg); cursor: pointer; border-radius: var(--r); border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); background: color-mix(in srgb, var(--accent) 10%, var(--surf2)); transition: translate .25s, box-shadow .25s, border-color .25s; }
+.bt:hover, .bt:focus-visible { translate: 0 -3px; border-color: var(--accent); box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--accent) 70%, transparent); }
+.bt:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.bt > * { position: relative; z-index: 1; }
+.bt > .hb-pill { position: absolute; }
+.bt.w2 { grid-column: span 2; } .bt.h2 { grid-row: span 2; }
+.bt b.t { font: 900 16px/1.15 var(--display, var(--ui)); }
+.bt .s2 { font-size: 12px; line-height: 1.3; color: var(--mute); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* photo tiles: the screenshot fills the tile and pans slowly on hover */
+.bt.bph > img { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; transition: object-position 4s ease; }
+.bt.bph:hover > img { object-position: bottom; }
+.bt.bph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgb(0 0 0 / .74)); }
+.bt.bph b.t, .bt.bph .s2 { color: #fff; } .bt.bph .s2 { opacity: .85; }
+/* Homelab: the NAS front panel, with drive lights that flicker like disk activity */
+.bt.hl { display: flex; flex-direction: column; padding-top: 40px; gap: 2px; }
+.bt.hl b.t { margin-top: auto; padding-top: 8px; }
+.nas { flex: 1 1 120px; min-height: 64px; max-height: 120px; display: grid; grid-template-columns: 1fr 1fr 70px; gap: 8px; padding: 10px; border-radius: 12px; background: linear-gradient(180deg, #2b2f33, #1c1f22); border: 1px solid #3a3f44; box-shadow: inset 0 1px 0 rgb(255 255 255 / .06); }
+.bay { position: relative; border-radius: 6px; background: repeating-linear-gradient(90deg, #15181a 0 3px, #22262a 3px 6px); border: 1px solid #3a3f44; }
+.bay::after { content: ""; position: absolute; right: 8px; bottom: 8px; width: 7px; height: 7px; border-radius: 50%; background: #5bd17a; box-shadow: 0 0 8px #5bd17a; animation: hb-led 1.7s steps(1) infinite; }
+.bay + .bay::after { animation-duration: 2.3s; animation-delay: .4s; }
+@keyframes hb-led { 0%, 100% { opacity: 1; } 12% { opacity: .25; } 18% { opacity: 1; } 47% { opacity: .3; } 52% { opacity: 1; } }
+.nas-side { display: grid; align-content: space-between; justify-items: start; color: #9aa3ab; font: 700 10px var(--mono); }
+.nas-side i { width: 9px; height: 9px; border-radius: 50%; background: #4aa3ff; box-shadow: 0 0 8px #4aa3ff; }
+.nas-chips { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px; }
+.nas-chips span { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 999px; background: var(--surf); border: 1px solid var(--line); font: 700 11px var(--ui); }
+.nas-chips i { width: 7px; height: 7px; border-radius: 50%; background: #5bd17a; }
+/* 3D prints: renders laid on the build plate, which lift a little on hover */
+.plate { position: relative; flex: 1 1 auto; min-height: 110px; overflow: hidden; border-radius: 12px; background: radial-gradient(circle at 30% 30%, #4a4f55, #2a2d31 70%); box-shadow: inset 0 0 0 6px #1d2023, inset 0 0 30px rgb(0 0 0 / .5); }
+.plate::before { content: attr(data-printer); position: absolute; right: 14px; bottom: 10px; font: 700 10px var(--mono); color: #a7adb3; }
+.plate img { position: absolute; width: 30%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; border: 3px solid #fff; background: #fff; box-shadow: 0 8px 16px rgb(0 0 0 / .45); transition: translate .3s; }
+.bt:hover .plate img { translate: 0 -4px; }
+/* Gaming: a Steam Deck whose screen shows what is playing */
+.bt.gm1 { align-content: start; padding-top: 40px; } .bt.gm1 > b, .bt.gm1 > .s2 { max-width: 136px; }
+.deck { position: absolute; inset: 38px 12px 10px 156px; display: grid; grid-template-columns: 34px 1fr 34px; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 26px; background: linear-gradient(180deg, #2a2d31, #17191b); box-shadow: 0 8px 20px rgb(0 0 0 / .35); }
+.deck .stick { width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle, #3b4045, #121416); box-shadow: inset 0 0 0 3px #222; }
+.deck .scr { height: 100%; min-height: 72px; display: grid; align-content: end; padding: 8px; border-radius: 8px; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 55%, #120a20), #0b0d10); color: #fff; font: 700 11px var(--ui); }
+.deck .scr small { font: 700 9px var(--mono); opacity: .7; text-transform: uppercase; letter-spacing: .08em; }
+.phone .bn { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 132px; }
+.phone .bt.gm1 > b, .phone .bt.gm1 > .s2 { max-width: 116px; } .phone .deck { left: 134px; grid-template-columns: 22px 1fr 22px; } .phone .deck .stick { width: 20px; height: 20px; }
+@media (prefers-reduced-motion: reduce) { .bt, .bt.bph > img, .plate img { transition: none; } .bay::after { animation: none; } .bt:hover, .bt:focus-visible { translate: none; } }
+
+/* Gaming window: the public Steam profile, opened in a new tab since Steam does not allow framing */
+.gm-steam { margin: 4px 0 14px; }
+.gm-steam .btn { display: inline-flex; gap: 8px; align-items: center; text-decoration: none; }
+.gm-steam .btn svg { width: 15px; height: 15px; flex: none; }
+.gm-lib { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 14px; }
+.gm-lib div { padding: 10px 12px; border-radius: calc(var(--r) * .7); background: color-mix(in srgb, var(--a4) 12%, var(--surf2)); }
+.gm-lib dt { font-size: 12px; color: var(--mute); } .gm-lib dd { margin: 0; font: 900 24px/1.1 var(--display, var(--ui)); }
+.gm-show { list-style: none; margin: 0 0 14px; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.gm-show li { padding: 10px; min-height: 48px; display: flex; align-items: end; border-radius: calc(var(--r) * .6); font: 800 13px/1.2 var(--ui); background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 40%, var(--surf2)), var(--surf2)); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.phone .gm-lib { grid-template-columns: repeat(2, minmax(0, 1fr)); }

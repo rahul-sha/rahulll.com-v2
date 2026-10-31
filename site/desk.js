@@ -15,7 +15,7 @@ const HINTS = {
   skills: ["Skills", "Every skill names the work that proves it. Click a project name to open it beside this window."],
   resume: ["Resume", "Jobs and study in one column. The PDF button downloads the same thing for printing."],
   projects: ["Projects", "Start with the three tiles under <b>Start here</b>. Each project opens as its own window, right next to this one."],
-  sites: ["Shipped", "Four sites I built outside work, first in Off the clock. Each opens as a browser window. <kbd>Shift</kbd> <kbd>F</kbd> takes one fullscreen."],
+  sites: ["Off the clock", "Everything outside work on one board: four websites, the smart home, the homelab, 3D prints, and gaming. Click a tile to open its window beside this one."],
   home: ["Smart home", "Screenshots of the real Home Assistant dashboards. Pick a tile to switch, or click the picture to see it full size."],
   homelab: ["Homelab", "The services behind the sites, all on one NAS at home."],
   prints: ["3D prints", "Parts printed at home on a Bambu Lab A1. Click a card for the full story; the MakerWorld link opens the shared model."],

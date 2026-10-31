@@ -7,7 +7,7 @@ const apps = {
   skills: { title: "Skills", icon: ICON.lab, accent: "a3", width: 1, dockLabel: "Skills", render: renderSkills },
   resume: { title: "Resume", icon: ICON.resume, accent: "a2", width: 1, dockLabel: "Resume", render: renderResume2 },
   projects: { title: "Projects", icon: ICON.work, accent: "a1", width: 2, dockLabel: "Projects", render: renderProjects2 },
-  sites: { title: "Shipped", icon: ICON.globe, accent: "a1", width: 0, dockLabel: "Shipped", render: renderSitesIndex },
+  sites: { title: "Off the clock", icon: ICON.globe, accent: "a4", width: 2, dockLabel: "Off the clock", render: renderHub },
   home: { title: "Smart home", icon: ICON.home, accent: "a3", width: 1, dockLabel: "Smart home", render: renderSmartHome },
   homelab: { title: "Homelab", icon: ICON.lab, accent: "a2", width: 0, dockLabel: "Homelab", render: renderHomelab },
   prints: { title: "3D prints", icon: ICON.work, accent: "a1", width: 1, dockLabel: "3D prints", render: renderPrints },
@@ -26,13 +26,14 @@ const wm = Niri({
   apps, dock: [
     { name: "Hello", ws: 0, items: ["about", "skills", "resume"] },
     { name: "Engineering", ws: 1, items: ["projects"] },
-    { name: "Off the clock", ws: 2, items: ["sites"].concat(SITES.map((s) => "site-" + s.id), ["home", "homelab", "prints", "gaming"]) },
+    { name: "Off the clock", ws: 2, items: ["sites", "site-" + SITES[0].id, "prints", "gaming"] },
     { name: "Anywhere", items: ["contact", "settings"] },
   ],
   workspaces: [
     { name: "Hello", open: ["about", "skills", "resume"] },
     { name: "Engineering", open: ["projects", projSpec(PROJECTS.find((p) => p.id === "cad-machine"))] },
-    { name: "Off the clock", open: ["sites"].concat(SITES.map((s) => "site-" + s.id), ["home", "homelab", "prints", "gaming"]) },
+    /* the hub, the first site, 3D prints, and Gaming; the other tiles open their windows from the hub */
+    { name: "Off the clock", open: ["sites", "site-" + SITES[0].id, "prints", "gaming"] },
   ],
   launcherExtras: (api) => deskExtras().concat(siteExtras(api), projectExtras(api), riceExtras()),
   extraKeys: [["E", "Session menu"], ["S", "Appearance settings"], ["W", "Next wallpaper"], ["P", "Next preset"], ["G", "Show or hide the guide"], ["M", "Play or pause music"], ["Shift + M", "Next track"], ["N", "Control centre"]],

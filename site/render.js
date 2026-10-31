@@ -119,8 +119,9 @@ function renderHomelab(b) {
 }
 function renderPrints(b, api) {
   b.innerHTML = `<div class="prints"><p class="kicker">3D prints</p><h2>Printed at home on a Bambu Lab A1</h2>
+    ${/^https:\/\//.test(PRINTS_PAGE.makerworld) ? `<p class="gm-steam"><a class="btn" href="${esc(PRINTS_PAGE.makerworld)}" target="_blank" rel="noopener">${ICON.ext} My MakerWorld profile</a></p>` : ""}
     <ul class="pr-grid">${PRINTS.map((p) => `<li style="${hueStyle(p.hue)}"><button type="button" class="pr-card" data-print="${p.id}"><span class="pr-img">${p.img ? `<img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async">` : "<span>[photo]</span>"}</span><b>${esc(p.title)}</b><span class="pr-m">${esc(p.printer)} · ${esc(p.material)}</span><span class="pr-w">${p.why}</span><span class="pr-more">Open ${ICON.fwd}</span></button>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">On MakerWorld ${ICON.ext}</a>` : p.private ? `<span class="pr-p">Private design</span>` : ""}</li>`).join("")}</ul>
-    <p class="hint">Designed in Fusion 360, which runs on Linux through Bottles. The Steam Deck stand is the one shared publicly; the rest are designed for home and [photos in use to come].</p></div>`;
+    ${PRINTS_NOTE ? `<p class="hint">${PRINTS_NOTE}</p>` : ""}</div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-print]"); if (t) api.open(printSpec(PRINTS.find((p) => p.id === t.dataset.print))); });
 }
 /* one print in detail: render, the story, design notes, print settings, and slots for photos in use */
@@ -139,6 +140,9 @@ function renderPrint(b, api, p) {
 const printSpec = (p) => ({ key: "print-" + p.id, title: p.title, icon: ICON.work, accent: p.hue, width: 1, kind: "print", dockLabel: p.short || p.title, render: renderPrint, arg: p });
 function renderGaming(b) {
   b.innerHTML = `<div class="gaming"><p class="kicker">Gaming</p><h2>Off the clock, controller in hand</h2>
+    ${/^https:\/\//.test(GAMES.steam) ? `<p class="gm-steam"><a class="btn" href="${esc(GAMES.steam)}" target="_blank" rel="noopener">${ICON.ext} My Steam profile</a></p>` : ""}
+    ${GAMES.library ? `<dl class="gm-lib">${[["games", "Games"], ["dlc", "DLC"], ["reviews", "Reviews"], ["wishlist", "On wishlist"]].filter(([k]) => GAMES.library[k] != null).map(([k, n]) => `<div><dt>${n}</dt><dd>${esc(String(GAMES.library[k]))}</dd></div>`).join("")}</dl>` : ""}
+    ${GAMES.showcase.length ? `<h3>On my Steam showcase</h3><ul class="gm-show">${GAMES.showcase.map((g, i) => `<li style="${hueStyle(["a1", "a2", "a3", "a4"][i % 4])}">${esc(g)}</li>`).join("")}</ul>` : ""}
     <h3>Playing now</h3><ul class="gm">${GAMES.now.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>
     <h3>All-time favourites</h3><ol class="gm gm-top">${GAMES.alltime.map((g) => `<li>${esc(g)}</li>`).join("")}</ol>
     <h3>The kit</h3><ul class="gm">${GAMES.kit.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>

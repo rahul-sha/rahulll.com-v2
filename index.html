@@ -77,7 +77,7 @@ body { font: 15px/1.55 var(--ui); background: var(--bg); }
 .logo:hover { background: var(--a1); filter: brightness(1.05); }
 .pills { display: flex; gap: 3px; align-items: center; height: var(--bh); box-sizing: border-box; padding: 2px; border-radius: var(--br); background: color-mix(in srgb, var(--surf2) 70%, transparent); }
 .pill { --wa: var(--a2); display: inline-flex; gap: 6px; align-items: center; height: calc(var(--bh) - 4px); padding: 0 9px 0 3px; border-radius: max(0px, calc(var(--br) - 2px)); border: 0; background: transparent; color: var(--mute); font: 700 12.5px var(--ui); cursor: pointer; white-space: nowrap; transition: background .25s, color .25s; }
-.pill[data-i="0"] { --wa: var(--a1); } .pill[data-i="1"] { --wa: var(--a2); } .pill[data-i="2"] { --wa: var(--a3); } .pill[data-i="3"] { --wa: var(--a4); }
+.pill[data-i="0"] { --wa: var(--a1); } .pill[data-i="1"] { --wa: var(--a2); } .pill[data-i="2"] { --wa: var(--a4); }
 /* each workspace keeps its own colour: the icon is tinted at rest and fills in when that workspace is open */
 .pill b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: calc(var(--r) * .45); color: color-mix(in srgb, var(--wa) 72%, var(--fg)); transition: background .25s, color .25s, transform .25s; }
 .pill b svg { width: 16px; height: 16px; }

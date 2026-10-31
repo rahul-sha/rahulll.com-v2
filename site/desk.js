@@ -14,9 +14,8 @@ const HINTS = {
   about: ["About", "Who I am in three lines. The four coloured buttons jump to projects at that stage. Press <kbd>L</kbd> for Skills."],
   skills: ["Skills", "Every skill names the work that proves it. Click a project name to open it beside this window."],
   resume: ["Resume", "Jobs and study in one column. The PDF button downloads the same thing for printing."],
-  projects: ["Projects", "Start with the four tiles under <b>Start here</b>. Each project opens as its own window, right next to this one."],
-  highlight: ["Work highlight", "A current work project, shown as a mockup once the video is in. Press <kbd>Q</kbd> to close it."],
-  sites: ["Shipped", "Four sites I built outside work. Each opens as a browser window. <kbd>Shift</kbd> <kbd>F</kbd> takes one fullscreen."],
+  projects: ["Projects", "Start with the three tiles under <b>Start here</b>. Each project opens as its own window, right next to this one."],
+  sites: ["Shipped", "Four sites I built outside work, next to the engineering projects. Each opens as a browser window. <kbd>Shift</kbd> <kbd>F</kbd> takes one fullscreen."],
   home: ["Smart home", "Screenshots of the real Home Assistant dashboards. Pick a tile to switch, or click the picture to see it full size."],
   homelab: ["Homelab", "The services behind the sites, all on one NAS at home."],
   prints: ["3D prints", "Parts printed at home on a Bambu Lab A1. Click a card for the full story; the MakerWorld link opens the shared model."],
@@ -40,7 +39,7 @@ const TIPS = [
   "<kbd>D</kbd> opens the launcher. Type a few letters of a project to find it.",
   "<kbd>M</kbd> plays some music made in your browser. <kbd>Shift</kbd> <kbd>M</kbd> skips a track.",
   "<kbd>N</kbd> or the clock opens the control centre: night light, Do not disturb, and a calendar.",
-  "Short on time? Resume is in the Hello group of the dock, and the four <b>Start here</b> tiles in Projects are the best of the work.",
+  "Short on time? Resume is in the Hello group of the dock, and the three <b>Start here</b> tiles in Projects are the best of the work.",
   "<kbd>?</kbd> lists every shortcut. There are a few secrets too.",
 ];
 let tipI = 0, gBody = null;
@@ -294,7 +293,7 @@ const TOG = [
 ];
 function renderCC() {
   const up = Math.max(1, Math.round((Date.now() - t0) / 60000));
-  CC.innerHTML = `<div class="cc-head"><img src="${IMG.ME || ""}" alt=""><div><b>rahul@portfolio</b><span>Up ${up} min · four workspaces</span></div>
+  CC.innerHTML = `<div class="cc-head"><img src="${IMG.ME || ""}" alt=""><div><b>rahul@portfolio</b><span>Up ${up} min · three workspaces</span></div>
       <button type="button" class="ib" data-cc="rice" aria-label="Appearance" title="Appearance">${ICON.sliders}</button><button type="button" class="ib" data-cc="power" aria-label="Session menu" title="Session menu (E)">${ICON.power}</button></div>
     <div class="cc-tg">${TOG.map(([k, ic, n, s, on]) => `<button type="button" data-t="${k}" class="${on() ? "on" : ""}" aria-pressed="${on()}">${ic}<b>${n}</b><span>${s}</span></button>`).join("")}</div>
     <div class="cc-media"><canvas data-bars="12" aria-hidden="true"></canvas><div class="ccm-m"><b class="ccm-t"></b><span>Made live in your browser</span><div class="ccm-prog"><i></i></div></div>

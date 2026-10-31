@@ -28,17 +28,13 @@ stages:
       - NC code checks
     proof:
       - cad-machine
-      - five-axis
-      - cusps
-      - lathe
   test:
     tools:
       - Thermal imaging
       - Acoustic analysis
       - Prototype validation
     proof:
-      - thermal
-      - spectro
+      - diagnostics
 beyond:
   - name: Web building
     line: Four sites shipped with Claude Code, one pull request at a time

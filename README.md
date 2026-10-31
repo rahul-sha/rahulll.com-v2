@@ -14,7 +14,7 @@ content/        Everything you edit. Markdown files with a short header, images 
   sites/        One .md per live site shown in the Shipped workspace.
   about/        index.md (name, role, headline, links) + portrait.
   resume.md     Jobs, study, tools. The build also makes the PDF from it.
-  skills.md, homelab.md, home/index.md, gaming.md, highlight.md
+  skills.md, homelab.md, home/index.md, gaming.md
 site/           The desk itself: engine (windows, workspaces, overview), shell, styles.
 build/build.js  Reads content/, resizes images to WebP, writes dist/.
 index.html      The page shell.
@@ -46,4 +46,4 @@ Then open the address `serve` prints. `npm run check` validates the content with
 
 ## Keyboard
 
-The desk has shortcuts: `?` shows them all. `1` to `4` jump between workspaces, `H` and `L` move between windows, `Space` opens the launcher, `S` opens Appearance.
+The desk has shortcuts: `?` shows them all. `1` to `3` jump between workspaces, `H` and `L` move between windows, `Space` opens the launcher, `S` opens Appearance.

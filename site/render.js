@@ -36,14 +36,14 @@ function renderSkills(b, api) {
   });
 }
 
-/* Projects: work highlight and flagships first, then everything by stage */
+/* Projects: flagships first, then everything by stage */
 function renderProjects2(b, api) {
   const chips = `<button type="button" class="chip on" data-c="all">Everything</button>` + stageOrder.map((k) => `<button type="button" class="chip" data-c="${k}" style="${hueStyle(CATS[k].hue)}">${CATS[k].label}</button>`).join("");
   const tile = (p, cls = "") => `<li class="${cls}"><button type="button" class="p-tile" data-id="${p.id}" style="${hueStyle(CATS[p.cat].hue)}"><img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async"><span class="p-cat">${CATS[p.cat].label}</span><span class="p-t">${p.title}</span></button></li>`;
   b.innerHTML = `<div class="projects"><p class="kicker">Engineering</p><h2>Things I have designed, simulated, made, and tested</h2>
     <div class="chips">${chips}</div>
     <h3 class="p-h">Start here</h3>
-    <ul class="p-grid p-lead"><li class="p-hl"><button type="button" class="p-tile" data-hl="1" style="${hueStyle("a1")}"><span class="p-hlimg"><span>Mockup to come</span></span><span class="p-cat">Work highlight</span><span class="p-t">${esc(HIGHLIGHT.title)}</span></button></li>${FLAGSHIPS.map((id) => tile(projById(id), "p-flag")).join("")}</ul>
+    <ul class="p-grid p-lead">${FLAGSHIPS.map((id) => tile(projById(id), "p-flag")).join("")}</ul>
     <h3 class="p-h">Everything, by stage</h3>
     <ul class="p-grid">${stageOrder.flatMap((k) => PROJECTS.filter((p) => p.cat === k)).map((p) => tile(p)).join("")}</ul>
     <p class="hint">Each project opens as its own window to the right. Scroll along to read them side by side.</p></div>`;
@@ -54,15 +54,9 @@ function renderProjects2(b, api) {
   });
   b.addEventListener("click", (e) => {
     const t = e.target.closest(".p-tile"); if (!t) return;
-    if (t.dataset.hl) api.open(highlightSpec); else api.open(projSpec(projById(t.dataset.id)));
+    api.open(projSpec(projById(t.dataset.id)));
   });
 }
-const highlightSpec = { key: "highlight", title: HIGHLIGHT.title, icon: ICON.work, accent: "a1", width: 1, render: (b) => {
-  b.innerHTML = `<div class="project"><figure class="p-hlimg big"><span>Mockup to come</span></figure>
-    <p class="kicker">Work highlight</p><h2>${esc(HIGHLIGHT.title)}</h2><p class="lede">${esc(HIGHLIGHT.line)}</p>
-    <dl class="facts"><div><dt>Year</dt><dd>[year]</dd></div><div><dt>Role</dt><dd>[role]</dd></div><div><dt>Team</dt><dd>[size]</dd></div><div><dt>Tools</dt><dd>[tools]</dd></div></dl>
-    <p>${HIGHLIGHT.note}</p></div>`;
-} };
 
 /* One anatomy for every project window */
 /* a media slot: the file when the content folder has it, a labelled placeholder until then */

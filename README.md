@@ -11,10 +11,10 @@ Design system: https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS
 content/        Everything you edit. Markdown files with a short header, images beside them.
   projects/     One folder per project (index.md + hero image). Copy _template.md to start.
   prints/       One folder per 3D print (index.md + render + photos).
-  sites/        One .md per live site shown in the Shipped workspace.
+  sites/        One .md per live site, shown as tiles on the Off the clock hub.
   about/        index.md (name, role, headline, links) + portrait.
   resume.md     Jobs, study, tools. The build also makes the PDF from it.
-  skills.md, homelab.md, home/index.md, gaming.md, highlight.md
+  skills.md, homelab.md, home/index.md, gaming.md (Steam link and showcase), prints.md (MakerWorld link and note)
 site/           The desk itself: engine (windows, workspaces, overview), shell, styles.
 build/build.js  Reads content/, resizes images to WebP, writes dist/.
 index.html      The page shell.
@@ -46,4 +46,4 @@ Then open the address `serve` prints. `npm run check` validates the content with
 
 ## Keyboard
 
-The desk has shortcuts: `?` shows them all. `1` to `4` jump between workspaces, `H` and `L` move between windows, `Space` opens the launcher, `S` opens Appearance.
+The desk has shortcuts: `?` shows them all. `1` to `3` jump between workspaces, `H` and `L` move between windows, `Space` opens the launcher, `S` opens Appearance.

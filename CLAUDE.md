@@ -14,7 +14,7 @@ Rahul's portfolio as a Noctalia-style desktop on a niri-like scrolling window ma
 - `content/<kind>/` is the only place content goes. Each kind has a `_template.md`; copy it, never edit it in place. Images sit beside the Markdown that references them.
 - `site/engine.js` and `engine.css` are the window manager (columns, workspaces, overview, floats, launcher). Keep content out of here.
 - `site/desk.js` and `desk.css` are the shell: bar, dock, control centre, context menu, guide, music, boot intro.
-- `site/render.js` renders each window from the data in `dist/site/content.js`. Fields the build emits as HTML (`sum`, `story`, `why`, `blurb`, `*_NOTE`, `ME.line`, `ME.voice`) are inserted unescaped. Plain strings go through `esc()`.
+- `site/render.js` renders each window from the data in `dist/site/content.js`. Fields the build emits as HTML (`sum`, `story`, `why`, `blurb`, `*_NOTE` (including `PRINTS_NOTE` from `content/prints.md`), `ME.line`, `ME.voice`) are inserted unescaped. Plain strings go through `esc()`.
 - `site/rice.js` is the Appearance system. The default preset is "Rahul's rice"; do not change it without asking.
 - `api/weather.js` is the only server code: a Vercel function that turns the visitor's approximate place (Vercel's IP headers) into an Open-Meteo reading for the bar chip and control centre. It does not run locally, where the desk shows "Weather --".
 - `build/build.js` is the whole pipeline. Add a new content kind there and a renderer in `render.js`.
@@ -23,8 +23,8 @@ Rahul's portfolio as a Noctalia-style desktop on a niri-like scrolling window ma
 
 - Colourful, dynamic, fun, still professional. No grid backgrounds, ransom-note lettering, stickers, or the generic AI-portfolio look.
 - Four accents, one per engineering stage: a1 Make, a2 Design, a3 Simulate, a4 Test. A window takes the accent of its content.
-- Four workspaces only: Hello, Engineering, Shipped, Off the clock. Contact and Style float on every workspace.
-- Live sites in Shipped are framed only after the visitor clicks; show the stand-in until then.
+- Three workspaces only: Hello, Engineering, Off the clock. Off the clock opens on a bento hub (the `sites` app, `renderHub` in `site/sites.js`) with tiles for the four sites, Smart home, Homelab, 3D prints, and Gaming; only the hub, The Aperture, 3D prints, and Gaming start open, and the rest open from their tiles. Contact and Style float on every workspace.
+- Live sites are framed only after the visitor clicks; show the stand-in until then.
 - Desktop zooms to 85 percent through CSS `zoom` on `#desk`; phones stay at 100.
 - Placeholders are written in square brackets so they are easy to find: `[photo in use]`.
 - UK English, no emojis, Oxford comma.

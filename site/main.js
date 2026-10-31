@@ -4,10 +4,10 @@ document.querySelectorAll(".bar button, .ss-box button").forEach((b) => (b.inner
 
 const apps = {
   about: { title: "About", icon: ICON.about, accent: "a1", width: 0, dockLabel: "About", render: renderAbout2 },
-  skills: { title: "Skills", icon: ICON.lab, accent: "a3", width: 1, dockLabel: "Skills", render: renderSkills },
-  resume: { title: "Resume", icon: ICON.resume, accent: "a2", width: 1, dockLabel: "Resume", render: renderResume2 },
-  projects: { title: "Projects", icon: ICON.work, accent: "a1", width: 2, dockLabel: "Projects", render: renderProjects2 },
-  sites: { title: "Shipped", icon: ICON.globe, accent: "a1", width: 0, dockLabel: "Shipped", render: renderSitesIndex },
+  skills: { title: "Skills", icon: ICON.lab, accent: "a3", width: 0, dockLabel: "Skills", render: renderSkills },
+  resume: { title: "Resume", icon: ICON.resume, accent: "a2", width: 0, dockLabel: "Resume", render: renderResume2 },
+  projects: { title: "Projects", icon: ICON.work, accent: "a1", width: 0, dockLabel: "Projects", render: renderProjects2 },
+  sites: { title: "Off the clock", icon: ICON.globe, accent: "a4", width: 0, dockLabel: "Off the clock", render: renderHub },
   home: { title: "Smart home", icon: ICON.home, accent: "a3", width: 1, dockLabel: "Smart home", render: renderSmartHome },
   homelab: { title: "Homelab", icon: ICON.lab, accent: "a2", width: 0, dockLabel: "Homelab", render: renderHomelab },
   prints: { title: "3D prints", icon: ICON.work, accent: "a1", width: 1, dockLabel: "3D prints", render: renderPrints },
@@ -26,15 +26,15 @@ const wm = Niri({
   apps, dock: [
     { name: "Hello", ws: 0, items: ["about", "skills", "resume"] },
     { name: "Engineering", ws: 1, items: ["projects"] },
-    { name: "Shipped", ws: 2, items: ["sites"].concat(SITES.map((s) => "site-" + s.id)) },
-    { name: "Off the clock", ws: 3, items: ["home", "homelab", "prints", "gaming"] },
+    { name: "Off the clock", ws: 2, items: ["sites", "site-" + SITES[0].id, "prints", "gaming"] },
     { name: "Anywhere", items: ["contact", "settings"] },
   ],
   workspaces: [
     { name: "Hello", open: ["about", "skills", "resume"] },
-    { name: "Engineering", open: ["projects", highlightSpec, projSpec(PROJECTS.find((p) => p.id === "cad-machine"))] },
-    { name: "Shipped", open: ["sites"].concat(SITES.map((s) => "site-" + s.id)) },
-    { name: "Off the clock", open: ["home", "homelab", "prints", "gaming"] },
+    /* the index windows are a third wide, so the first project and the hub tiles sit beside them */
+    { name: "Engineering", open: ["projects", projSpec(PROJECTS.find((p) => p.id === "cirrus-jet"))] },
+    /* the hub, the first site, 3D prints, and Gaming; the other tiles open their windows from the hub */
+    { name: "Off the clock", open: ["sites", "site-" + SITES[0].id, "prints", "gaming"] },
   ],
   launcherExtras: (api) => deskExtras().concat(siteExtras(api), projectExtras(api), riceExtras()),
   extraKeys: [["E", "Session menu"], ["S", "Appearance settings"], ["W", "Next wallpaper"], ["P", "Next preset"], ["G", "Show or hide the guide"], ["M", "Play or pause music"], ["Shift + M", "Next track"], ["N", "Control centre"]],
@@ -54,11 +54,10 @@ function liveRow(b, api) {
 
 /* bar */
 const pills = document.getElementById("pills");
-/* one icon per workspace, in order: a person, a gear, a rocket, a coffee */
+/* one icon per workspace, in order: a person, a gear, a coffee */
 const WS_ICON = [
   '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/>',
   '<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.5"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>',
-  '<path d="M12 3c3 2 4.5 5 4.5 9l-2 4h-5l-2-4c0-4 1.5-7 4.5-9z"/><circle cx="12" cy="10" r="1.6"/><path d="M9.5 16l-2 3.5M14.5 16l2 3.5"/>',
   '<path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M9 3.5c-.8 1 .8 2 0 3M12.5 3.5c-.8 1 .8 2 0 3"/>',
 ];
 const wsIcon = (i) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${WS_ICON[i] || ""}</svg>`;

@@ -36,14 +36,14 @@ function renderSkills(b, api) {
   });
 }
 
-/* Projects: work highlight and flagships first, then everything by stage */
+/* Projects: flagships first, then everything by stage */
 function renderProjects2(b, api) {
   const chips = `<button type="button" class="chip on" data-c="all">Everything</button>` + stageOrder.map((k) => `<button type="button" class="chip" data-c="${k}" style="${hueStyle(CATS[k].hue)}">${CATS[k].label}</button>`).join("");
   const tile = (p, cls = "") => `<li class="${cls}"><button type="button" class="p-tile" data-id="${p.id}" style="${hueStyle(CATS[p.cat].hue)}"><img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async"><span class="p-cat">${CATS[p.cat].label}</span><span class="p-t">${p.title}</span></button></li>`;
   b.innerHTML = `<div class="projects"><p class="kicker">Engineering</p><h2>Things I have designed, simulated, made, and tested</h2>
     <div class="chips">${chips}</div>
     <h3 class="p-h">Start here</h3>
-    <ul class="p-grid p-lead"><li class="p-hl"><button type="button" class="p-tile" data-hl="1" style="${hueStyle("a1")}"><span class="p-hlimg"><span>Mockup to come</span></span><span class="p-cat">Work highlight</span><span class="p-t">${esc(HIGHLIGHT.title)}</span></button></li>${FLAGSHIPS.map((id) => tile(projById(id), "p-flag")).join("")}</ul>
+    <ul class="p-grid p-lead">${FLAGSHIPS.map((id) => tile(projById(id), "p-flag")).join("")}</ul>
     <h3 class="p-h">Everything, by stage</h3>
     <ul class="p-grid">${stageOrder.flatMap((k) => PROJECTS.filter((p) => p.cat === k)).map((p) => tile(p)).join("")}</ul>
     <p class="hint">Each project opens as its own window to the right. Scroll along to read them side by side.</p></div>`;
@@ -54,26 +54,21 @@ function renderProjects2(b, api) {
   });
   b.addEventListener("click", (e) => {
     const t = e.target.closest(".p-tile"); if (!t) return;
-    if (t.dataset.hl) api.open(highlightSpec); else api.open(projSpec(projById(t.dataset.id)));
+    api.open(projSpec(projById(t.dataset.id)));
   });
 }
-const highlightSpec = { key: "highlight", title: HIGHLIGHT.title, icon: ICON.work, accent: "a1", width: 1, render: (b) => {
-  b.innerHTML = `<div class="project"><figure class="p-hlimg big"><span>Mockup to come</span></figure>
-    <p class="kicker">Work highlight</p><h2>${esc(HIGHLIGHT.title)}</h2><p class="lede">${esc(HIGHLIGHT.line)}</p>
-    <dl class="facts"><div><dt>Year</dt><dd>[year]</dd></div><div><dt>Role</dt><dd>[role]</dd></div><div><dt>Team</dt><dd>[size]</dd></div><div><dt>Tools</dt><dd>[tools]</dd></div></dl>
-    <p>${HIGHLIGHT.note}</p></div>`;
-} };
 
 /* One anatomy for every project window */
 /* a media slot: the file when the content folder has it, a labelled placeholder until then */
 function mediaSlot(m) {
-  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video src="${m.file}" controls preload="metadata" playsinline></video>` : `<img src="${m.file}" alt="${esc(m.label)}" loading="lazy">`}<span class="pm-cap">${esc(m.label)}</span></li>`;
+  /* a filled slot shows the picture or clip; clips play like GIFs, silent and on a loop, unless the visitor prefers less motion; a click on a picture opens it full size in a new tab */
+  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video src="${m.file}" muted loop playsinline preload="metadata"${matchMedia("(prefers-reduced-motion: reduce)").matches ? " controls" : " autoplay"} aria-label="${esc(m.label)}"></video>` : `<a href="${m.file}" target="_blank" rel="noopener" title="Open full size in a new tab"><img src="${m.file}" alt="${esc(m.label)}" loading="lazy" decoding="async"></a>`}<span class="pm-cap">${esc(m.label)}</span></li>`;
   return `<li class="pm-${m.kind}"><span class="pm-ic">${m.kind === "video" ? ICON.play : ICON.max}</span><span>${esc(m.label)}</span><small>[${m.kind === "video" ? "video" : "image"} to come]</small></li>`;
 }
 function renderProject2(b, api, p) {
   const c = CATS[p.cat], related = PROJECTS.filter((x) => x.cat === p.cat && x.id !== p.id).slice(0, 2);
   const skills = SKILLS[p.cat].tools.slice(0, 3);
-  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async"><figcaption>[Caption for this image]</figcaption></figure>
+  b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async"><figcaption>${esc(p.caption || "[Caption for this image]")}</figcaption></figure>
     <p class="kicker" style="color:var(--accent-ink)">${c.verb}${FLAGSHIPS.includes(p.id) ? " · Flagship" : ""}</p><h2>${p.title}</h2><p class="lede">${p.outcome || "[One-line outcome, such as: one 5-axis setup instead of three]"}</p>
     <dl class="facts"><div><dt>Year</dt><dd>${p.year || "[year]"}</dd></div><div><dt>Role</dt><dd>${p.role || "[role]"}</dd></div><div><dt>Team</dt><dd>${p.team || "[size]"}</dd></div><div><dt>Tools</dt><dd>${skills.join(", ")}</dd></div></dl>
     <h3>The problem</h3>${p.sum}
@@ -84,7 +79,7 @@ function renderProject2(b, api, p) {
     ${related.length ? `<p class="rel"><span>See also</span>${related.map((r) => `<button type="button" data-p="${r.id}">${r.title}</button>`).join("")}</p>` : ""}</div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-p]"); if (t) api.open(projSpec(projById(t.dataset.p))); });
 }
-projSpec = (p) => ({ key: "proj-" + p.id, title: p.title, icon: ICON.work, accent: CATS[p.cat].hue, width: 1, kind: "project", render: renderProject2, arg: p });
+projSpec = (p) => ({ key: "proj-" + p.id, title: p.title, icon: ICON.work, accent: CATS[p.cat].hue, width: 0, kind: "project", render: renderProject2, arg: p });
 
 /* Resume: one outcome line per job, and a download button in place of skill bars */
 function renderResume2(b) {
@@ -125,8 +120,9 @@ function renderHomelab(b) {
 }
 function renderPrints(b, api) {
   b.innerHTML = `<div class="prints"><p class="kicker">3D prints</p><h2>Printed at home on a Bambu Lab A1</h2>
+    ${/^https:\/\//.test(PRINTS_PAGE.makerworld) ? `<p class="gm-steam"><a class="btn" href="${esc(PRINTS_PAGE.makerworld)}" target="_blank" rel="noopener">${ICON.ext} My MakerWorld profile</a></p>` : ""}
     <ul class="pr-grid">${PRINTS.map((p) => `<li style="${hueStyle(p.hue)}"><button type="button" class="pr-card" data-print="${p.id}"><span class="pr-img">${p.img ? `<img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async">` : "<span>[photo]</span>"}</span><b>${esc(p.title)}</b><span class="pr-m">${esc(p.printer)} · ${esc(p.material)}</span><span class="pr-w">${p.why}</span><span class="pr-more">Open ${ICON.fwd}</span></button>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">On MakerWorld ${ICON.ext}</a>` : p.private ? `<span class="pr-p">Private design</span>` : ""}</li>`).join("")}</ul>
-    <p class="hint">Designed in Fusion 360, which runs on Linux through Bottles. The Steam Deck stand is the one shared publicly; the rest are designed for home and [photos in use to come].</p></div>`;
+    ${PRINTS_NOTE ? `<p class="hint">${PRINTS_NOTE}</p>` : ""}</div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-print]"); if (t) api.open(printSpec(PRINTS.find((p) => p.id === t.dataset.print))); });
 }
 /* one print in detail: render, the story, design notes, print settings, and slots for photos in use */
@@ -145,6 +141,9 @@ function renderPrint(b, api, p) {
 const printSpec = (p) => ({ key: "print-" + p.id, title: p.title, icon: ICON.work, accent: p.hue, width: 1, kind: "print", dockLabel: p.short || p.title, render: renderPrint, arg: p });
 function renderGaming(b) {
   b.innerHTML = `<div class="gaming"><p class="kicker">Gaming</p><h2>Off the clock, controller in hand</h2>
+    ${/^https:\/\//.test(GAMES.steam) ? `<p class="gm-steam"><a class="btn" href="${esc(GAMES.steam)}" target="_blank" rel="noopener">${ICON.ext} My Steam profile</a></p>` : ""}
+    ${GAMES.library ? `<dl class="gm-lib">${[["games", "Games"], ["dlc", "DLC"], ["reviews", "Reviews"], ["wishlist", "On wishlist"]].filter(([k]) => GAMES.library[k] != null).map(([k, n]) => `<div><dt>${n}</dt><dd>${esc(String(GAMES.library[k]))}</dd></div>`).join("")}</dl>` : ""}
+    ${GAMES.showcase.length ? `<h3>On my Steam showcase</h3><ul class="gm-show">${GAMES.showcase.map((g, i) => `<li style="${hueStyle(["a1", "a2", "a3", "a4"][i % 4])}">${esc(g)}</li>`).join("")}</ul>` : ""}
     <h3>Playing now</h3><ul class="gm">${GAMES.now.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>
     <h3>All-time favourites</h3><ol class="gm gm-top">${GAMES.alltime.map((g) => `<li>${esc(g)}</li>`).join("")}</ol>
     <h3>The kit</h3><ul class="gm">${GAMES.kit.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>

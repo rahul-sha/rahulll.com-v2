@@ -2,6 +2,7 @@
 title: Project title
 stage: design | simulate | make | test
 image: hero.webp
+caption: "One line under the main image, such as where the photo was taken"
 flagship: false
 year: "2026"
 role: What you did on it

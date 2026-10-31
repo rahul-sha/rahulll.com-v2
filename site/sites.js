@@ -3,7 +3,7 @@
    when the visitor clicks it. A site that refuses to be framed (embed: false in its Markdown) opens in a new tab.
    A site without a screenshot falls back to a stand-in drawn from the live page. */
 const canFrame = (s) => !s.private && s.embed;
-/* screenshots and clips load only when their window comes on screen, since Shipped is not where a visit starts */
+/* screenshots and clips load only when their window comes on screen, since Off the clock is not where a visit starts */
 const nearby = "IntersectionObserver" in window ? new IntersectionObserver((es) => es.forEach((e) => {
   if (!e.isIntersecting) return;
   const m = e.target; nearby.unobserve(m);
@@ -105,10 +105,34 @@ function renderSite(b, api, s) {
     b.querySelectorAll(".gw-pal button").forEach((y) => y.classList.toggle("on", y === x));
   }));
 }
-function renderSitesIndex(b, api) {
-  b.innerHTML = `<div class="sites"><p class="kicker">Shipped</p><h2>Things I built outside work</h2>
-    <p class="lede">Each one was built with Claude, one pull request at a time, and opens here as a browser window. Press <kbd>Shift</kbd> <kbd>F</kbd> or the corner button to take it fullscreen.</p>
-    <ul class="si-list">${SITES.map((s) => `<li><button type="button" class="si" data-id="${s.id}" style="--accent:var(--${s.accent});--accent-ink:var(--${s.accent}-ink)"><span class="si-prev">${s.thumb ? `<img class="si-shot" src="${s.thumb}" alt="" loading="lazy" decoding="async">` : `<span class="si-mini" aria-hidden="true">${standin(s).replace(/<(\/?)button\b[^>]*>/g, "<$1span>")}</span>`}</span><span class="si-t">${s.title}</span><span class="si-h">${s.private ? "Private" : s.host}</span><span class="si-b">${s.blurb}</span><span class="si-s">${s.stats}</span><span class="si-tag">${s.tag}</span></button></li>`).join("")}</ul></div>`;
-  b.querySelector(".si-list").addEventListener("click", (e) => { const t = e.target.closest(".si"); if (t) api.open(siteSpec(SITES.find((s) => s.id === t.dataset.id))); });
+/* Off the clock opens on this hub: one bento board for the sites, smart home, homelab, prints, and gaming.
+   Only the hub, the first site, 3D prints, and Gaming start open; every other tile opens its window beside it. */
+function renderHub(b, api) {
+  const first = (h) => h.replace(/<[^>]+>/g, "").split(/(?<=\.)\s/)[0];
+  const pill = (t) => `<span class="hb-pill">${esc(t)}</span>`;
+  const shot = (src) => (src ? `<img src="${src}" alt="" loading="lazy" decoding="async">` : "");
+  const site = (s, cls = "") => `<button type="button" class="bt bph ${cls}" data-site="${s.id}" style="${hueStyle(s.accent)}">${shot(s.thumb)}${pill(s.tag)}<b class="t">${esc(s.title)}</b>${cls.includes("w2") ? `<span class="s2">${esc(first(s.blurb))}</span>` : ""}</button>`;
+  const nas = (DEVICES[0] || ["[NAS]"])[0], model = nas.split(" ").pop();
+  const svc = LAB.filter((l) => !l[0].startsWith("["));
+  const prints = PRINTS.filter((p) => p.img), printer = (PRINTS[0] && PRINTS[0].printer) || "[printer]";
+  const pos = [[5, 8, -4], [36, 5, 3], [66, 10, -2], [20, 42, 2]];
+  const dash = HOME.filter((h) => h.img);
+  const [s0, ...rest] = SITES, last = rest.length > 2 ? rest.pop() : null;
+  const tiles = [
+    s0 && site(s0, "w2 h2"),
+    `<button type="button" class="bt bph w2" data-app="home" style="${hueStyle("a3")}">${shot(dash[0] && dash[0].img)}${pill("Smart home")}<b class="t">The flat, automated</b><span class="s2">${dash.length} Home Assistant dashboards</span></button>`,
+    ...rest.map((s) => site(s)),
+    `<button type="button" class="bt hl w2 h2" data-app="homelab" style="${hueStyle("a2")}">${pill("Homelab")}<span class="nas" aria-hidden="true"><span class="bay"></span><span class="bay"></span><span class="nas-side"><i></i>${esc(model)}<br>2 bays</span></span><span class="nas-chips">${svc.map((l) => `<span><i></i>${esc(l[0])}</span>`).join("")}</span><b class="t">One small NAS does a lot</b><span class="s2">${esc(nas)} at home</span></button>`,
+    `<button type="button" class="bt hl w2 h2" data-app="prints" style="${hueStyle("a1")}">${pill("3D prints")}<span class="plate" aria-hidden="true" data-printer="${esc(printer)} · plate 1">${prints.slice(0, 4).map((p, i) => `<img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async" style="left:${pos[i][0]}%;top:${pos[i][1]}%;rotate:${pos[i][2]}deg">`).join("")}</span><b class="t">${PRINTS.length} things printed at home</b><span class="s2">Designed in Fusion 360, printed on a ${esc(printer)}</span></button>`,
+    last && site(last, "w2"),
+    `<button type="button" class="bt gm1 w2" data-app="gaming" style="${hueStyle("a4")}">${pill("Gaming")}<b class="t">Controller in hand</b><span class="s2">${esc(GAMES.kit.slice(0, 2).join(" and "))}</span><span class="deck" aria-hidden="true"><span class="stick"></span><span class="scr">${GAMES.library ? `<small>On Steam</small>${esc(String(GAMES.library.games))} games` : `<small>Now playing</small>${esc(GAMES.now[0] || "[Game]")}`}</span><span class="stick"></span></span></button>`,
+  ].filter(Boolean).join("");
+  b.innerHTML = `<div class="hb"><p class="kicker">Off the clock</p><h2>What I do when the laptop closes</h2>
+    <p class="lede">Websites I built with Claude, a smart flat, a small NAS, things printed at home, and games. Each tile opens its own window beside this one.</p>
+    <div class="bn">${tiles}</div></div>`;
+  b.querySelector(".bn").addEventListener("click", (e) => {
+    const t = e.target.closest(".bt"); if (!t) return;
+    api.open(t.dataset.site ? siteSpec(SITES.find((s) => s.id === t.dataset.site)) : t.dataset.app);
+  });
 }
 function siteExtras(api) { return SITES.map((s) => ({ label: s.title, hint: s.private ? "Private project" : s.host, icon: ICON.globe, run: () => api.open(siteSpec(s)) })); }

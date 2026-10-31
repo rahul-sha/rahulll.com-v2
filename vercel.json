@@ -13,6 +13,9 @@
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()" }
       ]
     },
-    { "source": "/site/img/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] }
+    { "source": "/site/img/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] },
+    { "source": "/site/media/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] },
+    { "source": "/site/(.*).js", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] },
+    { "source": "/site/(.*).css", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }
   ]
 }

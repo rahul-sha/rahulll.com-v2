@@ -341,8 +341,53 @@ function finishBoot(silent) {
   booting = false;
   desk.classList.remove("preboot", "booting", "boot-zoom");
   if (D.guide && !guideOpen()) setTimeout(() => toggleGuide(true), silent ? 0 : 150);
+  railHint();
 }
 ["keydown", "pointerdown", "wheel"].forEach((ev) => addEventListener(ev, () => { if (booting && desk.classList.contains("booting")) finishBoot(); }, { capture: true, passive: true }));
+
+/* ---------- Phone rail: drag the grip to park the rail at the bottom (default), the middle, or the top of the screen ---------- */
+const rail = desk.querySelector(":scope > .bar"), grip = rail.querySelector(".grip");
+const RAIL_STOPS = ["bottom", "middle", "top"];
+if (!RAIL_STOPS.includes(D.rail)) D.rail = "bottom";
+/* how far above its resting place the rail sits at each stop, in px; "bottom" is where the CSS puts it */
+function railStops() {
+  const y = parseFloat(desk.style.getPropertyValue("--rail-y")) || 0;
+  const H = desk.clientHeight, h = rail.offsetHeight, gap = (parseFloat(getComputedStyle(rail).bottom) || 0) - y;
+  /* the top stop sits under the first window's title bar, so its close button stays reachable */
+  const topInset = (parseFloat(getComputedStyle(desk).gridTemplateRows) || 8) + 52;
+  return { bottom: 0, middle: Math.max(0, Math.round((H - h) / 2 - gap)), top: Math.max(0, Math.round(H - topInset - h - gap)) };
+}
+function setRail(stop, y) {
+  if (!wm.S.phone) { desk.style.removeProperty("--rail-y"); desk.classList.remove("rail-away"); return; }
+  const stops = railStops();
+  if (stop) { D.rail = stop; saveD(); y = stops[stop]; }
+  desk.style.setProperty("--rail-y", y + "px");
+  desk.classList.toggle("rail-away", y > 0);
+}
+function railHint() {
+  if (!wm.S.phone || D.railHint) return;
+  D.railHint = true; saveD();
+  rail.classList.add("nudge"); rail.addEventListener("animationend", () => rail.classList.remove("nudge"), { once: true });
+}
+grip.addEventListener("pointerdown", (e) => {
+  if (!wm.S.phone) return;
+  e.preventDefault(); e.stopPropagation(); grip.setPointerCapture(e.pointerId);
+  const stops = railStops(), startY = e.clientY, start = parseFloat(desk.style.getPropertyValue("--rail-y")) || 0;
+  let y = start, lastY = e.clientY, lastT = e.timeStamp, vel = 0;
+  rail.classList.add("dragging"); rail.classList.remove("nudge");
+  const move = (ev) => { vel = (lastY - ev.clientY) / Math.max(1, ev.timeStamp - lastT); lastY = ev.clientY; lastT = ev.timeStamp; y = Math.max(0, Math.min(stops.top, start + startY - ev.clientY)); setRail(null, y); };
+  const up = () => {
+    grip.removeEventListener("pointermove", move); grip.removeEventListener("pointerup", up); grip.removeEventListener("pointercancel", up);
+    rail.classList.remove("dragging");
+    const target = y + Math.max(-90, Math.min(90, vel * 120)); /* a flick carries on a little */
+    setRail(RAIL_STOPS.slice().sort((a, b) => Math.abs(stops[a] - target) - Math.abs(stops[b] - target))[0]);
+  };
+  grip.addEventListener("pointermove", move); grip.addEventListener("pointerup", up); grip.addEventListener("pointercancel", up);
+});
+grip.addEventListener("dblclick", () => setRail("bottom"));
+wm.onChange(() => setRail(D.rail));
+addEventListener("resize", () => setRail(D.rail));
+setRail(D.rail);
 
 function deskExtras() {
   return [

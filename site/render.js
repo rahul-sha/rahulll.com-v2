@@ -62,14 +62,24 @@ function renderProjects2(b, api) {
 /* a media slot: the file when the content folder has it, a labelled placeholder until then */
 function mediaSlot(m) {
   /* a filled slot shows the picture or clip; clips play like GIFs, silent and on a loop, unless the visitor prefers less motion; a click on a picture opens it in a floating viewer window */
-  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video src="${m.file}" muted loop playsinline preload="metadata"${matchMedia("(prefers-reduced-motion: reduce)").matches ? " controls" : " autoplay"} aria-label="${esc(m.label)}"></video>` : `<button type="button" class="pm-open" data-view="${m.file}" title="Open in a viewer window"><img src="${m.file}" alt="${esc(m.label)}" loading="lazy" decoding="async"></button>`}<span class="pm-cap">${esc(m.label)}</span></li>`;
+  if (m.file) return `<li class="pm-${m.kind} has-file">${m.kind === "video" ? `<video data-src="${m.file}" muted loop playsinline preload="none"${matchMedia("(prefers-reduced-motion: reduce)").matches ? " controls" : ""} aria-label="${esc(m.label)}"></video>` : `<button type="button" class="pm-open" data-view="${m.file}"${m.size ? ` data-w="${m.size[0]}" data-h="${m.size[1]}"` : ""} title="Open in a viewer window"><img src="${m.thumb || m.file}" alt="${esc(m.label)}"${m.size ? ` width="${m.size[0]}" height="${m.size[1]}"` : ""} loading="lazy" decoding="async"></button>`}<span class="pm-cap">${esc(m.label)}</span></li>`;
   return `<li class="pm-${m.kind}"><span class="pm-ic">${m.kind === "video" ? ICON.play : ICON.max}</span><span>${esc(m.label)}</span><small>[${m.kind === "video" ? "video" : "image"} to come]</small></li>`;
 }
 /* the viewer: a floating window in the site's own chrome, sized to the picture and centred, with the caption and a full-size link underneath */
 const CHROME = { tb: 40, cap: 34 };
+/* clips download and play only while their window is on screen, and pause when it leaves; the intro flies over every workspace, so look again once it settles */
+const clips = "IntersectionObserver" in window ? new IntersectionObserver((es) => es.forEach((e) => {
+  const v = e.target;
+  if (!e.isIntersecting) { if (v.src) v.pause(); return; }
+  const d = document.getElementById("desk");
+  if (d && (d.classList.contains("booting") || d.classList.contains("preboot"))) { clips.unobserve(v); return setTimeout(() => clips.observe(v), 1500); }
+  if (!v.src) v.src = v.dataset.src;
+  if (!v.controls) v.play().catch(() => {});
+}), { rootMargin: "200px" }) : null;
+function watchClips(root) { root.querySelectorAll("video[data-src]").forEach((v) => clips ? clips.observe(v) : (v.src = v.dataset.src, v.controls || v.play().catch(() => {}))); }
 function openViewer(api, t, accent) {
   const img = t.querySelector("img"), file = t.dataset.view, label = img.alt;
-  const nw = img.naturalWidth || 1200, nh = img.naturalHeight || 800, S = api.S;
+  const nw = +t.dataset.w || img.naturalWidth || 1200, nh = +t.dataset.h || img.naturalHeight || 800, S = api.S;
   /* on a phone the window keeps clear of the right-hand rail, like the guide does */
   const maxW = S.phone ? S.W - 86 : S.W - 96, maxH = S.H - (S.phone ? 16 : 96) - CHROME.tb - CHROME.cap, k = Math.min(maxW / nw, maxH / nh, 1);
   const w = Math.max(240, Math.round(nw * k)), h = Math.round(nh * k) + CHROME.tb + CHROME.cap;
@@ -94,7 +104,7 @@ function renderProject2(b, api, p) {
     <h3>Related</h3><p class="rel"><span>Proves</span>${skills.map((s) => `<i>${esc(s)}</i>`).join("")}</p>
     ${related.length ? `<p class="rel"><span>See also</span>${related.map((r) => `<button type="button" data-p="${r.id}">${r.title}</button>`).join("")}</p>` : ""}</div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-p]"); if (t) api.open(projSpec(projById(t.dataset.p))); });
-  b.addEventListener("click", viewClick(api, c.hue));
+  b.addEventListener("click", viewClick(api, c.hue)); watchClips(b);
 }
 /* the dock shows one word per window: `short` from the Markdown, or the first word of the title */
 const dockWord = (p) => p.short || p.title.split(/[\s,:]+/)[0];

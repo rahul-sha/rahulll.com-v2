@@ -179,6 +179,8 @@ async function main() {
   const ABOUT = { headline: about.fm.headline || "", employer: about.fm.employer || "", open_to: about.fm.open_to || "", image: image("about", "", about.fm.image, "content/about/index.md", { max: 600 }) };
   const PROJECTS = projects(), PRINTS = prints(), SITES = sites();
   for (const p of PROJECTS.concat(PRINTS)) { p.thumb = p.img ? thumb(p.img) : ""; p.size = p.img ? await size(p.img) : null; }
+  /* media slots show a small copy and keep the full size for the viewer */
+  for (const p of PROJECTS) for (const m of p.media) if (m.file && m.kind !== "video") { m.thumb = thumb(m.file); m.size = await size(m.file); }
   const tuple = (r) => [r.dates || "", r.title || "", r.place || "", r.line || ""];
   const JOBS = (resume.fm.jobs || []).map(tuple), STUDY = (resume.fm.study || []).map(tuple), TOOLS = (resume.fm.tools || []).map((t) => [t, 0]);
   const stages = skills.fm.stages || {};

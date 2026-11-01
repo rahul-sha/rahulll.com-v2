@@ -198,8 +198,7 @@ function paintWall(time) {
 function drawWall() {
   cancelAnimationFrame(wallRaf);
   if (!moving()) { lastFrame = 0; return paintWall(0); }
-  /* the wallpaper holds still during the boot intro: each repaint makes every glass window re-blur what is behind it, which a phone cannot do while the windows also fly in */
-  const loop = (time) => { if (!lastFrame || (time - lastFrame > 32 && !cv.closest(".booting"))) paintWall(time); else if (cv.closest(".booting")) lastFrame = time; wallRaf = requestAnimationFrame(loop); };
+  const loop = (time) => { if (time - lastFrame > 32 || !lastFrame) paintWall(time); wallRaf = requestAnimationFrame(loop); };
   wallRaf = requestAnimationFrame(loop);
 }
 addEventListener("resize", () => paintWall(lastFrame));

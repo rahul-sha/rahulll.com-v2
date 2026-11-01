@@ -126,7 +126,13 @@
 .booting:not(.boot-zoom) .boot { opacity: 1; }
 .booting .wsstack .win { animation: boot-in .7s var(--ease) both; animation-delay: calc(var(--i, 0) * 80ms + 250ms); }
 .booting .ws-label { opacity: 0; }
-@keyframes boot-in { from { opacity: 0; translate: 0 60px; scale: .9; } }
+/* .001 rather than 0, so the windows are painted (and their pictures drawn) while they wait, not on the first moving frame */
+@keyframes boot-in { from { opacity: .001; translate: 0 60px; scale: .9; } }
+/* while the phone finishes its first-load work, the title shows and everything else holds still */
+.boot-wait .wsstack .win, .boot-wait .bar, .boot-wait .dock { animation-play-state: paused; }
+/* phones: during the intro only the window the camera lands on keeps its frosted glass. Blurring the backdrop of a dozen
+   moving windows at once doubles the drawing work per frame; at overview size the glass looks the same without it */
+.phone.booting .wsstack .win:not(.focused) { -webkit-backdrop-filter: none; backdrop-filter: none; }
 .boot-zoom .wsstack { transition: transform 1.15s cubic-bezier(.65, 0, .25, 1) !important; }
 .booting .bar, .booting .dock { animation: chrome-in .8s var(--ease) both; animation-delay: 1.4s; }
 @keyframes chrome-in { from { opacity: 0; translate: 0 var(--from, -12px); } }

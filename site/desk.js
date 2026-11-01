@@ -320,26 +320,48 @@ wm.onChange(() => ccOpen() && syncCC());
 
 /* ---------- Boot: start zoomed out in the overview, then fly into the first workspace ---------- */
 let booting = false;
+/* Before the windows move, let the phone finish its first-load work: decode every picture in the overview
+   (off the main thread), wait for the fonts, then wait until a few frames in a row run smoothly. Until then the title shows and the
+   windows wait, painted but invisible, so the drop-in only has to move finished layers. Capped so a slow
+   network never holds the intro back. */
+function bootReady() {
+  /* lazy pictures still waiting are below the fold of their window, out of sight, so they are left to load later */
+  const pics = [...desk.querySelectorAll(".wsstack img")].filter((i) => i.getAttribute("src") && (i.complete || i.loading !== "lazy"));
+  const work = Promise.allSettled([...pics.map((i) => i.decode()), document.fonts ? document.fonts.ready : 0]);
+  /* then wait for four smooth frames in a row, so the drop-in starts once the phone has caught its breath */
+  const calm = () => new Promise((r) => {
+    let n = 0, last = 0;
+    const end = performance.now() + 900;
+    const tick = (t) => { n = last && t - last < 22 ? n + 1 : 0; last = t; if (n >= 4 || t > end) r(); else requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  });
+  return Promise.race([work, new Promise((r) => setTimeout(r, 1200))]).then(calm);
+}
 function boot(force) {
   if (!force && (R.intro === "off" || reduceMotion())) return finishBoot(true);
   booting = true;
+  const run = (boot.run = (boot.run || 0) + 1);
   desk.querySelectorAll(".wsstack .win").forEach((w, i) => w.style.setProperty("--i", i));
-  desk.classList.add("booting");
+  desk.classList.add("booting", "boot-wait");
   wm.S.cur = 0; wm.S.ws[0].focus = 0;
   wm.overview(true);
   desk.classList.remove("preboot");
   clearTimeout(boot.t1); clearTimeout(boot.t2);
-  boot.t1 = setTimeout(() => {
-    desk.classList.add("boot-zoom");
-    wm.overview(false);
-    boot.t2 = setTimeout(() => finishBoot(), 1300);
-  }, 1900);
+  bootReady().then(() => {
+    if (run !== boot.run || !booting) return;
+    desk.classList.remove("boot-wait");
+    boot.t1 = setTimeout(() => {
+      desk.classList.add("boot-zoom");
+      wm.overview(false);
+      boot.t2 = setTimeout(() => finishBoot(), 1300);
+    }, 1900);
+  });
 }
 function finishBoot(silent) {
   clearTimeout(boot.t1); clearTimeout(boot.t2);
   if (wm.S.overview && booting) wm.overview(false);
   booting = false;
-  desk.classList.remove("preboot", "booting", "boot-zoom");
+  desk.classList.remove("preboot", "booting", "boot-wait", "boot-zoom");
   if (D.guide && !guideOpen()) setTimeout(() => toggleGuide(true), silent ? 0 : 150);
   railHint();
 }

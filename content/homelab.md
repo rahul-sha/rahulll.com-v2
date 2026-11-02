@@ -1,4 +1,5 @@
 ---
+heading: One small NAS does a lot   # the window title line, also used on the Off the clock tile
 services:
   - name: Immich
     line: Private photo library; portfolio albums sync to The Aperture

@@ -3,39 +3,37 @@
 document.querySelectorAll(".bar button, .ss-box button").forEach((b) => (b.innerHTML = b.innerHTML.replace(/\$\{ICON\.(\w+)\}/g, (_, k) => ICON[k])));
 
 const apps = {
-  about: { title: "About", icon: ICON.about, accent: "a1", width: 0, dockLabel: "About", render: renderAbout2 },
-  skills: { title: "Skills", icon: ICON.lab, accent: "a3", width: 0, dockLabel: "Skills", render: renderSkills },
-  resume: { title: "Resume", icon: ICON.resume, accent: "a2", width: 0, dockLabel: "Resume", render: renderResume2 },
-  projects: { title: "Projects", icon: ICON.work, accent: "a1", width: 0, dockLabel: "Projects", render: renderProjects2 },
-  sites: { title: "Off the clock", icon: ICON.globe, accent: "a4", width: 0, dockLabel: "Off the clock", render: renderHub },
-  home: { title: "Smart home", icon: ICON.home, accent: "a3", width: 1, dockLabel: "Smart home", render: renderSmartHome },
-  homelab: { title: "Homelab", icon: ICON.lab, accent: "a2", width: 0, dockLabel: "Homelab", render: renderHomelab },
-  prints: { title: "3D prints", icon: ICON.work, accent: "a1", width: 0, dockLabel: "3D prints", render: renderPrints },
-  gaming: { title: "Gaming", icon: ICON.play, accent: "a4", width: 0, dockLabel: "Gaming", render: renderGaming },
-  contact: { title: "Contact", icon: ICON.mail, accent: "a1", width: 0, dockLabel: "Contact", render: renderContact },
+  about: { title: "About", icon: ICON.about, accent: "a1", width: 0, render: renderAbout2 },
+  skills: { title: "Skills", icon: ICON.lab, accent: "a3", width: 0, render: renderSkills },
+  resume: { title: "Resume", icon: ICON.resume, accent: "a2", width: 0, render: renderResume2 },
+  projects: { title: "Projects", icon: ICON.work, accent: "a1", width: 0, render: renderProjects2 },
+  sites: { title: "Off the clock", icon: ICON.globe, accent: "a4", width: 0, render: renderHub },
+  home: { title: "Smart home", icon: ICON.home, accent: "a3", width: 1, render: renderSmartHome },
+  homelab: { title: "Homelab", icon: ICON.lab, accent: "a2", width: 0, render: renderHomelab },
+  prints: { title: "3D prints", icon: ICON.work, accent: "a1", width: 0, render: renderPrints },
+  gaming: { title: "Gaming", icon: ICON.play, accent: "a4", width: 0, render: renderGaming },
+  contact: { title: "Contact", icon: ICON.mail, accent: "a1", width: 0, render: renderContact },
   /* Appearance floats as a full-height side panel on the right, pinned to every workspace, so changes show on the windows beside it */
   settings: { title: "Appearance", icon: ICON.sliders, accent: "a4", width: 0, hotkey: "S", dockLabel: "Style", floating: true, render: (b) => renderSettings(b),
     get float() { const S = wm.S; return { w: S.phone ? S.W - 16 : Math.min(400, S.W - 16), h: S.H - 16, x: "right", y: "top", sticky: true }; } },
   terminal: { title: "Terminal", icon: ICON.term, accent: "a2", width: 1, hotkey: "T", hidden: true,
-    render: (b, api) => Term(b, api, baseCommands(), { ps: "rahul@portfolio ~ $", banner: ["Welcome to the shell. Type <b>help</b>, or try <b>neofetch</b>."] }) },
+    render: (b, api) => Term(b, api, baseCommands(), { ps: SHELL_ID + " ~ $", banner: ["Welcome to the shell. Type <b>help</b>, or try <b>neofetch</b>."] }) },
 };
-/* each live site is also a dock item in the Live group */
-const SHORT = { aperture: "Aperture", gridwalk: "Grid Walk", aanchal: "aanchalll", chopshop: "Chop Shop" };
-SITES.forEach((s) => (apps["site-" + s.id] = { ...siteSpec(s), hidden: true, dockLabel: SHORT[s.id] }));
+/* each live site is also an app, so it can sit in the dock; its dock word is `short` in content/sites/<name>.md */
+SITES.forEach((s) => (apps["site-" + s.id] = { ...siteSpec(s), hidden: true, dockLabel: dockWord(s) }));
+const WORKSPACES = [
+  { name: "Hello", open: ["about", "skills", "resume"] },
+  /* the index windows are a third wide, so the first project and the hub tiles sit beside them; projects marked start_open: true follow, in their order */
+  { name: "Engineering", open: ["projects", ...START_OPEN.map((id) => projSpec(projById(id)))] },
+  /* the hub, the first site, 3D prints, and Gaming; the other tiles open their windows from the hub */
+  { name: "Off the clock", open: ["sites", ...SITES.slice(0, 1).map((s) => "site-" + s.id), "prints", "gaming"] },
+];
 const wm = Niri({
-  apps, dock: [
-    { name: "Hello", ws: 0, items: ["about", "skills", "resume"] },
-    { name: "Engineering", ws: 1, items: ["projects"] },
-    { name: "Off the clock", ws: 2, items: ["sites", "site-" + SITES[0].id, "prints", "gaming"] },
-    { name: "Anywhere", items: ["contact", "settings"] },
-  ],
-  workspaces: [
-    { name: "Hello", open: ["about", "skills", "resume"] },
-    /* the index windows are a third wide, so the first project and the hub tiles sit beside them; Engineering opens Cirrus Vision first, then the HVAC flagship */
-    { name: "Engineering", open: ["projects", ...["cirrus-jet", "hvac"].map((id) => projSpec(PROJECTS.find((p) => p.id === id)))] },
-    /* the hub, the first site, 3D prints, and Gaming; the other tiles open their windows from the hub */
-    { name: "Off the clock", open: ["sites", "site-" + SITES[0].id, "prints", "gaming"] },
-  ],
+  apps,
+  /* the dock has one group per workspace holding the apps that open there, then the windows that float on every workspace */
+  dock: WORKSPACES.map((w, i) => ({ name: w.name, ws: i, items: w.open.filter((x) => typeof x === "string") }))
+    .concat({ name: "Anywhere", items: ["contact", "settings"] }),
+  workspaces: WORKSPACES,
   launcherExtras: (api) => deskExtras().concat(siteExtras(api), projectExtras(api), riceExtras()),
   extraKeys: [["E", "Session menu"], ["S", "Appearance settings"], ["W", "Next wallpaper"], ["P", "Next preset"], ["G", "Show or hide the guide"], ["M", "Play or pause music"], ["Shift + M", "Next track"], ["N", "Control centre"]],
   keys: { KeyE: () => session(true), KeyS: () => wm.open("settings"), KeyW: () => nextWall(), KeyP: () => nextPreset(), KeyG: () => toggleGuide(), KeyM: (a, e) => (e.shiftKey ? player.next() : player.toggle()), KeyN: () => cc() },
@@ -46,11 +44,6 @@ const wm = Niri({
   eggHint: "There are a few secrets: try typing <b>niri</b>, the Konami code, or tapping the clock a few times.",
 });
 wm.focusTo(0);
-function liveRow(b, api) {
-  const h = b.querySelector("h2");
-  h.insertAdjacentHTML("afterend", `<div class="live-row"><span>Live now</span>${SITES.map((s) => `<button type="button" data-site="${s.id}" style="--accent:var(--${s.accent});--accent-ink:var(--${s.accent}-ink)">${ICON.globe}${s.title}</button>`).join("")}</div>`);
-  b.querySelector(".live-row").addEventListener("click", (e) => { const t = e.target.closest("[data-site]"); if (t) api.open(siteSpec(SITES.find((s) => s.id === t.dataset.site))); });
-}
 
 /* bar */
 const pills = document.getElementById("pills");

@@ -1,4 +1,5 @@
 ---
+short: Chop Shop
 title: Chop Shop
 host: chopshop.[private]
 tag: Private app

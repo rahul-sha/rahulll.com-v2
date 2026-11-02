@@ -5,6 +5,7 @@ stage: simulate
 image: hero.webp
 caption: Air draft across the test room, with a person standing in it, from CFD
 flagship: true
+start_open: true
 order: 2
 year: 2018 to 2021
 role: Mechanical design, CFD and FEA, test rig, and build tracking

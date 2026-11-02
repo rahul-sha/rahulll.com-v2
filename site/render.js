@@ -6,7 +6,7 @@ const stageOrder = Object.keys(CATS);
 /* About: three lines, a photo, and a "Currently" line */
 function renderAbout2(b, api) {
   b.innerHTML = `<div class="about">
-    <img class="about-me" src="${IMG.ME}" alt="Portrait of Rahul" fetchpriority="high">
+    <img class="about-me" src="${IMG.ME}" alt="Portrait of ${esc(ME.name)}" fetchpriority="high">
     <p class="kicker">${ME.role}, ${ME.place}</p>
     <h1 class="about-h">${ABOUT.headline}</h1>
     <p class="lede">${ME.line}</p>
@@ -108,14 +108,14 @@ function renderProject2(b, api, p) {
 }
 /* the dock shows one word per window: `short` from the Markdown, or the first word of the title */
 const dockWord = (p) => p.short || p.title.split(/[\s,:]+/)[0];
-projSpec = (p) => ({ key: "proj-" + p.id, title: p.title, icon: ICON.work, accent: CATS[p.cat].hue, width: 0, kind: "project", dockLabel: dockWord(p), render: renderProject2, arg: p });
+const projSpec = (p) => ({ key: "proj-" + p.id, title: p.title, icon: ICON.work, accent: CATS[p.cat].hue, width: 0, kind: "project", dockLabel: dockWord(p), render: renderProject2, arg: p });
 
 /* Resume: one outcome line per job, and a download button in place of skill bars */
 function renderResume2(b) {
   const tl = (rows) => rows.map(([d, t, o, x]) => `<li><span class="r-d">${d}</span><strong>${t}</strong><span class="r-o">${o}</span><span class="r-x">${x}</span></li>`).join("");
   b.innerHTML = `<div class="resume">
     <p class="kicker">Resume</p><h2>Engineer, designer, maker.</h2>
-    <p class="r-dl"><a class="btn" href="site/resume.pdf" download="Rahul-Sharma-resume.pdf">${ICON.resume} Download PDF</a><span>Built from resume.md</span></p>
+    <p class="r-dl"><a class="btn" href="site/resume.pdf" download="${esc(ME.name.replace(/\s+/g, "-"))}-resume.pdf">${ICON.resume} Download PDF</a><span>Built from resume.md</span></p>
     <h3>Experience</h3><ol class="r-tl">${tl(JOBS)}</ol>
     <h3>Education</h3><ol class="r-tl">${tl(STUDY)}</ol>
     <h3>Tools</h3><p class="r-tools2">${TOOLS.map(([n]) => `<i>${n}</i>`).join("")}</p>
@@ -127,7 +127,7 @@ function renderResume2(b) {
 /* the Home Assistant dashboards as screenshots; the tabs are styled like Home Assistant tiles */
 function renderSmartHome(b) {
   const ready = HOME.filter((d) => d.img);
-  b.innerHTML = `<div class="hass"><p class="kicker">Smart home</p><h2>The flat, automated</h2>
+  b.innerHTML = `<div class="hass"><p class="kicker">Smart home</p><h2>${esc(HOME_PAGE.heading)}</h2>
     <div class="ha-tabs" role="tablist" aria-label="Dashboards">${HOME.map((d, i) => d.img
       ? `<button type="button" class="ha-tab${d === ready[0] ? " on" : ""}" role="tab" aria-selected="${d === ready[0]}" aria-controls="ha-shot" data-i="${i}"><b>${esc(d.name)}</b><span>${esc(d.line)}</span></button>`
       : `<button type="button" class="ha-tab soon" role="tab" aria-selected="false" disabled aria-disabled="true"><b>${esc(d.name)}</b><span>${esc(d.line || "Coming soon")}</span></button>`).join("")}</div>
@@ -142,13 +142,13 @@ function renderSmartHome(b) {
   });
 }
 function renderHomelab(b) {
-  b.innerHTML = `<div class="lab2"><p class="kicker">Homelab</p><h2>One small NAS does a lot</h2>
+  b.innerHTML = `<div class="lab2"><p class="kicker">Homelab</p><h2>${esc(LAB_PAGE.heading)}</h2>
     <p class="lede">${LAB_NOTE}</p>
     <ul class="svc">${LAB.map(([n, d, h]) => `<li style="${hueStyle(h)}"><i></i><b>${n}</b><span>${d}</span></li>`).join("")}</ul>
     <h3>Hardware</h3><ul class="dev">${DEVICES.map(([n, d]) => `<li><b>${n}</b><span>${d}</span></li>`).join("")}</ul></div>`;
 }
 function renderPrints(b, api) {
-  b.innerHTML = `<div class="prints"><p class="kicker">3D prints</p><h2>Printed at home on a Bambu Lab A1</h2>
+  b.innerHTML = `<div class="prints"><p class="kicker">3D prints</p><h2>Printed at home on a ${esc(PRINTER)}</h2>
     ${/^https:\/\//.test(PRINTS_PAGE.makerworld) ? `<p class="gm-steam"><a class="btn" href="${esc(PRINTS_PAGE.makerworld)}" target="_blank" rel="noopener">${ICON.ext} My MakerWorld profile</a></p>` : ""}
     <ul class="pr-grid">${PRINTS.map((p) => `<li style="${hueStyle(p.hue)}"><button type="button" class="pr-card" data-print="${p.id}"><span class="pr-img">${p.img ? `<img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async">` : "<span>[photo]</span>"}</span><b>${esc(p.title)}</b><span class="pr-m">${esc(p.printer)} · ${esc(p.material)}</span><span class="pr-w">${p.why}</span><span class="pr-more">Open ${ICON.fwd}</span></button>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">On MakerWorld ${ICON.ext}</a>` : p.private ? `<span class="pr-p">Private design</span>` : ""}</li>`).join("")}</ul>
     ${PRINTS_NOTE ? `<p class="hint">${PRINTS_NOTE}</p>` : ""}</div>`;
@@ -157,7 +157,7 @@ function renderPrints(b, api) {
 /* one print in detail: render, the story, design notes, print settings, and slots for photos in use */
 function renderPrint(b, api, p) {
   const others = PRINTS.filter((x) => x.id !== p.id).slice(0, 3);
-  b.innerHTML = `<div class="project print" style="${hueStyle(p.hue)}"><figure>${p.img ? `<img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async">` : `<span class="pr-img"><span>[render]</span></span>`}<figcaption>${p.img ? esc(p.caption || "Render from Fusion 360") : "[Render to come]"}</figcaption></figure>
+  b.innerHTML = `<div class="project print" style="${hueStyle(p.hue)}"><figure>${p.img ? `<img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async">` : `<span class="pr-img"><span>[render]</span></span>`}<figcaption>${p.img ? esc(p.caption || (PRINTS_PAGE.cad ? "Render from " + PRINTS_PAGE.cad : "Render")) : "[Render to come]"}</figcaption></figure>
     <p class="kicker" style="color:var(--accent-ink)">3D print${p.private ? " · Private design" : " · On MakerWorld"}</p><h2>${esc(p.title)}</h2><p class="lede">${p.why}</p>
     <dl class="facts"><div><dt>Printer</dt><dd>${esc(p.printer)}</dd></div><div><dt>Material</dt><dd>${esc(p.material)}</dd></div><div><dt>Layer</dt><dd>${esc(p.settings.layer)}</dd></div><div><dt>Infill</dt><dd>${esc(p.settings.infill)}</dd></div><div><dt>Supports</dt><dd>${esc(p.settings.supports)}</dd></div><div><dt>Print time</dt><dd>${esc(p.settings.time)}</dd></div></dl>
     <h3>Why it exists</h3>${p.story}
@@ -173,7 +173,7 @@ function renderGaming(b) {
   b.innerHTML = `<div class="gaming"><p class="kicker">Gaming</p><h2>Off the clock, controller in hand</h2>
     ${/^https:\/\//.test(GAMES.steam) ? `<p class="gm-steam"><a class="btn" href="${esc(GAMES.steam)}" target="_blank" rel="noopener">${ICON.ext} My Steam profile</a></p>` : ""}
     ${GAMES.library ? `<dl class="gm-lib">${[["games", "Games"], ["dlc", "DLC"], ["reviews", "Reviews"], ["wishlist", "On wishlist"]].filter(([k]) => GAMES.library[k] != null).map(([k, n]) => `<div><dt>${n}</dt><dd>${esc(String(GAMES.library[k]))}</dd></div>`).join("")}</dl>` : ""}
-    ${GAMES.showcase.length ? `<h3>On my Steam showcase</h3><ul class="gm-show">${GAMES.showcase.map((g, i) => `<li style="${hueStyle(["a1", "a2", "a3", "a4"][i % 4])}">${esc(g)}</li>`).join("")}</ul>` : ""}
+    ${GAMES.showcase.length ? `<h3>On my Steam showcase</h3><ul class="gm-show">${GAMES.showcase.map((g, i) => `<li style="${hueStyle(ACCENTS[i % ACCENTS.length])}">${esc(g)}</li>`).join("")}</ul>` : ""}
     <h3>Playing now</h3><ul class="gm">${GAMES.now.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>
     <h3>All-time favourites</h3><ol class="gm gm-top">${GAMES.alltime.map((g) => `<li>${esc(g)}</li>`).join("")}</ol>
     <h3>The kit</h3><ul class="gm">${GAMES.kit.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>

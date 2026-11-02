@@ -71,6 +71,8 @@ async function runImages() {
 
 /* ---------- kinds ---------- */
 const STAGE = { design: "design", simulate: "rnd", make: "mnfg", test: "test" };
+/* the four accent colours; each stage, site, print, and service takes one */
+const ACCENT = (fm, where) => { if (fm.accent && !/^a[1-4]$/.test(fm.accent)) fail(where, `accent must be a1, a2, a3, or a4 (got "${fm.accent}")`); };
 function projects() {
   const out = [];
   for (const id of listItems(path.join(CONTENT, "projects"))) {
@@ -82,7 +84,7 @@ function projects() {
     out.push({
       id, cat: STAGE[fm.stage] || "design", title: fm.title || id, img: image("projects", id, fm.image, where), thumb: "", sum: html(body) || "",
       steps: fm.steps || [], outcome: fm.outcome || "", caption: fm.caption || "", year: String(fm.year || ""), role: fm.role || "", team: fm.team || "", result: fm.result || "",
-      flagship: !!fm.flagship, order: fm.order || 99, tools: fm.tools || [], short: fm.short || "",
+      flagship: !!fm.flagship, startOpen: !!fm.start_open, order: fm.order || 99, tools: fm.tools || [], short: fm.short || "",
       media: (fm.media || []).map((m) => ({ kind: m.kind === "video" ? "video" : "section", label: m.label || "", file: image("projects", id, m.file, where) })),
     });
   }
@@ -94,7 +96,7 @@ function prints() {
     const file = path.join(CONTENT, "prints", id, "index.md"), where = rel(file);
     if (!fs.existsSync(file)) { fail(`content/prints/${id}`, "folder has no index.md"); continue; }
     const { fm, body } = readMd(file);
-    need(fm, ["title", "printer", "material", "why"], where);
+    need(fm, ["title", "printer", "material", "why"], where); ACCENT(fm, where);
     out.push({
       id, title: fm.title || id, short: fm.short || "", img: image("prints", id, fm.image, where), thumb: "", caption: fm.caption || "", printer: fm.printer || "", material: fm.material || "",
       why: inline(fm.why), hue: fm.accent || "a1", url: fm.makerworld || "", private: !fm.makerworld, story: html(body), notes: fm.notes || [],
@@ -109,10 +111,10 @@ function sites() {
   for (const name of listItems(path.join(CONTENT, "sites"))) {
     if (!name.endsWith(".md")) continue;
     const file = path.join(CONTENT, "sites", name), where = rel(file), { fm, body } = readMd(file);
-    need(fm, ["title", "host", "accent"], where);
+    need(fm, ["title", "host", "accent"], where); ACCENT(fm, where);
     const id = path.basename(name, ".md"), shot = image("sites", id, fm.shot, where, { max: 1600, quality: 84 });
     if (!fm.private && fm.embed !== false && fm.host && !frameHosts().includes("https://" + fm.host)) fail(where, `add https://${fm.host} (and its www. address if it redirects there) to frame-src in vercel.json, or set embed: false`);
-    out.push({ id, shot, thumb: shot ? thumb(shot) : "", video: image("sites", id, fm.video, where), title: fm.title, host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, embed: fm.embed !== false, under: fm.under || "", width: { "1/3": 0, "1/2": 1, "2/3": 2 }[fm.width] ?? 2, order: fm.order || 99 });
+    out.push({ id, shot, thumb: shot ? thumb(shot) : "", video: image("sites", id, fm.video, where), title: fm.title, short: fm.short || "", host: fm.host, tag: fm.tag || "", accent: fm.accent || "a1", blurb: inline(body), stats: fm.stats || "", stack: fm.stack || "", private: !!fm.private, embed: fm.embed !== false, under: fm.under || "", width: { "1/3": 0, "1/2": 1, "2/3": 2 }[fm.width] ?? 2, order: fm.order || 99 });
   }
   return out.sort((a, b) => a.order - b.order);
 }
@@ -189,8 +191,9 @@ async function main() {
   const LAB = (lab.fm.services || []).map((x) => [x.name, x.line, x.accent || "a2"]), DEVICES = (lab.fm.devices || []).map((x) => [x.name, x.line]);
   const HOME = (home.fm.dashboards || []).map((d, i) => { need(d, ["name"], `content/home/index.md dashboard ${i + 1}`); const img = image("home", "", d.image, "content/home/index.md", { max: 1600, quality: 84 }); return { name: d.name, line: d.line || "", img, full: img ? fullCopy(img) : "", alt: d.alt || `${d.name} dashboard` }; });
   const GAMES = { steam: games.fm.steam || "", library: games.fm.library || null, showcase: games.fm.showcase || [], now: games.fm.now || [], alltime: games.fm.alltime || [], kit: games.fm.kit || [] };
-  const FLAGSHIPS = PROJECTS.filter((p) => p.flagship).map((p) => p.id);
-  for (const p of PROJECTS) delete p.flagship;
+  const FLAGSHIPS = PROJECTS.filter((p) => p.flagship).map((p) => p.id), START_OPEN = PROJECTS.filter((p) => p.startOpen).map((p) => p.id);
+  for (const p of PROJECTS) { delete p.flagship; delete p.startOpen; }
+  (lab.fm.services || []).forEach((x, i) => ACCENT(x, `content/homelab.md service ${i + 1}`));
 
   if (problems.length) { console.error("Content problems:\n  " + problems.join("\n  ")); process.exit(1); }
   /* the preview image is drawn once with `npm run og` and kept in content/about/, since build servers lack the fonts */
@@ -198,13 +201,14 @@ async function main() {
   if (check) { console.log(`Content is fine: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites.`); return; }
 
   fs.rmSync(DIST, { recursive: true, force: true }); fs.mkdirSync(path.join(DIST, "site"), { recursive: true });
-  const out = Object.entries({ ME, ABOUT, IMG: { ME: ABOUT.image }, FLAGSHIPS, SKILLS, SKILLS_NOTE: html(skills.body), BEYOND, PROJECTS, PRINTS, SITES, JOBS, STUDY, TOOLS, LAB, LAB_NOTE: inline(lab.body), DEVICES, HOME, HOME_NOTE: inline(home.body), GAMES, GAMES_NOTE: inline(games.body), PRINTS_PAGE: { makerworld: printsPage.fm.makerworld || "" }, PRINTS_NOTE: inline(printsPage.body) })
+  const out = Object.entries({ ME, ABOUT, IMG: { ME: ABOUT.image }, FLAGSHIPS, START_OPEN, SKILLS, SKILLS_NOTE: html(skills.body), BEYOND, PROJECTS, PRINTS, SITES, JOBS, STUDY, TOOLS, LAB, LAB_PAGE: { heading: lab.fm.heading || "Homelab" }, LAB_NOTE: inline(lab.body), DEVICES, HOME, HOME_PAGE: { heading: home.fm.heading || "Smart home" }, HOME_NOTE: inline(home.body), GAMES, GAMES_NOTE: inline(games.body), PRINTS_PAGE: { makerworld: printsPage.fm.makerworld || "", cad: printsPage.fm.cad || "" }, PRINTS_NOTE: inline(printsPage.body) })
     .map(([k, v]) => `const ${k} = ${JSON.stringify(v)};`).join("\n");
   fs.writeFileSync(path.join(DIST, "site/content.js"), `/* Generated by build/build.js from the content/ folders. Do not edit; edit the Markdown instead. */\n${out}\n`);
   for (const f of fs.readdirSync(path.join(ROOT, "site"))) fs.copyFileSync(path.join(ROOT, "site", f), path.join(DIST, "site", f));
   /* the address for link previews and search engines: Vercel's production domain when it builds there, rahulll.com otherwise */
+  const x = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
   const SITE = "https://" + (process.env.SITE_HOST || process.env.VERCEL_PROJECT_PRODUCTION_URL || "rahulll.com");
-  fs.writeFileSync(path.join(DIST, "index.html"), fs.readFileSync(path.join(ROOT, "index.html"), "utf8").replaceAll("%SITE%", SITE).replaceAll("%PORTRAIT%", ABOUT.image));
+  fs.writeFileSync(path.join(DIST, "index.html"), fs.readFileSync(path.join(ROOT, "index.html"), "utf8").replaceAll("%SITE%", SITE).replaceAll("%PORTRAIT%", ABOUT.image).replaceAll("%NAME%", x(ME.name)).replaceAll("%ROLE%", x(ME.role)));
   fs.copyFileSync(path.join(ROOT, "favicon.svg"), path.join(DIST, "favicon.svg"));
   fs.writeFileSync(path.join(DIST, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
   fs.writeFileSync(path.join(DIST, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${SITE}/</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url>\n</urlset>\n`);

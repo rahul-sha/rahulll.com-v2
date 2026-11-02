@@ -5,6 +5,7 @@ stage: design | simulate | make | test
 image: hero.webp
 caption: "One line under the main image, such as where the photo was taken"
 flagship: false
+start_open: false   # true opens this window on the Engineering workspace at the start, in order
 year: "2026"
 role: What you did on it
 team: Solo, or the team size

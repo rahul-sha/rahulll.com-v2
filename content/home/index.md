@@ -2,6 +2,7 @@
 # Each dashboard becomes a tile-style tab in the Smart home window.
 # Put the screenshot beside this file. Blur anything private first (the Away tile is blurred on rooms.jpg).
 # A dashboard with no image shows as "coming soon".
+heading: The flat, automated   # the window title line, also used on the Off the clock tile
 dashboards:
   - name: Rooms
     line: Climate, air, and lights

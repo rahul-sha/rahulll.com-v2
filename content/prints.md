@@ -1,4 +1,5 @@
 ---
+cad: Fusion 360   # what the prints are designed in, shown on the Off the clock tile and under renders without a caption
 makerworld: https://makerworld.com/en/@wambamamba
 ---
 

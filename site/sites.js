@@ -106,7 +106,7 @@ function renderSite(b, api, s) {
   }));
 }
 /* Off the clock opens on this hub: one bento board for the sites, smart home, homelab, prints, and gaming.
-   Only the hub, the first site, 3D prints, and Gaming start open; every other tile opens its window beside it. */
+   Which windows start open is set in main.js; every other tile opens its window beside the hub. Tiles take the accent of the window they open. */
 function renderHub(b, api) {
   const first = (h) => h.replace(/<[^>]+>/g, "").split(/(?<=\.)\s/)[0];
   const pill = (t) => `<span class="hb-pill">${esc(t)}</span>`;
@@ -114,18 +114,18 @@ function renderHub(b, api) {
   const site = (s, cls = "") => `<button type="button" class="bt bph ${cls}" data-site="${s.id}" style="${hueStyle(s.accent)}">${shot(s.thumb)}${pill(s.tag)}<b class="t">${esc(s.title)}</b>${cls.includes("w2") ? `<span class="s2">${esc(first(s.blurb))}</span>` : ""}</button>`;
   const nas = (DEVICES[0] || ["[NAS]"])[0], model = nas.split(" ").pop();
   const svc = LAB.filter((l) => !l[0].startsWith("["));
-  const prints = PRINTS.filter((p) => p.img), printer = (PRINTS[0] && PRINTS[0].printer) || "[printer]";
+  const prints = PRINTS.filter((p) => p.img), printer = PRINTER;
   const pos = [[5, 8, -4], [36, 5, 3], [66, 10, -2], [20, 42, 2]];
   const dash = HOME.filter((h) => h.img);
   const [s0, ...rest] = SITES, last = rest.length > 2 ? rest.pop() : null;
   const tiles = [
     s0 && site(s0, "w2 h2"),
-    `<button type="button" class="bt bph w2" data-app="home" style="${hueStyle("a3")}">${shot(dash[0] && dash[0].img)}${pill("Smart home")}<b class="t">The flat, automated</b><span class="s2">${dash.length} Home Assistant dashboards</span></button>`,
+    `<button type="button" class="bt bph w2" data-app="home" style="${hueStyle(apps.home.accent)}">${shot(dash[0] && dash[0].img)}${pill("Smart home")}<b class="t">${esc(HOME_PAGE.heading)}</b><span class="s2">${dash.length} Home Assistant dashboards</span></button>`,
     ...rest.map((s) => site(s)),
-    `<button type="button" class="bt hl w2 h2" data-app="homelab" style="${hueStyle("a2")}">${pill("Homelab")}<span class="nas" aria-hidden="true"><span class="bay"></span><span class="bay"></span><span class="nas-side"><i></i>${esc(model)}<br>2 bays</span></span><span class="nas-chips">${svc.map((l) => `<span><i></i>${esc(l[0])}</span>`).join("")}</span><b class="t">One small NAS does a lot</b><span class="s2">${esc(nas)} at home</span></button>`,
-    `<button type="button" class="bt hl w2 h2" data-app="prints" style="${hueStyle("a1")}">${pill("3D prints")}<span class="plate" aria-hidden="true" data-printer="${esc(printer)} · plate 1">${prints.slice(0, 4).map((p, i) => `<img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async" style="left:${pos[i][0]}%;top:${pos[i][1]}%;rotate:${pos[i][2]}deg">`).join("")}</span><b class="t">${PRINTS.length} things printed at home</b><span class="s2">Designed in Fusion 360, printed on a ${esc(printer)}</span></button>`,
+    `<button type="button" class="bt hl w2 h2" data-app="homelab" style="${hueStyle(apps.homelab.accent)}">${pill("Homelab")}<span class="nas" aria-hidden="true"><span class="bay"></span><span class="bay"></span><span class="nas-side"><i></i>${esc(model)}<br>2 bays</span></span><span class="nas-chips">${svc.map((l) => `<span><i></i>${esc(l[0])}</span>`).join("")}</span><b class="t">${esc(LAB_PAGE.heading)}</b><span class="s2">${esc(nas)} at home</span></button>`,
+    `<button type="button" class="bt hl w2 h2" data-app="prints" style="${hueStyle(apps.prints.accent)}">${pill("3D prints")}<span class="plate" aria-hidden="true" data-printer="${esc(printer)} · plate 1">${prints.slice(0, 4).map((p, i) => `<img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async" style="left:${pos[i][0]}%;top:${pos[i][1]}%;rotate:${pos[i][2]}deg">`).join("")}</span><b class="t">${PRINTS.length} things printed at home</b><span class="s2">${PRINTS_PAGE.cad ? `Designed in ${esc(PRINTS_PAGE.cad)}, printed` : "Printed"} on a ${esc(printer)}</span></button>`,
     last && site(last, "w2"),
-    `<button type="button" class="bt gm1 w2" data-app="gaming" style="${hueStyle("a4")}">${pill("Gaming")}<b class="t">Controller in hand</b><span class="s2">${esc(GAMES.kit.slice(0, 2).join(" and "))}</span><span class="deck" aria-hidden="true"><span class="stick"></span><span class="scr">${GAMES.library ? `<small>On Steam</small>${esc(String(GAMES.library.games))} games` : `<small>Now playing</small>${esc(GAMES.now[0] || "[Game]")}`}</span><span class="stick"></span></span></button>`,
+    `<button type="button" class="bt gm1 w2" data-app="gaming" style="${hueStyle(apps.gaming.accent)}">${pill("Gaming")}<b class="t">Controller in hand</b><span class="s2">${esc(GAMES.kit.slice(0, 2).join(" and "))}</span><span class="deck" aria-hidden="true"><span class="stick"></span><span class="scr">${GAMES.library ? `<small>On Steam</small>${esc(String(GAMES.library.games))} games` : `<small>Now playing</small>${esc(GAMES.now[0] || "[Game]")}`}</span><span class="stick"></span></span></button>`,
   ].filter(Boolean).join("");
   b.innerHTML = `<div class="hb"><p class="kicker">Off the clock</p><h2>What I do when the laptop closes</h2>
     <p class="lede">Websites I built with Claude, a smart flat, a small NAS, things printed at home, and games. Each tile opens its own window beside this one.</p>

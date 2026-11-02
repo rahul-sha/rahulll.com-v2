@@ -7,4 +7,11 @@ const CATS = {
   test: { label: "Test", long: "Testing and validation", hue: "a4", verb: "Test it" },
 };
 
+/* the four accent colours, in order; a list cycles through them with ACCENTS[i % ACCENTS.length] */
+const ACCENTS = Object.values(CATS).map((c) => c.hue).sort();
+/* small counts read as words in sentences ("three workspaces"); bigger ones stay as numbers */
+const inWords = (n) => ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"][n] || String(n);
+/* the printer most prints were made on, from content/prints/ */
+const PRINTER = (() => { const n = {}; PRINTS.forEach((p) => p.printer && (n[p.printer] = (n[p.printer] || 0) + 1)); return Object.keys(n).sort((a, b) => n[b] - n[a])[0] || "[printer]"; })();
+
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));

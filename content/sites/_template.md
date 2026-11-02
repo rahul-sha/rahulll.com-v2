@@ -1,4 +1,5 @@
 ---
+short: Oneword   # the label under its dock icon; leave it out to use the first word of the title
 title: Site name
 host: example.com
 tag: What kind of thing it is

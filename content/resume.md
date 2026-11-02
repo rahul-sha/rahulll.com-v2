@@ -1,8 +1,5 @@
 ---
-name: Rahul Sharma
-role: Manufacturing Engineer
-place: Singapore
-email: "[email address]"
+# Your name, role, place, and email come from content/about/index.md, so they are written once.
 jobs:
   - dates: Jan 2022 to now
     title: Manufacturing Engineer

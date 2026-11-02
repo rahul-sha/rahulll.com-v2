@@ -5,6 +5,7 @@ stage: design
 image: hero.png
 caption: Final render in real-world lighting, from Fusion 360
 flagship: true
+start_open: true
 order: 1
 tools:
   - Fusion 360 CAD

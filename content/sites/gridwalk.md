@@ -1,4 +1,5 @@
 ---
+short: Grid Walk
 title: Grid Walk
 host: thegridwalk.app
 tag: F1 data

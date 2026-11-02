@@ -145,7 +145,8 @@ function Niri(opts) {
   /* ---------- layout ---------- */
   function layout() {
     S.W = vp.clientWidth; S.H = vp.clientHeight;
-    S.phone = S.W < 700;
+    /* the same breakpoint as @media (max-width: 700px) in desk.css, which turns the 85 percent zoom off */
+    S.phone = S.W <= 700;
     const g = (S.gap = S.phone ? Math.min(10, opts.gap ?? 16) : opts.gap ?? 16);
     /* workspaces sit a little apart, so window shadows can spill past the bottom edge without showing the next one */
     const st = (S.step = S.H + 64);

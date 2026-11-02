@@ -1,4 +1,5 @@
 ---
+short: Aperture
 title: The Aperture
 host: the-aperture.app
 tag: Photography

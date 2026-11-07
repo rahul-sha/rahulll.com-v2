@@ -1,6 +1,7 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "ignoreCommand": "bash build/ignore-build.sh",
   "cleanUrls": true,
   "headers": [
     {

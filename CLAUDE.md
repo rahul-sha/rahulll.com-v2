@@ -18,6 +18,14 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 - Link preview: `npm run og` redraws `content/about/og.jpg`; run it after changing the About name, role, or portrait, then commit the image.
 - Deploy: merge to `main` and Vercel builds production. Each pull request gets a preview link. `build/ignore-build.sh` skips previews that change only Markdown outside `content/` or files in `docs/`; production always builds.
 
+## Where things live
+
+- `content/<kind>/` holds all content, with images beside the Markdown. Copy `_template.md`, never edit it in place.
+- `site/main.js` sets the workspaces and dock; `engine.js` and `engine.css` are the window manager (no content here).
+- `site/desk.js` and `desk.css` are the shell; `render.js` draws windows from `dist/site/content.js`; `sites.js` is the Off the clock hub; `data.js` and `apps.js` hold shared helpers.
+- `site/rice.js` is Appearance. The default preset is "Rahul's rice"; do not change it without asking.
+- `build/build.js` is the whole pipeline. A new content kind needs code there and a renderer in `render.js`.
+
 ## Data and safety
 
 - A merge to `main` is live within minutes. There is no staging site beyond the preview.
@@ -29,18 +37,11 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 ## How to work
 
 - New feature or a change across several files: post a short plan first and wait for Rahul's OK. Small fixes go straight ahead.
-- Anything visual: mockups before code, and load the `rahulll-design-rules` skill.
-- Before pushing more to a branch, check its PR is still open (Rahul merges quickly); if merged, branch again from `main`. Merge `main` in rather than rebasing, since force-push is blocked.
-- After a fix or finding, update the bug tracker doc; after a merged PR that changes the build or design, sync the build map and design system pages in Trilium.
+- Anything visual: mockups before code, following `docs/design-system.md`.
+- After a fix or finding, update the [bug and feedback tracker](https://claude.ai/artifact/KwDVECNhoHBfrKq3VZ3JaR).
+- This project uses the Cartographer plugin (switched on in `.claude/settings.json`). Its rules for this site only are in `.claude/rules/project-rules.md`, the bug list is the tracker above, and the plan is in `docs/roadmap.md`.
+- Work on a branch with one small pull request per step; never push to `main`, since it is live.
 - Rahul is new to the command line: give steps, name the file, say what to click.
-
-## Where things live
-
-- `content/<kind>/` holds all content, with images beside the Markdown. Copy `_template.md`, never edit it in place.
-- `site/main.js` sets the workspaces and dock; `engine.js` and `engine.css` are the window manager (no content here).
-- `site/desk.js` and `desk.css` are the shell; `render.js` draws windows from `dist/site/content.js`; `sites.js` is the Off the clock hub; `data.js` and `apps.js` hold shared helpers.
-- `site/rice.js` is Appearance. The default preset is "Rahul's rice"; do not change it without asking.
-- `build/build.js` is the whole pipeline. A new content kind needs code there and a renderer in `render.js`.
 
 ## Conventions and decisions
 

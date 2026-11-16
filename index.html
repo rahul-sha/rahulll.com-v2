@@ -19,9 +19,14 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preload" as="image" href="%PORTRAIT%" fetchpriority="high">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="preload" as="font" type="font/woff2" href="site/font-figtree.woff2" crossorigin>
+<style>
+/* Fonts are hosted with the site (latin subset, SIL Open Font License): Figtree and JetBrains Mono are variable fonts, one file for every weight */
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 300 900; font-display: swap; src: url(site/font-figtree.woff2) format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 100 800; font-display: swap; src: url(site/font-jetbrains-mono.woff2) format("woff2"); }
+@font-face { font-family: "Instrument Serif"; font-style: normal; font-weight: 400; font-display: swap; src: url(site/font-instrument-serif.woff2) format("woff2"); }
+@font-face { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; font-display: swap; src: url(site/font-instrument-serif-italic.woff2) format("woff2"); }
+</style>
 <link rel="stylesheet" href="site/engine.css">
 <style>
 /* Mockup A, Noctalia faithful: floating top bar, floating dock, rounded columns on a night wallpaper.

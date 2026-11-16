@@ -5,6 +5,46 @@ Rahul Sharma's portfolio, built as a small desktop: a Noctalia-style shell on a 
 Live mockup of the design: https://claude.ai/artifact/XnEaQfCCDmAvqNpVYd6d9m
 Design system: https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS
 
+## Tech stack
+
+<table>
+  <tr>
+    <th width="130">Back-end</th>
+    <th width="150">Front-end</th>
+    <th width="130">Data</th>
+    <th width="130">Hosting</th>
+    <th width="130">Other</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/nodejs/nodejs-original.svg" height="36" alt="Node.js" title="Node.js">
+    </td>
+    <td align="center">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/html5/html5-original.svg" height="36" alt="HTML" title="HTML">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/css3/css3-original.svg" height="36" alt="CSS" title="CSS">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/javascript/javascript-original.svg" height="36" alt="JavaScript" title="JavaScript">
+    </td>
+    <td align="center">
+      <img src="https://cdn.simpleicons.org/markdown/000/fff" height="36" alt="Markdown" title="Markdown">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/yaml/yaml-original.svg" height="36" alt="YAML" title="YAML">
+    </td>
+    <td align="center">
+      <img src="https://cdn.simpleicons.org/vercel/000/fff" height="36" alt="Vercel" title="Vercel">
+    </td>
+    <td align="center">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/githubactions/githubactions-original.svg" height="36" alt="GitHub Actions" title="GitHub Actions">
+      <img src="https://cdn.simpleicons.org/sharp" height="36" alt="sharp" title="sharp">
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top"><sub>Node.js 22<br>Build script<br>Weather function</sub></td>
+    <td align="center" valign="top"><sub>HTML<br>Hand-written CSS<br>Plain JavaScript<br>No framework<br>Self-hosted fonts</sub></td>
+    <td align="center" valign="top"><sub>Markdown content<br>YAML headers<br>(marked, js-yaml)</sub></td>
+    <td align="center" valign="top"><sub>Vercel<br>Static site + one function</sub></td>
+    <td align="center" valign="top"><sub>GitHub Actions build check<br>sharp (WebP images)<br>PDFKit (resume PDF)<br>Open-Meteo weather</sub></td>
+  </tr>
+</table>
+
 ## How the repo is laid out
 
 ```

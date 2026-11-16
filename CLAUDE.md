@@ -37,7 +37,7 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 ## How to work
 
 - New feature or a change across several files: post a short plan first and wait for Rahul's OK. Small fixes go straight ahead.
-- Anything visual: mockups before code.
+- Anything visual: mockups before code, following `docs/design-system.md`.
 - After a fix or finding, update the [bug and feedback tracker](https://claude.ai/artifact/KwDVECNhoHBfrKq3VZ3JaR).
 - This project uses the Cartographer plugin (switched on in `.claude/settings.json`). Its rules for this site only are in `.claude/rules/project-rules.md`, the bug list is the tracker above, and the plan is in `docs/roadmap.md`.
 - Work on a branch with one small pull request per step; never push to `main`, since it is live.

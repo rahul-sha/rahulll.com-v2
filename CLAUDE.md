@@ -8,7 +8,7 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 - Plain HTML, CSS, and vanilla JavaScript in `site/`. No framework, no bundler.
 - One Node 22 build (`build/build.js`, using marked, js-yaml, sharp, pdfkit) turns `content/` into `dist/`.
 - Vercel serves `dist/` and one function, `api/weather.js` (visitor's town from Vercel's IP headers, reading from Open-Meteo, no key).
-- GitHub Actions (`.github/workflows/build.yml`) runs the build on every pull request.
+- GitHub Actions (`.github/workflows/build.yml`) runs the build on every pull request and every push to `main`.
 
 ## Run commands
 
@@ -41,6 +41,8 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 - After a fix or finding, update the [bug and feedback tracker](https://claude.ai/artifact/KwDVECNhoHBfrKq3VZ3JaR).
 - This project uses the Cartographer plugin (switched on in `.claude/settings.json`). Its rules for this site only are in `.claude/rules/project-rules.md`, the bug list is the tracker above, and the plan is in `docs/roadmap.md`.
 - Work on a branch with one small pull request per step; never push to `main`, since it is live.
+- Before opening a pull request, check no other open one changes the same files, and update `README.md` with any change to `site/`, `build/`, `api/`, or `vercel.json` (or add a `Docs-checked: <reason>` line to the commit): Cartographer's checks stop the pull request otherwise.
+- When a pull request is ready, offer Rahul a Merge card; merge only after he taps it, the checks pass, and there are no conflicts.
 - Rahul is new to the command line: give steps, name the file, say what to click.
 
 ## Conventions and decisions

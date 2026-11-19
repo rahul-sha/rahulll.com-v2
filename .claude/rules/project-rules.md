@@ -2,6 +2,8 @@
 
 Rules for this project only. They add to, or override, the shared rules from the Cartographer plugin (`RULES.md`, `DESIGN.md`, and the shared skills). Claude Code loads this file automatically because it sits in `.claude/rules/`.
 
+Cartographer plugin: 0.16.0 (the version this project last took in; the version check compares it at the start of each session)
+
 Each rule is one line, with the reason after a colon.
 
 ## Adds

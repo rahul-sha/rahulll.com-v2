@@ -16,6 +16,7 @@ Each rule is one line, with the reason after a colon.
 
 ## Overrides
 
+- [testing] Overrides the shared tests-first rule for site changes: `npm test` is the content check (Rahul's choice, 2026-11-20); a content or build change keeps it passing, and visual changes are checked in a browser at the four sizes in `CLAUDE.md`: there is no test runner for the desk itself.
 - [workflow] Overrides the shared bug list rule (`docs/bugs.md`): bugs and feedback live in the Claude Doc tracker, https://claude.ai/artifact/KwDVECNhoHBfrKq3VZ3JaR. Rahul's own table holds only his open items; move a fixed row to the "Fixed" table, struck through, and never delete a row otherwise: Rahul keeps that doc pinned and adds to it himself.
 - [workflow] Overrides the shared bug list template's "Last full check-up" line: a full check-up writes `Last full check-up: YYYY-MM-DD` at the top of the tracker doc above, not in `docs/bugs.md`: the tracker is this project's only bug list.
 

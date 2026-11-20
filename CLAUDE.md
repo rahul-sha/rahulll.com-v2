@@ -13,8 +13,8 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 ## Run commands
 
 - Start: `npm install`, `npm run build`, then `npx serve dist` and open the address it prints. The weather chip shows "Weather" locally.
-- Check: `npm run check` validates content only and lists every missing field. `npm test` is the unused npm default and always fails.
-- Test: no test runner. Verify in a browser (Playwright is fine) at 1440, 1024, 390 portrait, and 844 landscape, in light and dark, console clean, no horizontal overflow.
+- Check: `npm test` (the same as `npm run check`) validates content only, lists every missing field, and fails if any is missing. GitHub runs it on every pull request.
+- Test: `npm test` is the content check, the only automated test. Also verify in a browser (Playwright is fine) at 1440, 1024, 390 portrait, and 844 landscape, in light and dark, console clean, no horizontal overflow.
 - Link preview: `npm run og` redraws `content/about/og.jpg`; run it after changing the About name, role, or portrait, then commit the image.
 - Deploy: merge to `main` and Vercel builds production. Each pull request gets a preview link. `build/ignore-build.sh` skips previews that change only Markdown outside `content/` or files in `docs/`; production always builds.
 

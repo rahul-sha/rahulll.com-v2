@@ -4,7 +4,7 @@
   "description": "Personal Website and Portfolio",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node build/build.js --check",
     "build": "node build/build.js",
     "check": "node build/build.js --check",
     "og": "node build/build.js --og"

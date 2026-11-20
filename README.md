@@ -91,8 +91,8 @@ Then open the address `serve` prints. `npm run check` validates the content with
 
 ## Checks and deploy
 
-- `npm run check` lists every missing content field. GitHub Actions runs the full build on every pull request and on every push to `main`.
-- There is no test runner yet (`npm test` is the unused npm default). Changes are checked in a browser at desktop and phone sizes, in light and dark.
+- `npm test` (the same as `npm run check`) lists every missing content field and fails if any is missing. GitHub Actions runs it, then the full build, on every pull request and on every push to `main`.
+- Visual changes are also checked in a browser at desktop and phone sizes, in light and dark.
 - Merging to `main` puts the change live within minutes. Each pull request gets its own preview link first.
 
 ## Where things are written down

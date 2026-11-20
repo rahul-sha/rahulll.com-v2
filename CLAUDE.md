@@ -39,7 +39,7 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 - New feature or a change across several files: post a short plan first and wait for Rahul's OK. Small fixes go straight ahead.
 - Anything visual: mockups before code, following `docs/design-system.md`.
 - After a fix or finding, update the [bug and feedback tracker](https://claude.ai/artifact/KwDVECNhoHBfrKq3VZ3JaR).
-- This project uses the Cartographer plugin (switched on in `.claude/settings.json`). Its rules for this site only are in `.claude/rules/project-rules.md`, the bug list is the tracker above, and the plan is in `docs/roadmap.md`.
+- This project uses the Cartographer plugin (switched on in `.claude/settings.json`). Its rules for this site only are in `.claude/rules/project-rules.md`, the bug list is the tracker above, the plan is in `docs/roadmap.md`, and notes on tricky fixes go in `docs/solutions/`.
 - Work on a branch with one small pull request per step; never push to `main`, since it is live.
 - Before opening a pull request, check no other open one changes the same files, and update `README.md` with any change to `site/`, `build/`, `api/`, or `vercel.json` (or add a `Docs-checked: <reason>` line to the commit): Cartographer's checks stop the pull request otherwise.
 - When a pull request is ready, offer Rahul a Merge card; merge only after he taps it, the checks pass, and there are no conflicts.

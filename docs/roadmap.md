@@ -1,6 +1,6 @@
 # Roadmap: rahulll.com
 
-- **Updated:** 2026-11-16
+- **Updated:** 2026-11-20
 
 Bugs and smaller fixes live in the [bug and feedback tracker](https://claude.ai/artifact/KwDVECNhoHBfrKq3VZ3JaR). This page holds the bigger pieces of work and the order they come in.
 
@@ -27,6 +27,9 @@ Ideas worth keeping, not yet agreed.
 - Question for Rahul: should light mode follow the visitor's system, or stay dark with Rahul's rice?
 
 ## Done recently
+- 2026-11-20: Cartographer updated to 0.28.2 (this pull request).
+- 2026-11-19: Cartographer updated to 0.16.0, and a tech stack panel in the README (PRs #28 and #29).
+- 2026-11-16: Cartographer set up, and fonts self-hosted (PRs #26 and #27).
 - 2026-11-07: `CLAUDE.md` rewritten in six sections, and Vercel previews skip docs-only pushes (PR #25).
 - 2026-11-02: values written by hand in the code are now derived from content (PR #24).
 - 2026-11-01: smoother boot intro on phones (PR #23).

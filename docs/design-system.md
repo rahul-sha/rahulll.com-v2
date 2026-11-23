@@ -1,6 +1,6 @@
 # rahulll.com design system
 
-Version 2.1, 16 November 2026. Copied into the repo on 16 November 2026 from the [design system Claude Doc](https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS). This file is now the copy Claude reads; when the design changes, update it, the Claude Doc, and the Trilium page in step.
+Version 2.2, 23 November 2026. Copied into the repo on 16 November 2026 from the [design system Claude Doc](https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS). This file is now the copy Claude reads; when the design changes, update it, the Claude Doc, and the Trilium page in step.
 
 ## Purpose and scope
 
@@ -9,6 +9,8 @@ This is the standard for rahulll.com as a desktop. Version 2, of 30 October 2026
 It does not cover the four live sites that open inside the Off the clock workspace; they keep their own designs and are only framed here.
 
 ## Since version 2
+
+Version 2.2, 23 November 2026: light mode in Rahul's rice reaches 4.5:1 contrast. Text on a solid accent is dark (#1e2326) instead of cream, and the muted text and the four ink accents are a step darker. On phones, window buttons, rail buttons, workspace icons, chips, and the About links have a tap area at least 44 px tall; icons and text keep their size.
 
 Version 2.1, 16 November 2026: three later pull requests change what this doc describes, and the sections below are updated to match. The site looks the same.
 
@@ -53,13 +55,13 @@ Every colour in the interface comes from sixteen named tokens, so a scheme is a 
 | --surf2 | Cards, chips, facts rows, the Overview button | #343f44 | #f4f0d9 |
 | --line | Borders and dividers | #475258 | #e0dcc7 |
 | --fg | Body text | #d3c6aa | #5c6a72 |
-| --mute | Secondary text, kickers | #9da9a0 | #748276 |
+| --mute | Secondary text, kickers | #9da9a0 | #5f6d63 |
 | --a1 | Accent 1, Make (yellow); Hello workspace | #dbbc7f | #dfa000 |
 | --a2 | Accent 2, Design and focus (blue); Engineering workspace | #7fbbb3 | #3a94c5 |
 | --a3 | Accent 3, Simulate (green) | #a7c080 | #8da101 |
 | --a4 | Accent 4, Test and danger (red); Off the clock workspace | #e67e80 | #f85552 |
-| --a1-ink to --a4-ink | The same accents at a contrast that reads as text | same as accents | #a87700, #2f7aa3, #6b7a00, #d13c39 |
-| --on-a | Text placed on a solid accent | #232a2e | #fdf6e3 |
+| --a1-ink to --a4-ink | The same accents at a contrast that reads as text | same as accents | #8a6200, #2a6f95, #5f6d00, #c03532 |
+| --on-a | Text placed on a solid accent | #232a2e | #1e2326 |
 | --ring | Focus ring of the active window | var(--a2) at 1 px | var(--a2) at 1 px |
 
 Rules
@@ -114,7 +116,7 @@ Instrument Serif appears only inside The Aperture's stand-in preview, because st
 
 Breakpoints
 
-- Up to 700 px wide is a phone: one column at a time, swipe between windows, scale 100%, the bar becomes a vertical rail floating at the bottom right above the dock (icons only, no clock), guide docked to the bottom edge and narrowed to clear the rail, Overview button hidden.
+- Up to 700 px wide is a phone: one column at a time, swipe between windows, scale 100%, the bar becomes a vertical rail floating at the bottom right above the dock (icons only, no clock), guide docked to the bottom edge and narrowed to clear the rail, Overview button hidden. Tap areas are at least 44 px tall: rail buttons and workspace icons 44 by 44 px, window buttons 36 by 44 px, chips and About links 44 px tall.
 - Up to 1180 px wide is a tablet: dock labels move under their icons, windows keep their tiled widths.
 - Above that is a desktop at 85% scale, which is what makes the screen feel bigger than it is.
 - The page declares a viewport, charset, and language, so phones get the phone layout rather than a shrunken desktop.

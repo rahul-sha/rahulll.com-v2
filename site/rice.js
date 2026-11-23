@@ -19,7 +19,7 @@ const SCHEMES = {
     light: pal(["#d5d6db", "#e9e9ed", "#dcdee6", "#c4c8da", "#343b58", "#5a6390", "#c08a3e", "#2e7de9", "#587539", "#f52a65", "#8c6c3e", "#2e7de9", "#587539", "#d1164f", "#ffffff", "#9854f1"]) },
   everforest: { name: "Everforest",
     dark: pal(["#232a2e", "#2d353b", "#343f44", "#475258", "#d3c6aa", "#9da9a0", "#dbbc7f", "#7fbbb3", "#a7c080", "#e67e80", "#dbbc7f", "#7fbbb3", "#a7c080", "#e67e80", "#232a2e", "#a7c080"]),
-    light: pal(["#efebd4", "#fdf6e3", "#f4f0d9", "#e0dcc7", "#5c6a72", "#748276", "#dfa000", "#3a94c5", "#8da101", "#f85552", "#a87700", "#2f7aa3", "#6b7a00", "#d13c39", "#fdf6e3", "#8da101"]) },
+    light: pal(["#efebd4", "#fdf6e3", "#f4f0d9", "#e0dcc7", "#5c6a72", "#5f6d63", "#dfa000", "#3a94c5", "#8da101", "#f85552", "#8a6200", "#2a6f95", "#5f6d00", "#c03532", "#1e2326", "#8da101"]) },
   wallpaper: { name: "From wallpaper" },
 };
 const WALLS = { volute: "Volute", aurora: "Aurora", waterline: "Waterline", dunes: "Dunes", bokeh: "Bokeh", solid: "Plain", custom: "Your own" };

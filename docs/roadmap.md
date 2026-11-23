@@ -27,7 +27,7 @@ Ideas worth keeping, not yet agreed.
 - Question for Rahul: should light mode follow the visitor's system, or stay dark with Rahul's rice?
 
 ## Done recently
-- 2026-11-23: full check-up; the docs-only preview skip now compares the whole push, and the design system file, README, and `CLAUDE.md` are brought up to date.
+- 2026-11-23: full check-up; the docs-only preview skip now compares the whole push, and the design system file, README, and `CLAUDE.md` are brought up to date. Light mode in Rahul's rice reaches 4.5:1 contrast, and phone tap areas are at least 44 px tall.
 - 2026-11-20: `npm test` runs the content check, on every pull request too (PR #31).
 - 2026-11-20: Cartographer updated to 0.28.2 (PR #30).
 - 2026-11-19: Cartographer updated to 0.16.0, and a tech stack panel in the README (PRs #28 and #29).

@@ -420,10 +420,13 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
 .phone .b-sec { flex-direction: column; gap: 4px; flex: none; }
 .phone .b-left { gap: 6px; }
 .phone .pills { flex-direction: column; gap: 3px; padding: 3px; overflow: visible; height: auto; }
-.phone .pill, .phone .pill.on { width: 36px; height: 36px; min-width: 0; padding: 0; justify-content: center; }
+.phone .pill, .phone .pill.on { width: 44px; height: 44px; min-width: 0; padding: 0; justify-content: center; }
 .phone .pill b { width: 28px; height: 28px; }
 .phone .pill span, .phone .pill.on span { display: none; }
-.phone .ib { width: 38px; height: 38px; }
+.phone .ib { width: 44px; height: 44px; }
+/* thumb-sized tap areas on phones: the icons and text keep their size */
+.phone .tb-b button { min-width: 36px; height: 44px; }
+.phone .chip, .phone .about-links a { display: inline-flex; align-items: center; min-height: 44px; }
 .phone .b-right { padding-top: 6px; border-top: 1px solid var(--line); }
 .phone .bar .b-sec:has(> .clock) { display: none; }
 /* an attached bar brings the dock with it: flush to the bottom edge, full width */

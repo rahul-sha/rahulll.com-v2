@@ -1,13 +1,13 @@
 # Roadmap: rahulll.com
 
-- **Updated:** 2026-11-20
+- **Updated:** 2026-11-23
 
 Bugs and smaller fixes live in the [bug and feedback tracker](https://claude.ai/artifact/KwDVECNhoHBfrKq3VZ3JaR). This page holds the bigger pieces of work and the order they come in.
 
 ## Now
 Being built this week or next. At most three items.
 - Fill in the missing Hello and Resume facts (email address, "Open to" line, internship line): they are the first things a visitor reads. Waiting on Rahul for the wording.
-- Years and results for the seven projects other than the Cirrus Vision Jet: Engineering is the heart of the site and most projects still show placeholders.
+- Years and results for the three projects still missing them: a year for From CAD to the machine, and a year and a result for the desk mount and the thermometer. Engineering is the heart of the site.
 - Question for Rahul: is this the right order, or should the phone fixes below come first?
 
 ## Next
@@ -20,14 +20,16 @@ Agreed and waiting for a slot.
 ## Later
 Ideas worth keeping, not yet agreed.
 - Hook up the rahulll.com domain (deferred by Rahul's choice; the `CNAME` file is unused until then).
-- Faster mobile first load (Lighthouse 85 on mobile after PR #22).
+- Faster mobile first load (Lighthouse 85 on mobile after PR #22; fonts are self-hosted since PR #27).
 - Keyboard start point: a skip link so the first Tab lands on the top bar.
 - Link preview and resume PDF colours follow the default preset, Rahul's rice.
 - Tidy the old site's unused files in `assets/`.
 - Question for Rahul: should light mode follow the visitor's system, or stay dark with Rahul's rice?
 
 ## Done recently
-- 2026-11-20: Cartographer updated to 0.28.2 (this pull request).
+- 2026-11-23: full check-up; the docs-only preview skip now compares the whole push, and the design system file, README, and `CLAUDE.md` are brought up to date. Light mode in Rahul's rice reaches 4.5:1 contrast, and phone tap areas are at least 44 px tall.
+- 2026-11-20: `npm test` runs the content check, on every pull request too (PR #31).
+- 2026-11-20: Cartographer updated to 0.28.2 (PR #30).
 - 2026-11-19: Cartographer updated to 0.16.0, and a tech stack panel in the README (PRs #28 and #29).
 - 2026-11-16: Cartographer set up, and fonts self-hosted (PRs #26 and #27).
 - 2026-11-07: `CLAUDE.md` rewritten in six sections, and Vercel previews skip docs-only pushes (PR #25).

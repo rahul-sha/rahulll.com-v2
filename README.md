@@ -3,8 +3,17 @@
 Rahul Sharma's portfolio, built as a small desktop: a Noctalia-style shell on a niri-like scrolling window manager. Every page is a window, every section is a workspace, and the whole thing is plain HTML, CSS, and JavaScript with one small build step that turns Markdown content into the data the site reads.
 
 Live site: https://rahulllcom-v2.vercel.app
-Live mockup of the design: https://claude.ai/artifact/XnEaQfCCDmAvqNpVYd6d9m
+First design mockup (30 October 2026, kept for history; the live site has moved on): https://claude.ai/artifact/XnEaQfCCDmAvqNpVYd6d9m
 Design system: https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS
+
+## What it does
+
+- Three workspaces, Hello, Engineering, and Off the clock, that you scroll, drag, or key between like a tiling desktop.
+- Each project and 3D print is a window, drawn from a Markdown file in `content/`.
+- Off the clock opens on a hub of tiles; the four live sites show a screenshot first and load only after a click.
+- Appearance changes the whole look: presets, light and dark, wallpaper, corner radius, and interface scale.
+- The top bar shows live weather for the visitor's town, with no key and no location prompt.
+- A resume PDF and a link preview image are made by the build.
 
 ## Tech stack
 
@@ -101,6 +110,7 @@ Then open the address `serve` prints. `npm run check` validates the content with
 - `.claude/rules/project-rules.md`: rules for this site only, on top of the shared Cartographer rules.
 - `docs/roadmap.md`: what is next.
 - `docs/design-system.md`: the look, kept in step with the [design system doc](https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS).
+- Trilium, under Vibe Coding Projects: copies of the "Build map" and "Design system" pages, synced after a merged change to the build or the design.
 - Bugs and feedback: the [tracker](https://claude.ai/artifact/KwDVECNhoHBfrKq3VZ3JaR).
 
 ## Keyboard

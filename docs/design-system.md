@@ -1,12 +1,24 @@
 # rahulll.com design system
 
-Version 2, 30 October 2026. Copied into the repo on 16 November 2026 from the [design system Claude Doc](https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS). This file is now the copy Claude reads; when the design changes, update it, the Claude Doc, and the Trilium page in step.
+Version 2.2, 23 November 2026. Copied into the repo on 16 November 2026 from the [design system Claude Doc](https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS). This file is now the copy Claude reads; when the design changes, update it, the Claude Doc, and the Trilium page in step.
 
 ## Purpose and scope
 
 This is the standard for rahulll.com as a desktop. Version 2, of 30 October 2026, describes the live site at [rahulllcom-v2.vercel.app](https://rahulllcom-v2.vercel.app) as it stands after pull request 12; the Noctalia desk mockup (version 16) was the starting point, and where the two differ, the live site and this doc win. Anything built for the site follows the tokens, components, and rules below. It covers the shell (bar, dock, overview, menus), the windows and their content patterns, motion, the content model, and how new content gets onto the site without touching code.
 
 It does not cover the four live sites that open inside the Off the clock workspace; they keep their own designs and are only framed here.
+
+## Since version 2
+
+Version 2.2, 23 November 2026: light mode in Rahul's rice reaches 4.5:1 contrast. Text on a solid accent is dark (#1e2326) instead of cream, and the muted text and the four ink accents are a step darker. On phones, window buttons, rail buttons, workspace icons, chips, and the About links have a tap area at least 44 px tall; icons and text keep their size.
+
+Version 2.1, 16 November 2026: three later pull requests change what this doc describes, and the sections below are updated to match. The site looks the same.
+
+| PR | Change | Where it shows in this doc |
+| --- | --- | --- |
+| 27 | Figtree, JetBrains Mono, and Instrument Serif are hosted with the site (four woff2 files in site/, Figtree preloaded), so no request goes to Google; the security policy allows fonts and styles from the site only, and the font files are cached for a day | Type |
+| 24 | Values written by hand in the code moved into the content: start_open on projects, heading on Smart home and Homelab, cad in prints.md, and short on sites; the dock groups come from the workspace list, hub tiles take the accent of the window they open, the printer name and the guide counts are worked out from the content, and the build rejects an accent other than a1 to a4 | Content model |
+| 23 | The boot intro waits, with the windows painted but invisible, until the overview's pictures are decoded, the fonts are in, and a few frames run smoothly, so the drop-in only moves finished layers; the wallpaper keeps moving | Motion |
 
 ## What changed in version 2
 
@@ -43,13 +55,13 @@ Every colour in the interface comes from sixteen named tokens, so a scheme is a 
 | --surf2 | Cards, chips, facts rows, the Overview button | #343f44 | #f4f0d9 |
 | --line | Borders and dividers | #475258 | #e0dcc7 |
 | --fg | Body text | #d3c6aa | #5c6a72 |
-| --mute | Secondary text, kickers | #9da9a0 | #748276 |
+| --mute | Secondary text, kickers | #9da9a0 | #5f6d63 |
 | --a1 | Accent 1, Make (yellow); Hello workspace | #dbbc7f | #dfa000 |
 | --a2 | Accent 2, Design and focus (blue); Engineering workspace | #7fbbb3 | #3a94c5 |
 | --a3 | Accent 3, Simulate (green) | #a7c080 | #8da101 |
 | --a4 | Accent 4, Test and danger (red); Off the clock workspace | #e67e80 | #f85552 |
-| --a1-ink to --a4-ink | The same accents at a contrast that reads as text | same as accents | #a87700, #2f7aa3, #6b7a00, #d13c39 |
-| --on-a | Text placed on a solid accent | #232a2e | #fdf6e3 |
+| --a1-ink to --a4-ink | The same accents at a contrast that reads as text | same as accents | #8a6200, #2a6f95, #5f6d00, #c03532 |
+| --on-a | Text placed on a solid accent | #232a2e | #1e2326 |
 | --ring | Focus ring of the active window | var(--a2) at 1 px | var(--a2) at 1 px |
 
 Rules
@@ -84,8 +96,8 @@ One UI face, one mono face, and a short scale of sizes; everything else is weigh
 
 | Token or role | Value |
 | --- | --- |
-| --ui | Figtree, falling back to Segoe UI and system sans; weights 400, 500, 600, 800, 900 |
-| --mono | JetBrains Mono 400 and 600, for keys, facts, settings, and the steps numbering |
+| --ui | Figtree, falling back to Segoe UI and system sans; weights 400, 500, 600, 800, 900; one variable font file hosted with the site since PR 27 |
+| --mono | JetBrains Mono 400 and 600, for keys, facts, settings, and the steps numbering; hosted with the site since PR 27 |
 | Body | 15 px / 1.55 line height |
 | Window heading h2 | clamp(22 px, 2.4 vw, 30 px), weight 900 |
 | Lede | 17 px |
@@ -100,11 +112,11 @@ One UI face, one mono face, and a short scale of sizes; everything else is weigh
 | Dock | 48 px icons with 15 px radius, 8 px padding; its own corners follow --r and it sits flush when the bar is attached |
 | --zoom | Interface scale: Small 75%, Compact 85% (default), Cosy 100% on desktop and tablet; always 100% on phones. The chosen option is highlighted in Appearance. |
 
-Instrument Serif appears only inside The Aperture's stand-in preview, because stand-ins keep each site's own look.
+Instrument Serif appears only inside The Aperture's stand-in preview, because stand-ins keep each site's own look. All three faces are hosted with the site; nothing loads from Google Fonts.
 
 Breakpoints
 
-- Up to 700 px wide is a phone: one column at a time, swipe between windows, scale 100%, the bar becomes a vertical rail floating at the bottom right above the dock (icons only, no clock), guide docked to the bottom edge and narrowed to clear the rail, Overview button hidden.
+- Up to 700 px wide is a phone: one column at a time, swipe between windows, scale 100%, the bar becomes a vertical rail floating at the bottom right above the dock (icons only, no clock), guide docked to the bottom edge and narrowed to clear the rail, Overview button hidden. Tap areas are at least 44 px tall: rail buttons and workspace icons 44 by 44 px, window buttons 36 by 44 px, chips and About links 44 px tall.
 - Up to 1180 px wide is a tablet: dock labels move under their icons, windows keep their tiled widths.
 - Above that is a desktop at 85% scale, which is what makes the screen feel bigger than it is.
 - The page declares a viewport, charset, and language, so phones get the phone layout rather than a shrunken desktop.
@@ -125,7 +137,7 @@ The shell is the part that never changes between pages: it frames every window t
 | Context menu | Right-click anywhere | Windows: width, maximise, fullscreen, float, centre, move, move to workspace, close. Dock: open, close, labels, auto-hide. Desktop: launcher, overview, wallpaper, preset, appearance, light or dark, control centre, shortcuts, guide, session. Escape and arrows work. |
 | Edge glow | A soft wash of --a2 over the outer 5 percent of the screen at the left or right, spanning only the middle three fifths of the height with a soft fade at each end (full height and a tenth wide until PRs 20 and 21), with a 3 px bar that fills while it waits | Shows while the mouse rests at an edge and the desk is about to step; never shown on phones, in the overview, or over floating windows. |
 | Toasts | Title plus one line, top right, 3.6 s | Suppressed by do not disturb except for the do not disturb message itself. Used for eggs and confirmations, never for errors a visitor must act on. |
-| Guide | A pinned floating window of hints, one per app or window kind, plus ten rotating tips | On by default, G hides it, the choice is kept. Keeps its blur over the whole window. On phones it docks to the bottom at 150 px tall, 54 px narrower than the screen so the rail stays clear. |
+| Guide | A pinned floating window of hints, one per app or window kind, plus a set of rotating tips (13 at present, counted from the content) | On by default, G hides it, the choice is kept. Keeps its blur over the whole window. On phones it docks to the bottom at 150 px tall, 54 px narrower than the screen so the rail stays clear. |
 | Shortcuts overlay | The ? key, a dialog listing every key | Every new action gets a key and a line here. |
 | Session menu | E: lock, suspend, reboot, shut down | Jokes only; nothing destructive. |
 
@@ -176,7 +188,7 @@ Motion is one duration and one easing, set once and inherited everywhere, so cha
 | Window open effect | Zoom, Slide up, Drop in, Unfold, None | Unfold |
 | Animated wallpaper | On or off; Aurora drifts slowly | On |
 | Reduced motion | Follows the system setting: no intro, no animated wallpaper, instant open and close, edge glow without its fill animation | Automatic |
-| Intro | Windows stay hidden until it starts, drop into the overview, then the camera flies into Hello; any key, click, or scroll skips it | On |
+| Intro | Windows stay hidden until it starts and wait, painted but invisible, until the pictures are decoded, the fonts are in, and a few frames run smoothly, then drop into the overview, then the camera flies into Hello; any key, click, or scroll skips it | On |
 
 Input rules
 
@@ -195,13 +207,13 @@ The site has eight kinds of content, and each kind is a list of items with a fix
 
 | Kind | Lives in | Fields each item carries | Becomes |
 | --- | --- | --- | --- |
-| Project | Engineering | id, stage (design, simulate, make, test), title, short (one word for the dock), image, caption, summary, steps, outcome, year, role, team, result, tools (optional, falls back to the stage tools), media (section or video slots), flagship yes or no, order | A tile in Projects and its own detail window |
+| Project | Engineering | id, stage (design, simulate, make, test), title, short (one word for the dock), image, caption, summary, steps, outcome, year, role, team, result, tools (optional, falls back to the stage tools), media (section or video slots), flagship yes or no, start_open (true opens it on Engineering at the start, in order), order | A tile in Projects and its own detail window |
 | Print | Off the clock | id, title, short (one word for the dock), render image, caption (optional), printer, material, why, story, notes, settings (layer, infill, supports, time), MakerWorld link or private, photos in use | A card in 3D prints and its own detail window |
 | Site | Off the clock | id, title, host, tag, accent, blurb, stats, stack, private, shot (screenshot), video, embed yes or no, width (1/3, 1/2, 2/3), under (stack below another site), order | A tile on the Off the clock hub and a browser window with the screenshot, then the live site on click |
 | Resume | Hello | jobs (dates, role, place, one line), study (same), PDF | The Resume window and the download |
 | Skills | Hello | per stage: tools and the project ids that prove them; beyond engineering: name, line, link target | The Skills window; the proof chips open projects |
-| Homelab | Off the clock | services (name, line, accent), devices (name, line) | The Homelab window |
-| Smart home | Off the clock | dashboards (name, line, image, alt), one intro line | The Smart home window with a tab per dashboard |
+| Homelab | Off the clock | heading (the window title line, also on its hub tile), services (name, line, accent), devices (name, line) | The Homelab window |
+| Smart home | Off the clock | heading (the window title line, also on its hub tile), dashboards (name, line, image, alt), one intro line | The Smart home window with a tab per dashboard |
 
 Smaller lists follow the same idea: games (now, all-time, kit), contact links, and the guide hints keyed by window kind.
 
@@ -316,4 +328,4 @@ Later the same day, in pull requests 5 to 12:
 - Default look: Rahul's rice, Everforest dark on the animated Aurora wallpaper, replaces Tokyo Night. The other looks stay as presets.
 - Live sites: the Off the clock hub shows a tile for each site, and its window shows a screenshot first; the real site loads in a frame on click and unloads when its window loses focus.
 - Smart home: the window shows screenshots of the real Home Assistant dashboards instead of sample tiles.
-- Navigation: drag, edge rest, and scrolling past the last window are all ways to move, alongside the keyboard and wheel; the overview button is now called Zoom out.
+- Navigation: drag, edge rest, and scrolling past the last window are all ways to move, alongside the keyboard and wheel; the overview button was called Zoom out for a while and has been Overview again since PR 17.

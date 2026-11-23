@@ -97,9 +97,9 @@ function renderProject2(b, api, p) {
   b.innerHTML = `<div class="project" style="${hueStyle(c.hue)}"><figure><img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async">${p.caption ? `<figcaption>${esc(p.caption)}</figcaption>` : ""}</figure>
     <p class="kicker" style="color:var(--accent-ink)">${c.verb}${FLAGSHIPS.includes(p.id) ? " · Flagship" : ""}</p><h2>${p.title}</h2>${p.outcome ? `<p class="lede">${p.outcome}</p>` : ""}
     <dl class="facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
-    <h3>The problem</h3>${p.sum}
+    ${p.sum ? `<h3>The problem</h3>${p.sum}` : ""}
     ${p.steps && p.steps.length ? `<h3>What I did</h3><ol class="steps">${p.steps.map((s) => `<li>${s}</li>`).join("")}</ol>` : ""}
-    ${p.media && p.media.length ? `<h3>More views</h3><ul class="p-media">${p.media.map((m) => mediaSlot(m)).join("")}</ul>` : ""}
+    ${p.media && p.media.some((m) => m.file) ? `<h3>More views</h3><ul class="p-media">${p.media.filter((m) => m.file).map((m) => mediaSlot(m)).join("")}</ul>` : ""}
     ${p.result ? `<h3>Result</h3><p>${p.result}</p>` : ""}
     <h3>Related</h3><p class="rel"><span>Proves</span>${skills.map((s) => `<i>${esc(s)}</i>`).join("")}</p>
     ${related.length ? `<p class="rel"><span>See also</span>${related.map((r) => `<button type="button" data-p="${r.id}">${r.title}</button>`).join("")}</p>` : ""}</div>`;
@@ -112,7 +112,7 @@ const projSpec = (p) => ({ key: "proj-" + p.id, title: p.title, icon: ICON.work,
 
 /* Resume: one outcome line per job, and a download button in place of skill bars */
 function renderResume2(b) {
-  const tl = (rows) => rows.map(([d, t, o, x]) => `<li><span class="r-d">${d}</span><strong>${t}</strong><span class="r-o">${o}</span><span class="r-x">${x}</span></li>`).join("");
+  const tl = (rows) => rows.map(([d, t, o, x]) => `<li><span class="r-d">${d}</span><strong>${t}</strong><span class="r-o">${o}</span>${x ? `<span class="r-x">${x}</span>` : ""}</li>`).join("");
   b.innerHTML = `<div class="resume">
     <p class="kicker">Resume</p><h2>Engineer, designer, maker.</h2>
     <p class="r-dl"><a class="btn" href="site/resume.pdf" download="${esc(ME.name.replace(/\s+/g, "-"))}-resume.pdf">${ICON.resume} Download PDF</a><span>Built from resume.md</span></p>
@@ -150,19 +150,21 @@ function renderHomelab(b) {
 function renderPrints(b, api) {
   b.innerHTML = `<div class="prints"><p class="kicker">3D prints</p><h2>Printed at home on a ${esc(PRINTER)}</h2>
     ${/^https:\/\//.test(PRINTS_PAGE.makerworld) ? `<p class="gm-steam"><a class="btn" href="${esc(PRINTS_PAGE.makerworld)}" target="_blank" rel="noopener">${ICON.ext} My MakerWorld profile</a></p>` : ""}
-    <ul class="pr-grid">${PRINTS.map((p) => `<li style="${hueStyle(p.hue)}"><button type="button" class="pr-card" data-print="${p.id}"><span class="pr-img">${p.img ? `<img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async">` : "<span>[photo]</span>"}</span><b>${esc(p.title)}</b><span class="pr-m">${esc(p.printer)} · ${esc(p.material)}</span><span class="pr-w">${p.why}</span><span class="pr-more">Open ${ICON.fwd}</span></button>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">On MakerWorld ${ICON.ext}</a>` : p.private ? `<span class="pr-p">Private design</span>` : ""}</li>`).join("")}</ul>
+    <ul class="pr-grid">${PRINTS.map((p) => `<li style="${hueStyle(p.hue)}"><button type="button" class="pr-card" data-print="${p.id}"><span class="pr-img">${p.img ? `<img src="${p.thumb || p.img}" alt="" loading="lazy" decoding="async">` : "<span>[photo]</span>"}</span><b>${esc(p.title)}</b><span class="pr-m">${esc([p.printer, p.material].filter(Boolean).join(" · "))}</span>${p.why ? `<span class="pr-w">${p.why}</span>` : ""}<span class="pr-more">Open ${ICON.fwd}</span></button>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">On MakerWorld ${ICON.ext}</a>` : p.private ? `<span class="pr-p">Private design</span>` : ""}</li>`).join("")}</ul>
     ${PRINTS_NOTE ? `<p class="hint">${PRINTS_NOTE}</p>` : ""}</div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-print]"); if (t) api.open(printSpec(PRINTS.find((p) => p.id === t.dataset.print))); });
 }
 /* one print in detail: render, the story, design notes, print settings, and slots for photos in use */
 function renderPrint(b, api, p) {
-  const others = PRINTS.filter((x) => x.id !== p.id).slice(0, 3);
+  /* a fact still to come in content/prints/<id>/index.md prints nothing, the same as in a project window */
+  const others = PRINTS.filter((x) => x.id !== p.id).slice(0, 3), t = p.settings;
+  const facts = [["Printer", p.printer], ["Material", p.material], ["Layer", t.layer], ["Infill", t.infill], ["Supports", t.supports], ["Print time", t.time]].filter(([, v]) => v);
   b.innerHTML = `<div class="project print" style="${hueStyle(p.hue)}"><figure>${p.img ? `<img src="${p.img}" alt="${esc(p.title)}"${p.size ? ` width="${p.size[0]}" height="${p.size[1]}"` : ""} loading="lazy" decoding="async">` : `<span class="pr-img"><span>[render]</span></span>`}<figcaption>${p.img ? esc(p.caption || (PRINTS_PAGE.cad ? "Render from " + PRINTS_PAGE.cad : "Render")) : "[Render to come]"}</figcaption></figure>
-    <p class="kicker" style="color:var(--accent-ink)">3D print${p.private ? " · Private design" : " · On MakerWorld"}</p><h2>${esc(p.title)}</h2><p class="lede">${p.why}</p>
-    <dl class="facts"><div><dt>Printer</dt><dd>${esc(p.printer)}</dd></div><div><dt>Material</dt><dd>${esc(p.material)}</dd></div><div><dt>Layer</dt><dd>${esc(p.settings.layer)}</dd></div><div><dt>Infill</dt><dd>${esc(p.settings.infill)}</dd></div><div><dt>Supports</dt><dd>${esc(p.settings.supports)}</dd></div><div><dt>Print time</dt><dd>${esc(p.settings.time)}</dd></div></dl>
-    <h3>Why it exists</h3>${p.story}
-    <h3>Design notes</h3><ol class="steps">${p.notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ol>
-    <h3>In use</h3><ul class="p-media">${(p.photos && p.photos.length ? p.photos.map((f, i) => ({ kind: "image", label: i ? "Photo " + (i + 1) : "In use", file: f })) : [{ kind: "image", label: "Photo in use" }, { kind: "image", label: "On the printer" }]).map((m) => mediaSlot(m)).join("")}</ul>
+    <p class="kicker" style="color:var(--accent-ink)">3D print${p.private ? " · Private design" : " · On MakerWorld"}</p><h2>${esc(p.title)}</h2>${p.why ? `<p class="lede">${p.why}</p>` : ""}
+    <dl class="facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
+    ${p.story ? `<h3>Why it exists</h3>${p.story}` : ""}
+    ${p.notes.length ? `<h3>Design notes</h3><ol class="steps">${p.notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ol>` : ""}
+    ${p.photos && p.photos.length ? `<h3>In use</h3><ul class="p-media">${p.photos.map((f, i) => mediaSlot({ kind: "image", label: i ? "Photo " + (i + 1) : "In use", file: f })).join("")}</ul>` : ""}
     ${p.url ? `<p class="r-dl"><a class="btn" href="${p.url}" target="_blank" rel="noopener">${ICON.ext} Open on MakerWorld</a><span>Download the model there</span></p>` : ""}
     <h3>Related</h3><p class="rel"><span>More prints</span>${others.map((o) => `<button type="button" data-print="${o.id}">${esc(o.title)}</button>`).join("")}</p></div>`;
   b.addEventListener("click", (e) => { const t = e.target.closest("[data-print]"); if (t) api.open(printSpec(PRINTS.find((x) => x.id === t.dataset.print))); });
@@ -174,8 +176,8 @@ function renderGaming(b) {
     ${/^https:\/\//.test(GAMES.steam) ? `<p class="gm-steam"><a class="btn" href="${esc(GAMES.steam)}" target="_blank" rel="noopener">${ICON.ext} My Steam profile</a></p>` : ""}
     ${GAMES.library ? `<dl class="gm-lib">${[["games", "Games"], ["dlc", "DLC"], ["reviews", "Reviews"], ["wishlist", "On wishlist"]].filter(([k]) => GAMES.library[k] != null).map(([k, n]) => `<div><dt>${n}</dt><dd>${esc(String(GAMES.library[k]))}</dd></div>`).join("")}</dl>` : ""}
     ${GAMES.showcase.length ? `<h3>On my Steam showcase</h3><ul class="gm-show">${GAMES.showcase.map((g, i) => `<li style="${hueStyle(ACCENTS[i % ACCENTS.length])}">${esc(g)}</li>`).join("")}</ul>` : ""}
-    <h3>Playing now</h3><ul class="gm">${GAMES.now.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>
-    <h3>All-time favourites</h3><ol class="gm gm-top">${GAMES.alltime.map((g) => `<li>${esc(g)}</li>`).join("")}</ol>
-    <h3>The kit</h3><ul class="gm">${GAMES.kit.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>
+    ${GAMES.now.length ? `<h3>Playing now</h3><ul class="gm">${GAMES.now.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>` : ""}
+    ${GAMES.alltime.length ? `<h3>All-time favourites</h3><ol class="gm gm-top">${GAMES.alltime.map((g) => `<li>${esc(g)}</li>`).join("")}</ol>` : ""}
+    ${GAMES.kit.length ? `<h3>The kit</h3><ul class="gm">${GAMES.kit.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>` : ""}
     ${GAMES_NOTE ? `<p class="hint">${GAMES_NOTE}</p>` : ""}</div>`;
 }

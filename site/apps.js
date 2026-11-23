@@ -5,10 +5,10 @@ const SHELL_ID = ME.name.split(" ")[0].toLowerCase() + "@portfolio";
 const yearsIn = () => { const ys = JOBS.map(([d]) => +((d.match(/\d{4}/) || [])[0])).filter(Boolean); return ys.length ? new Date().getFullYear() - Math.min(...ys) : 0; };
 function renderContact(b, api) {
   b.innerHTML = `<div class="contact"><p class="kicker">Say hello</p><h2>Got a part that needs making?</h2>
-    <p class="lede">The quickest way to reach me is email.</p>
-    <p class="c-mail"><span id="c-addr">${ME.email}</span><button type="button" class="c-copy">Copy</button></p>
+    ${ME.email ? `<p class="lede">The quickest way to reach me is email.</p>
+    <p class="c-mail"><span id="c-addr">${esc(ME.email)}</span><button type="button" class="c-copy">Copy</button></p>` : `<p class="lede">The quickest way to reach me is a message on any of these.</p>`}
     <p class="about-links">${ME.links.map(([n, u]) => `<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join("")}</p></div>`;
-  b.querySelector(".c-copy").addEventListener("click", async () => {
+  b.querySelector(".c-copy")?.addEventListener("click", async () => {
     try { await navigator.clipboard.writeText(ME.email); api.toast("Copied", "Email address is on your clipboard", 2000); }
     catch (_) { const r = document.createRange(); r.selectNodeContents(b.querySelector("#c-addr")); getSelection().removeAllRanges(); getSelection().addRange(r); }
   });

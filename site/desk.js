@@ -20,7 +20,7 @@ const HINTS = {
   homelab: ["Homelab", "The services behind the sites, all on one NAS at home."],
   prints: ["3D prints", `Parts printed at home on a ${PRINTER}. Click a card for the full story; the MakerWorld link opens the shared model.`],
   gaming: ["Gaming", "What I play and what I play it on. Half the Linux notes exist because of this."],
-  contact: ["Contact", "Copy my email with one click. I reply within a day or two."],
+  contact: ["Contact", ME.email ? "Copy my email with one click. I reply within a day or two." : "Every way to reach me, in one place. I reply within a day or two."],
   settings: ["Appearance", "Change colours, wallpaper, blur, corners, and motion. Press <kbd>P</kbd> to try the presets one by one."],
   terminal: ["Terminal", "Type <b>help</b> for the list of commands. <b>neofetch</b> and <b>cat about</b> are good first tries."],
   site: ["Browser window", "A live project. <kbd>Shift</kbd> <kbd>F</kbd> goes fullscreen with a thin border, and <kbd>Esc</kbd> brings it back."],

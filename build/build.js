@@ -15,13 +15,33 @@ function readMd(file) {
   if (!m) { fail(rel(file), "no YAML header between --- lines"); return { fm: {}, body: "" }; }
   let fm = {};
   try { fm = yaml.load(m[1]) || {}; } catch (e) { fail(rel(file), "YAML header: " + e.message.split("\n")[0]); }
-  return { fm, body: m[2].trim() };
+  return { fm: clean(fm, rel(file)), body: strip(m[2].trim(), rel(file) + " text") };
+}
+/* ---------- placeholders ---------- */
+/* Facts still to come are written in square brackets, such as "[h m]". Visitors never see them: a bracketed note is
+   taken out here, an empty field prints nothing, and a list row that was only a note is dropped. `npm test` lists them. */
+const todo = [];
+const NOTE = /(^|\s)\[[^\]\n]*\](?!\()/g;
+function strip(s, where) {
+  const found = typeof s === "string" && s.match(NOTE);
+  if (!found) return s;
+  found.forEach((f) => todo.push(`${where}: ${f.trim()}`));
+  return s.replace(NOTE, "$1").replace(/[ \t]{2,}/g, " ").replace(/[ \t]+([.,;])/g, "$1").trim();
+}
+function clean(v, where) {
+  if (typeof v === "string") return strip(v, where);
+  if (Array.isArray(v)) return v.map((x) => clean(x, where)).filter((x) => x !== "" && !(x && x.__held && x.__held.has("name")));
+  if (!v || typeof v !== "object" || v instanceof Date) return v;
+  const o = {}, held = new Set();
+  for (const k of Object.keys(v)) { o[k] = clean(v[k], `${where} ${k}`); if (typeof v[k] === "string" && v[k] && o[k] === "") held.add(k); }
+  /* fields that hold only a note still count as filled in for the required-field check */
+  return Object.defineProperty(o, "__held", { value: held });
 }
 const rel = (f) => path.relative(ROOT, f);
 const html = (md) => (md ? marked.parse(md, { mangle: false, headerIds: false }).trim() : "");
 const inline = (md) => (md ? marked.parseInline(String(md)).trim() : "");
 const paras = (md) => (md ? md.split(/\n\s*\n/).map((p) => inline(p.trim())).filter(Boolean) : []);
-const need = (fm, keys, where) => keys.forEach((k) => { if (fm[k] == null || fm[k] === "") fail(where, `missing "${k}"`); });
+const need = (fm, keys, where) => keys.forEach((k) => { if ((fm[k] == null || fm[k] === "") && !(fm.__held && fm.__held.has(k))) fail(where, `missing "${k}"`); });
 const listItems = (dir) => fs.existsSync(dir) ? fs.readdirSync(dir).filter((n) => !n.startsWith("_") && !n.startsWith(".")) : [];
 
 /* ---------- images ---------- */
@@ -198,7 +218,11 @@ async function main() {
   if (problems.length) { console.error("Content problems:\n  " + problems.join("\n  ")); process.exit(1); }
   /* the preview image is drawn once with `npm run og` and kept in content/about/, since build servers lack the fonts */
   if (process.argv.includes("--og")) { await ogImage(about.fm, path.join(CONTENT, "about", about.fm.image || ""), path.join(CONTENT, "about", "og.jpg")); console.log("Wrote content/about/og.jpg"); return; }
-  if (check) { console.log(`Content is fine: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites.`); return; }
+  if (check) {
+    console.log(`Content is fine: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites.`);
+    if (todo.length) console.log(`\n${todo.length} bracketed notes are hidden from visitors until the real words are in:\n  ` + todo.join("\n  "));
+    return;
+  }
 
   fs.rmSync(DIST, { recursive: true, force: true }); fs.mkdirSync(path.join(DIST, "site"), { recursive: true });
   const out = Object.entries({ ME, ABOUT, IMG: { ME: ABOUT.image }, FLAGSHIPS, START_OPEN, SKILLS, SKILLS_NOTE: html(skills.body), BEYOND, PROJECTS, PRINTS, SITES, JOBS, STUDY, TOOLS, LAB, LAB_PAGE: { heading: lab.fm.heading || "Homelab" }, LAB_NOTE: inline(lab.body), DEVICES, HOME, HOME_PAGE: { heading: home.fm.heading || "Smart home" }, HOME_NOTE: inline(home.body), GAMES, GAMES_NOTE: inline(games.body), PRINTS_PAGE: { makerworld: printsPage.fm.makerworld || "", cad: printsPage.fm.cad || "" }, PRINTS_NOTE: inline(printsPage.body) })
@@ -216,6 +240,6 @@ async function main() {
   if (fs.existsSync(og)) fs.copyFileSync(og, path.join(DIST, "og.jpg"));
   await runImages();
   await resumePdf({ jobs: JOBS, study: STUDY, tools: TOOLS.map(([t]) => t) }, { ...ME, link: "" }, path.join(DIST, "site/resume.pdf"));
-  console.log(`Built dist/: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites, ${imageJobs.length} images, resume.pdf.`);
+  console.log(`Built dist/: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites, ${imageJobs.length} images, resume.pdf.${todo.length ? ` ${todo.length} bracketed notes hidden; run npm test to list them.` : ""}`);
 }
 main().catch((e) => { console.error(e); process.exit(1); });

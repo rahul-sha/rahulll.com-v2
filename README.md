@@ -68,14 +68,33 @@ content/        Everything you edit. Markdown files with a short header, images 
 site/           The desk itself: engine (windows, workspaces, overview), shell, styles.
 build/build.js  Reads content/, resizes images to WebP, writes dist/.
 build/ignore-build.sh  Tells Vercel to skip preview builds that change only docs.
-api/weather.js  The one server function: the visitor's town and weather, cached 15 minutes.
+api/weather.js  The visitor's town and weather, cached 15 minutes.
+api/auth.js, api/callback.js  Sign-in for the editor: they pass you to GitHub and back.
+admin/          The editor at /admin: its page and config.yml, which lists the forms and their fields.
 vercel.json     Security headers and build settings for Vercel.
 docs/           The roadmap and the design system (notes for Claude and for you).
 index.html      The page shell.
 dist/           Build output (ignored by git). Vercel serves this.
 ```
 
-## Adding something
+## Adding or changing something
+
+The quick way is the editor, at `/admin` on the live site (for example `https://rahulllcom-v2.vercel.app/admin`):
+
+1. Open the address and press **Sign In with GitHub**. Only GitHub accounts that can write to this repository can save.
+2. Pick **Projects**, **3D prints**, **Shipped sites**, or **Pages** (About and contact, Resume, Skills, Homelab, Smart home, Gaming, and the 3D prints page).
+3. Open an entry, or press **New**. Fill in the form and drag pictures onto the image fields.
+4. Press **Save**. The editor commits the change to `main`, and Vercel rebuilds the live site in about a minute.
+
+Things to know:
+
+- A save goes live. If a required field is missing, the build fails and the previous version of the site stays up; GitHub emails you about the failed check.
+- Every save is a commit, so anything can be undone from the repository's history on GitHub.
+- The editor is [Sveltia CMS](https://github.com/sveltia/sveltia-cms), pinned to an exact version in `package.json`. The forms come from `admin/config.yml`. A new field in the build needs a line there too, or the editor would drop it on the next save.
+- Sign-in needs two settings in Vercel (Project, Settings, Environment Variables): `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`, from a GitHub OAuth app whose callback address is `https://<the site's address>/api/callback`. They are never stored in this repository. When the site moves to another address, update the OAuth app's two addresses to match.
+- The editor works on the production address only, since that is the address GitHub sends you back to.
+
+By hand, without the editor:
 
 1. Copy the `_template.md` in the kind you want (for a project or print, copy it into a new folder and name the file `index.md`).
 2. Give the folder a short id in kebab-case, for example `prints/desk-hook/`.
@@ -102,6 +121,7 @@ Then open the address `serve` prints. `npm run check` validates the content with
 
 - `npm test` (the same as `npm run check`) lists every missing content field and fails if any is missing. It also lists the bracketed notes still to be filled in, such as `[h m]`. Those do not fail the check: the build leaves them out, so visitors see a shorter page, never a bracket. GitHub Actions runs it, then the full build, on every pull request and on every push to `main`.
 - Visual changes are also checked in a browser at desktop and phone sizes, in light and dark.
+- A save from the editor at `/admin` is a push to `main`, so the same check and build run on it.
 - Merging to `main` puts the change live within minutes. Each pull request gets its own preview link first.
 
 ## Where things are written down

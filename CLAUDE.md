@@ -9,7 +9,8 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 
 - Plain HTML, CSS, and vanilla JavaScript in `site/`. No framework, no bundler.
 - One Node 22 build (`build/build.js`, using marked, js-yaml, sharp, pdfkit) turns `content/` into `dist/`.
-- Vercel serves `dist/` and one function, `api/weather.js` (visitor's town from Vercel's IP headers, reading from Open-Meteo, no key).
+- Vercel serves `dist/` and three functions: `api/weather.js` (visitor's town from Vercel's IP headers, reading from Open-Meteo, no key), and `api/auth.js` with `api/callback.js` (GitHub sign-in for the editor).
+- The editor at `/admin` is Sveltia CMS, pinned to an exact version and copied from `node_modules` by the build. Its forms come from `admin/config.yml`; a save commits Markdown to `main`.
 - GitHub Actions (`.github/workflows/build.yml`) runs the build on every pull request and every push to `main`.
 
 ## Run commands
@@ -34,7 +35,9 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 - A merge to `main` is live within minutes. There is no staging site beyond the preview.
 - `vercel.json` holds the security headers. A new framed site must be added to `frame-src`, or its window stays blank.
 - `render.js` inserts build-made HTML unescaped (`sum`, `story`, `why`, `blurb`, `*_NOTE`, `ME.line`, `ME.voice`). Keep those build-generated; plain strings go through `esc()`.
-- No secrets in the repo. Nothing here needs a key; ask before adding a service that does or that bills.
+- No secrets in the repo. The only secrets are `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` for the editor's sign-in, which Rahul keeps in Vercel's environment variables; ask before adding a service that needs another or that bills.
+- `/admin` has its own, looser security header in `vercel.json` (it talks to GitHub); the public pages keep the strict one. Do not merge the two.
+- A field the build reads must also be listed in `admin/config.yml`, or the editor drops it when that entry is saved.
 - The weather function runs per visit; keep its 15 minute cache so calls stay low.
 
 ## How to work

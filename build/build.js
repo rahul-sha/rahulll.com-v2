@@ -234,10 +234,17 @@ async function main() {
   const SITE = "https://" + (process.env.SITE_HOST || process.env.VERCEL_PROJECT_PRODUCTION_URL || "rahulll.com");
   fs.writeFileSync(path.join(DIST, "index.html"), fs.readFileSync(path.join(ROOT, "index.html"), "utf8").replaceAll("%SITE%", SITE).replaceAll("%PORTRAIT%", ABOUT.image).replaceAll("%NAME%", x(ME.name)).replaceAll("%ROLE%", x(ME.role)));
   fs.copyFileSync(path.join(ROOT, "favicon.svg"), path.join(DIST, "favicon.svg"));
-  fs.writeFileSync(path.join(DIST, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
   fs.writeFileSync(path.join(DIST, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${SITE}/</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url>\n</urlset>\n`);
   const og = path.join(CONTENT, "about", "og.jpg");
   if (fs.existsSync(og)) fs.copyFileSync(og, path.join(DIST, "og.jpg"));
+  /* the editor at /admin: its pages, the form settings with the site's address filled in (anchors written out in full, so any YAML reader copes), and Sveltia CMS itself from node_modules */
+  const ADMIN = path.join(ROOT, "admin"), CMS = path.join(ROOT, "node_modules/@sveltia/cms/dist");
+  fs.mkdirSync(path.join(DIST, "admin"), { recursive: true });
+  for (const f of fs.readdirSync(ADMIN)) if (f !== "config.yml") fs.copyFileSync(path.join(ADMIN, f), path.join(DIST, "admin", f));
+  fs.writeFileSync(path.join(DIST, "admin/config.yml"), yaml.dump(yaml.load(fs.readFileSync(path.join(ADMIN, "config.yml"), "utf8").replaceAll("%SITE%", SITE)), { noRefs: true, lineWidth: -1 }));
+  fs.copyFileSync(path.join(CMS, "sveltia-cms.js"), path.join(DIST, "admin/sveltia-cms.js"));
+  fs.cpSync(path.join(CMS, "chunks"), path.join(DIST, "admin/chunks"), { recursive: true, filter: (f) => !f.endsWith(".map") });
+  fs.writeFileSync(path.join(DIST, "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${SITE}/sitemap.xml\n`);
   await runImages();
   await resumePdf({ jobs: JOBS, study: STUDY, tools: TOOLS.map(([t]) => t) }, { ...ME, link: "" }, path.join(DIST, "site/resume.pdf"));
   console.log(`Built dist/: ${PROJECTS.length} projects, ${PRINTS.length} prints, ${SITES.length} sites, ${imageJobs.length} images, resume.pdf.${todo.length ? ` ${todo.length} bracketed notes hidden; run npm test to list them.` : ""}`);

@@ -23,6 +23,7 @@
   "private": "true",
   "type": "commonjs",
   "devDependencies": {
+    "@sveltia/cms": "0.271.0",
     "js-yaml": "^4.3.2",
     "marked": "^12.0.2",
     "pdfkit": "^0.15.0",

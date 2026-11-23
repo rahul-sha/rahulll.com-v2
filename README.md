@@ -100,7 +100,7 @@ Then open the address `serve` prints. `npm run check` validates the content with
 
 ## Checks and deploy
 
-- `npm test` (the same as `npm run check`) lists every missing content field and fails if any is missing. GitHub Actions runs it, then the full build, on every pull request and on every push to `main`.
+- `npm test` (the same as `npm run check`) lists every missing content field and fails if any is missing. It also lists the bracketed notes still to be filled in, such as `[h m]`. Those do not fail the check: the build leaves them out, so visitors see a shorter page, never a bracket. GitHub Actions runs it, then the full build, on every pull request and on every push to `main`.
 - Visual changes are also checked in a browser at desktop and phone sizes, in light and dark.
 - Merging to `main` puts the change live within minutes. Each pull request gets its own preview link first.
 

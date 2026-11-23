@@ -1,5 +1,7 @@
 # rahulll.com
 
+## What this project does
+
 Rahul's portfolio as a Noctalia-style desktop on a niri-like scrolling window manager: every page is a window, every section a workspace.
 It shows his engineering work (Make, Design, Simulate, Test) and what he does off the clock, live at https://rahulllcom-v2.vercel.app.
 
@@ -14,9 +16,9 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 
 - Start: `npm install`, `npm run build`, then `npx serve dist` and open the address it prints. The weather chip shows "Weather" locally.
 - Check: `npm test` (the same as `npm run check`) validates content only, lists every missing field, and fails if any is missing. GitHub runs it on every pull request.
-- Test: `npm test` is the content check, the only automated test. Also verify in a browser (Playwright is fine) at 1440, 1024, 390 portrait, and 844 landscape, in light and dark, console clean, no horizontal overflow.
+- Test: `npm test` is the content check, the only automated test. Also verify in a browser (Playwright is fine) at 1440, 1024, 390 portrait, and 844 landscape, in light and dark, and with reduced motion turned on, console clean, no horizontal overflow.
 - Link preview: `npm run og` redraws `content/about/og.jpg`; run it after changing the About name, role, or portrait, then commit the image.
-- Deploy: merge to `main` and Vercel builds production. Each pull request gets a preview link. `build/ignore-build.sh` skips previews that change only Markdown outside `content/` or files in `docs/`; production always builds.
+- Deploy: merge to `main` and Vercel builds production. Each pull request gets a preview link. `build/ignore-build.sh` skips previews when everything pushed changes only Markdown outside `content/` or files in `docs/`; production always builds.
 
 ## Where things live
 
@@ -25,6 +27,7 @@ It shows his engineering work (Make, Design, Simulate, Test) and what he does of
 - `site/desk.js` and `desk.css` are the shell; `render.js` draws windows from `dist/site/content.js`; `sites.js` is the Off the clock hub; `data.js` and `apps.js` hold shared helpers.
 - `site/rice.js` is Appearance. The default preset is "Rahul's rice"; do not change it without asking.
 - `build/build.js` is the whole pipeline. A new content kind needs code there and a renderer in `render.js`.
+- Trilium (Vibe Coding Projects) keeps copies of the "Build map" and "Design system" pages; sync them with the `trilium-project-docs` skill after a merged change to the build or the design.
 
 ## Data and safety
 

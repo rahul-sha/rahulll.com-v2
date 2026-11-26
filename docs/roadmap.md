@@ -1,6 +1,6 @@
 # Roadmap: rahulll.com
 
-- **Updated:** 2026-11-23
+- **Updated:** 2026-11-26
 
 Bugs and smaller fixes live in the [bug and feedback tracker](https://claude.ai/artifact/KwDVECNhoHBfrKq3VZ3JaR). This page holds the bigger pieces of work and the order they come in.
 
@@ -27,6 +27,7 @@ Ideas worth keeping, not yet agreed.
 - Question for Rahul: should light mode follow the visitor's system, or stay dark with Rahul's rice?
 
 ## Done recently
+- 2026-11-26: Cartographer updated to 0.35.1.
 - 2026-11-23: an editor at `/admin` (Sveltia CMS) with a form for every kind of content; a save commits to `main` and the site rebuilds.
 - 2026-11-23: bracketed notes are hidden from visitors and listed by `npm test`, the first step of the finish-off plan (admin page next).
 - 2026-11-23: full check-up; the docs-only preview skip now compares the whole push, and the design system file, README, and `CLAUDE.md` are brought up to date. Light mode in Rahul's rice reaches 4.5:1 contrast, and phone tap areas are at least 44 px tall.

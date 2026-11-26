@@ -1,6 +1,6 @@
 # rahulll.com design system
 
-Version 2.2, 23 November 2026. Copied into the repo on 16 November 2026 from the [design system Claude Doc](https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS). This file is now the copy Claude reads; when the design changes, update it, the Claude Doc, and the Trilium page in step.
+Version 2.3, 26 November 2026. Copied into the repo on 16 November 2026 from the [design system Claude Doc](https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS). This file is now the copy Claude reads; when the design changes, update it, the Claude Doc, and the Trilium page in step.
 
 ## Purpose and scope
 
@@ -9,6 +9,8 @@ This is the standard for rahulll.com as a desktop. Version 2, of 30 October 2026
 It does not cover the four live sites that open inside the Off the clock workspace; they keep their own designs and are only framed here.
 
 ## Since version 2
+
+Version 2.3, 26 November 2026: the About window ends with a revision block, like the one on an engineering drawing: "Rev" over the site version from `package.json`, and "Updated" over the date of the last commit. It sits bottom right on desktop and bottom left on phones, so the rail never covers it. Every pull request that changes what visitors see raises the version: last number for a fix, middle for a feature, first for a redesign.
 
 Version 2.2, 23 November 2026: light mode in Rahul's rice reaches 4.5:1 contrast. Text on a solid accent is dark (#1e2326) instead of cream, and the muted text and the four ink accents are a step darker. On phones, window buttons, rail buttons, workspace icons, chips, and the About links have a tap area at least 44 px tall; icons and text keep their size.
 
@@ -166,6 +168,7 @@ Content patterns, in the order they appear in a detail window
 | Media slots | ul.p-media: dashed tiles with an icon, label, and "to come" line until a file replaces them; a filled picture shows its 560 px copy and opens the full size in the viewer on click; a clip has no source until its slot scrolls into view, loops there, and pauses when its workspace scrolls away | Project "More views", print "In use" |
 | Related | p.rel: a label and a row of buttons that open other windows | Project, print |
 | Grid tiles | p-tile and pr-card: image, category, title; clicking opens a detail window beside the list | Projects, 3D prints, Shipped |
+| Revision block | p.about-rev: two cells, Rev in the a1 ink and Updated, 12 px on a 1.5 px hairline border; text only, no link | About |
 | Timeline | ol.r-tl: date in mono, role, place, one line | Resume |
 | Site screenshot | A screenshot or short clip of the live site with a "Load the live site" button; the real site loads in a frame only after the click and unloads when the window loses focus. A site that refuses framing opens in a new tab; one with no screenshot shows its drawn stand-in. | Shipped |
 | Dashboard tabs | ha-tabs: tabs styled like Home Assistant tiles over a screenshot of that dashboard, which opens full size in a new tab; a dashboard with no image shows as "Coming soon" | Smart home |

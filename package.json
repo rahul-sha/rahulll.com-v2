@@ -1,13 +1,14 @@
 {
   "name": "rahulll.com",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Personal Website and Portfolio",
   "main": "index.js",
   "scripts": {
     "test": "node build/build.js --check",
     "build": "node build/build.js",
     "check": "node build/build.js --check",
-    "og": "node build/build.js --og"
+    "og": "node build/build.js --og",
+    "check:version": "node --test \"build/*.test.js\" && node build/check-version.js"
   },
   "repository": {
     "type": "git",

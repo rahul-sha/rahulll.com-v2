@@ -135,6 +135,13 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
 .about-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .about-links a { color: var(--fg); text-decoration: none; font-weight: 700; font-size: 14px; padding: 7px 12px; border-radius: calc(var(--r) * .6); background: var(--surf2); }
 .about-links a:hover { background: var(--a2); color: var(--on-a); }
+/* the site version as a drawing revision block: number from package.json, date of the last commit */
+.about-rev { justify-self: end; display: inline-grid; grid-template-columns: auto auto; margin: 14px 0 0; border: 1.5px solid color-mix(in srgb, var(--fg) 22%, transparent); border-radius: calc(var(--r) * .45); font-size: 12px; line-height: 1.2; overflow: hidden; }
+.about-rev span { display: grid; gap: 1px; padding: 5px 10px; }
+.about-rev span + span { border-left: 1.5px solid color-mix(in srgb, var(--fg) 22%, transparent); }
+.about-rev small { font-size: 10px; font-weight: 600; letter-spacing: .02em; color: var(--mute); }
+.about-rev b, .about-rev time { font-weight: 800; }
+.about-rev b { color: var(--a1-ink, var(--a1)); }
 .r-tl { display: grid; gap: 14px; border-left: 3px solid var(--line); padding-left: 16px; }
 .r-tl li { position: relative; }
 .r-tl li::before { content: ""; position: absolute; left: -23px; top: 6px; width: 11px; height: 11px; border-radius: 4px; background: var(--a2); }
@@ -426,6 +433,7 @@ h3 { font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: u
 .phone .ib { width: 44px; height: 44px; }
 /* thumb-sized tap areas on phones: the icons and text keep their size */
 .phone .tb-b button { min-width: 36px; height: 44px; }
+.phone .about-rev { justify-self: start; }
 .phone .chip, .phone .about-links a { display: inline-flex; align-items: center; min-height: 44px; }
 .phone .b-right { padding-top: 6px; border-top: 1px solid var(--line); }
 .phone .bar .b-sec:has(> .clock) { display: none; }

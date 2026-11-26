@@ -14,6 +14,7 @@ function renderAbout2(b, api) {
     <p class="now"><b>Currently</b> ${ME.role} at ${ABOUT.employer}.${ABOUT.open_to ? ` <span>${ABOUT.open_to}</span>` : ""}</p>
     <div class="stages">${stageOrder.map((k) => `<button type="button" data-stage="${k}" style="${hueStyle(CATS[k].hue)}"><i></i>${CATS[k].verb}</button>`).join("")}</div>
     <p class="about-links">${ME.links.map(([n, u]) => `<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join("")}</p>
+    <p class="about-rev" aria-label="Site version ${esc(VERSION.number)}, updated ${esc(VERSION.day)}"><span><small>Rev</small><b>${esc(VERSION.number)}</b></span><span><small>Updated</small><time datetime="${esc(VERSION.date)}">${esc(VERSION.day)}</time></span></p>
   </div>`;
   b.querySelector(".stages").addEventListener("click", (e) => { const t = e.target.closest("[data-stage]"); if (t) openProjects(api, t.dataset.stage); });
 }

@@ -68,6 +68,7 @@ content/        Everything you edit. Markdown files with a short header, images 
 site/           The desk itself: engine (windows, workspaces, overview), shell, styles.
 build/build.js  Reads content/, resizes images to WebP, writes dist/.
 build/ignore-build.sh  Tells Vercel to skip preview builds that change only docs.
+build/check-version.js  Fails a pull request that changes what visitors see without raising the version (tests in version.test.js).
 api/weather.js  The visitor's town and weather, cached 15 minutes.
 api/auth.js, api/callback.js  Sign-in for the editor: they pass you to GitHub and back.
 admin/          The editor at /admin: its page and config.yml, which lists the forms and their fields.
@@ -120,6 +121,7 @@ Then open the address `serve` prints. `npm run check` validates the content with
 ## Checks and deploy
 
 - `npm test` (the same as `npm run check`) lists every missing content field and fails if any is missing. It also lists the bracketed notes still to be filled in, such as `[h m]`. Those do not fail the check: the build leaves them out, so visitors see a shorter page, never a bracket. GitHub Actions runs it, then the full build, on every pull request and on every push to `main`.
+- The site's version number is `"version"` in `package.json`, shown at the bottom of the About window with the date of the last commit. Raise it in every pull request that changes what visitors see: the last number for a fix (1.1.0 to 1.1.1), the middle for a feature (1.1.0 to 1.2.0), the first for a redesign (2.0.0). `npm run check:version` checks this; GitHub runs it on every pull request and fails it when `site/`, `content/`, `index.html`, or `favicon.svg` changed but the number did not go up. Saves from the editor go straight to `main`, so they never need a new number.
 - Visual changes are also checked in a browser at desktop and phone sizes, in light and dark.
 - A save from the editor at `/admin` is a push to `main`, so the same check and build run on it.
 - Merging to `main` puts the change live within minutes. Each pull request gets its own preview link first.

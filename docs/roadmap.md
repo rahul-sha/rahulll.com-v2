@@ -27,6 +27,7 @@ Ideas worth keeping, not yet agreed.
 - Question for Rahul: should light mode follow the visitor's system, or stay dark with Rahul's rice?
 
 ## Done recently
+- 2026-11-26: the site version shows in About as a drawing revision block, and `npm run check:version` fails a pull request that changes what visitors see without raising it (PR #36).
 - 2026-11-26: Cartographer updated to 0.35.1.
 - 2026-11-23: an editor at `/admin` (Sveltia CMS) with a form for every kind of content; a save commits to `main` and the site rebuilds.
 - 2026-11-23: bracketed notes are hidden from visitors and listed by `npm test`, the first step of the finish-off plan (admin page next).

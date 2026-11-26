@@ -1,5 +1,7 @@
 # rahulll.com design system
 
+Made from: 2026-11-26, commit 629a656 plus pull request 36
+
 Version 2.3, 26 November 2026. Copied into the repo on 16 November 2026 from the [design system Claude Doc](https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS). This file is now the copy Claude reads; when the design changes, update it, the Claude Doc, and the Trilium page in step.
 
 ## Purpose and scope

@@ -2,7 +2,7 @@
 
 Rules for this project only. They add to, or override, the shared rules from the Cartographer plugin (`RULES.md`, `DESIGN.md`, and the shared skills). Claude Code loads this file automatically because it sits in `.claude/rules/`.
 
-Cartographer plugin: 0.28.2 (the version this project last took in; the setup-project skill sets it, and the version check compares it at the start of each session. It is this project's own record, not the plugin the chat loaded)
+Cartographer plugin: 0.35.1 (the version this project last took in; the setup-project skill sets it, and the version check compares it at the start of each session. It is this project's own record, not the plugin the chat loaded)
 
 Each rule is one line, with the reason after a colon.
 
@@ -13,6 +13,7 @@ Each rule is one line, with the reason after a colon.
 - [design] For anything visual, load the `rahulll-design-rules` skill as well as the shared design rules: it holds this site's own look and the directions Rahul rejected.
 - [design] When the design changes, update `docs/design-system.md` and its Claude Doc (https://claude.ai/artifact/5YqBNXspb4y2adDMXKdqMS) in the same pull request: the repo copy is what Claude reads, the doc is what Rahul reads.
 - [workflow] After a merged pull request that changes the build or the design, sync the "Build map" and "Design system" pages in Trilium with the `trilium-project-docs` skill: those are the pages this project keeps there.
+- [design] A new window or page lists, in its plan, the states from shared `DESIGN.md` section 11 and the section 12 checklist, each marked built or not needed: the site has few forms or lists, so most states will be "not needed", and saying so keeps the check honest.
 
 ## Overrides
 
